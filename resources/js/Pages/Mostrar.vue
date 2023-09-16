@@ -16,7 +16,7 @@
                 <div class="relative w-full max-w-2xl max-h-full">
 
                 <!-- Modal content -->
-                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <!-- Modal header -->
                 <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -35,11 +35,10 @@
                     <div class="flex flex-wrap -mx-3 mb-6">
 
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
                                 Nombre del aula
                             </label>
-                            <input id="NombreAula" v-model="NuevaAula.NombreAula"  class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="Aula 1">
-
+                            <input id="NombreAula" v-model="NuevaAula.NombreAula"  class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="Aula 1">
                         </div>
 
                         <div class="w-full md:w-1/2 px-3">
@@ -124,7 +123,7 @@
                                         <i class="fa-solid fa-trash text-white"></i>
                             </a>
 
-                            <div>
+                                    <div>
                                         <div :class="{ hidden: !isvisibleDelete }" v-bind:id="`Modal${aula.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">
                                             <div class="relative w-full max-w-md max-h-full">
                                                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
@@ -220,7 +219,6 @@ export default {
     async crearAula(){
         await this.$inertia.post(route('Aulas.store'),this.NuevaAula)
         this.hideElement()
-
     },
 
     showElement() {
@@ -231,9 +229,7 @@ export default {
     },
 
     showDelete(id){
-
         this.idBorrarSeleccionado=id;
-
         this.isvisibleDelete = true;
     },
     hideDelete(){

@@ -16,16 +16,17 @@ return new class extends Migration
             $table->string('categoria');
             $table->integer('horas');
             $table->string('estatus');
-
+            
             $table->timestamps();
         });
     }
+
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('_plaza_table_');
+        Schema::dropIfExists('plazas');
     }
 };

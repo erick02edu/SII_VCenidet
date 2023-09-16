@@ -27,30 +27,5 @@ import Logo from '@/Components/LogoCenidet.vue';
 
 </template>
 
-<script>
 
-    import axios from 'axios';
-
-    export default {
-
-    data() {
-        return {
-            usuarioAutenticado:" ",
-        };
-    },
-
-    mounted() {
-
-        axios.get('/NameUsuario')
-        .then(response => {
-            this.usuarioAutenticado = response.data.NombreUsuario;
-            console.log(response.data.NombreUsuario);
-        })
-        .catch(error => {
-            console.error(error);
-        });
-    },
-    };
-
-</script>
 

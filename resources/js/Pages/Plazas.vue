@@ -2,69 +2,184 @@
 
     <Head title="Plazas" />
     <AuthenticatedLayout>
-    <template #header>
-            Lista de Plazas
-    </template>
+
+
+        <template #header>
+                Lista de Plazas
+        </template>
+
+        <h3 class="text-m  text-gray-900 dark:text-white py-1 ml-1">
+                Buscar por:
+
+                <input type="radio" value="estatus" name="Campos" v-model="campoBusqueda" required > estatus
+                <input type="radio" value="horas" name="Campos" v-model="campoBusqueda" required> horas
+                <input type="radio" value="unidad" name="Campos" v-model="campoBusqueda" required> unidad
+                <input type="radio" value="subunidad" name="Campos" v-model="campoBusqueda" required> subunidad
+                <input type="radio" value="diagonal" name="Campos" v-model="campoBusqueda" required> diagonal
+        </h3>
+
+        <div class="inline-flex w-full" >
+
+            <div class="relative text-gray-700 focus-within:text-gray-700">
+                <input
+                    class=" border-gray-300 bg-white h-10 px-4 pr-16 rounded-lg text-sm focus:outline-none"
+                    type="text"
+                    placeholder="Buscar..."
+                    v-model="PlazaBuscar"
+                    @input="HacerBusqueda()"
+                />
+            </div>
+
+            <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
+            v-canPermiso="'Agregar Plazas'" v-show="none">
+                Nuevo
+            </button>
+
+
+        </div>
+
 
     <div id="modalContainer">
-        <button :type="type" @click="showElement" class="rounded-md bg-[#014E82] px-5 py-3 mb-4 text-center text-sm text-white hover:bg-[#0284c7] ">
-            Nuevo
-        </button>
+
+        <span>
+            <!-- <button :type="type" @click="showElement" class="rounded-md bg-[#014E82] px-5 py-3 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
+            v-canPermiso="'Agregar Plazas'" v-show="none">
+                Nuevo
+            </button> -->
+
+
+        </span>
+
+        <!-- <input type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+        placeholder="Buscar Plaza" v-model="PlazaBuscar" @input="HacerBusqueda()"> -->
+
+
+        <div v-if="mensajePlazaNueva!=null" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-3 mb-3" role="alert">
+            <strong class="font-bold">Éxito:</strong>
+            <span class="block sm:inline">{{ mensajePlazaNueva }}</span>
+        </div>
 
         <!-- Main modal -->
         <div :class="{ hidden: !isVisible }">
-
             <div id="defaultModal" tabindex="-1" aria-hidden="true"  class="fixed inset-0 flex items-center justify-center z-50">
                 <div class="relative w-full max-w-2xl max-h-full">
 
                 <!-- Modal content -->
-                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                 <!-- Modal header -->
                 <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                         Agregar Plaza
                     </h3>
-                <button type="button" @click="hideElement" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
+                    <button type="button" @click="hideElement" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                     </svg>
                     <span class="sr-only">Close modal</span>
                 </button>
-
+        </div>
         <!-- Modal body -->
         <div class="p-6 space-y-6">
             <form @submit.prevent="crearPlaza"  class="w-full max-w-lg">
                     <div class="flex flex-wrap -mx-3 mb-6">
 
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
-                                Categoria de la plaza
-                            </label>
-                            <input id="categoria" v-model="NuevaPlaza.categoria"  class="appearance-none block w-full bg-gray-200 text-gray-700 border border-red-500 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="Categoria">
-                        </div>
+                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
 
-                        <div class="w-full md:w-1/2 px-3">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
-                                Horas/min a la semana de la plaza
-                            </label>
-                            <input id="horas" v-model="NuevaPlaza.horas" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"  type="number" placeholder="0">
-                        </div>
-                    </div>
-
-                    <div class="flex flex-wrap -mx-3 mb-6">
-                            <div class="w-full px-3">
-                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-password">
-                                    Estatus de la plaza
+                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                                    Categoria de la plaza
                                 </label>
-                                <input id="estatus" v-model="NuevaPlaza.estatus" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" type="text" placeholder="Estatus">
 
+                                <select class="md:w-6/7 appearance-none bg-white border-gray-300 py-3 px-4 rounded leading-tight focus:outline-none focus-border blue-500 text-gray-700 border" name="categorias" v-model="NuevaPlaza.idCategoria" required>
+
+                                <option :value="0"> Seleccione categoria </option>
+
+                                <option
+                                    v-for="(categoria,index) in ListaCategorias"
+                                    :key="categoria.id"
+                                    :value="categoria.id"
+                                >
+
+                                    {{ categoria.Clave }}-{{ categoria.Descripcion }}
+                                </option>
+                                </select>
+
+                                <p v-if="mensajeCategoria!=null" class="text-sm text-red-600 ">Por favor selecciona una categoria</p>
+
+
+                            </div>
+
+                            <div class="w-full md:w-1/3 px-3">
+
+                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                                    Unidad
+                                </label>
+
+                                <select name="aplicaciones" class="md:w-2/3 appearance-none bg-white border-gray-300 py-3 px-4 rounded leading-tight focus:outline-none focus-border blue-500 text-gray-700 border" v-model="NuevaPlaza.unidad" @change="PonerSubunidad(NuevaPlaza.unidad)" required>
+
+                                    <option :value="14">
+                                       14
+                                    </option>
+                                    <option :value="18">
+                                       18
+                                    </option>
+                                    <option :value="68">
+                                       68
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="w-full md:w-1/2 px-3">
+                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                                    Subunidad
+                                </label>
+                                <select class="md:w-1/3 appearance-none bg-white border-gray-300 py-3 px-4 rounded leading-tight focus:outline-none focus-border blue-500 text-gray-700 border" name="aplicaciones" v-model="NuevaPlaza.subunidad" required>
+                                    <option :value='1'>
+                                       01
+                                    </option>
+                                    <option :value='2'>
+                                       02
+                                    </option>
+                                    <option :value='14'>
+                                       14
+                                    </option>
+                                </select>
+                                
+                            </div>
+
+
+                            <div class="w-full md:w-1/2 px-3">
+                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                                    Diagonal
+                                </label>
+                                <input id="diagonal" v-model="NuevaPlaza.diagonal"  class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="Diagonal" required>
+                            </div>
+
+
+                            <div class="w-full md:w-1/2 px-3">
+                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                                    Horas/min a la semana de la plaza
+                                </label>
+                                <input id="horas" v-model="NuevaPlaza.horas" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"  type="number" placeholder="0" required>
+                            </div>
+
+                            <div class="w-full md:w-1/2 px-3">
+                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                                    Estatus
+                                </label>
+
+                                <input type="radio" value="A" name="Estatus" v-model="NuevaPlaza.estatus" required> Alta <br>
+                                <input type="radio" value="B" name="Estatus" v-model="NuevaPlaza.estatus" required> Baja
+                            </div>
+
+                        <!-- Modal footer -->
+                        <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                            <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar</button>
+                            <button @click="hideElement" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar</button>
                         </div>
-                    </div>
 
-                    <!-- Modal footer -->
-                    <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                        <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar</button>
-                        <button @click="hideElement" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar</button>
                     </div>
             </form>
 
@@ -74,9 +189,7 @@
         </div>
         </div>
         </div>
-    </div>
 </div>
-
 
     <!--TABLA DE PLAZAS-->
     <div class="inline-block min-w-full overflow-hidden rounded-lg shadow">
@@ -84,16 +197,25 @@
                 <!--Encabezados-->
                 <thead>
                     <tr class="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
                             ID
                         </th>
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
-                            Categoria
+                        <th class="border-b-2 border-gray-300 bg-gray-300 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                            Descripcion Categoria
                         </th>
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                            Diagonal
+                        </th>
+                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                            Unidad
+                        </th>
+                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                            Subunidad
+                        </th>
+                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
                             Horas a la semana
                         </th>
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
                             Estatus de la plaza
                         </th>
                         <th class="border-b-1 border-gray-300 bg-gray-300 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
@@ -105,30 +227,45 @@
                 <tbody>
                     <tr v-for="plaza in plazas" :key="plaza.id" class="text-gray-700">
 
-                        <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                        <td class="border-b border-gray-200 bg-white px-2 py-4 text-sm">
                             <p class="text-gray-900 whitespace-no-wrap">{{ plaza.id }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ plaza.categoria }}</p>
+                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
+                            <div v-for="(categoria,index) in ListaCategorias">
+                                <p v-if="plaza.idCategoria==categoria.id" class="text-gray-900 whitespace-no-wrap">{{ categoria.Descripcion }}</p>
+                            </div>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ plaza.diagonal }}</p>
+                        </td>
+
+                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ plaza.unidad }}</p>
+                        </td>
+
+                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
+                            <p class="text-gray-900 whitespace-no-wrap">{{ plaza.subunidad }}</p>
+                        </td>
+
+                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
                             <p class="text-gray-900 whitespace-no-wrap">{{ plaza.horas }}</p>
                         </td>
-                        
-                        <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+
+                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
                             <p class="text-gray-900 whitespace-no-wrap">{{ plaza.estatus }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
 
-                            <Link :href="route('Plazas.edit',plaza.id)" class="p-3 rounded-md bg-[#014E82] mx-2 ">
+                            <!-- v-canPermiso="'Editar Plazas'" v-show="none" -->
+                            <Link :href="route('Plazas.edit',plaza.id)"  class="p-3 rounded-md bg-[#014E82] mx-2 " >
                                 <i class="fa-solid fa-pen text-white"></i>
                             </Link>
 
-
-                            <a type="button" @click="showDelete(plaza.id)" class="p-3 rounded-md bg-[#dc2626] mx-2">
+                            <!-- v-canPermiso="'Eliminar Plazas'" v-show="none" -->
+                            <a type="button" @click="showDelete(plaza.id)" class="p-3 rounded-md bg-[#dc2626] mx-2" >
                                         <i class="fa-solid fa-trash text-white"></i>
                             </a>
 
@@ -163,10 +300,7 @@
                 </tbody>
 
             </table>
-
-
-
-        </div>
+    </div>
 
 
     </AuthenticatedLayout>
@@ -176,87 +310,224 @@
 
 
 
+<script>
 
+    import axios from 'axios';
+    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+    import { Head }   from '@inertiajs/vue3';
+    import { Link }  from '@inertiajs/vue3';
+    export default {
+
+        components: {
+            'AuthenticatedLayout': AuthenticatedLayout, // Registra el componente para su uso en la plantilla
+            'Head': Head, // Registra el componente para su uso en la plantilla
+            'Link': Link,
+        },
+
+        directives:{
+
+            'canPermiso':{
+                async mounted(el, binding) {
+                    //Obtemos la instancia del elemento
+                    const vm = binding.instance;
+                    // binding.value contiene el valor que pasaste a la directiva
+                    console.log(binding.value);
+                    //Obtenemos el permiso enviado a traves de la directiva
+                    vm.Permiso=binding.value;
+
+                    console.log("Id a enviar:",vm.$data.userID);
+                    console.log("Permiso a revisar:",vm.Permiso);
+
+                    //Datos a enviar a la ruta
+                    const userID=vm.$data.userID;
+                    const Permiso=vm.Permiso;
+
+                    const response=await axios.post('/Permisos/can',{userID,Permiso})
+                    .catch(error => {
+                        console.error('Error al obtener datos:', error);
+                    });
+                    vm.resultado=response.data.decision;
+                    console.log("Tiene permisos de",Permiso,":",vm.decision);
+
+                    if(vm.resultado==true){
+                        console.log("ver")
+                        el.style.display = 'block';  // Mostrar elemento
+                    }
+                    else{
+                        console.log("ocultar")
+                        el.style.display = 'none';  // Ocultar elemento
+                    }
+
+                }
+            }
+        },
+
+
+        components:{
+            Link
+        },
+
+        mounted() {
+            this.hideDelete(),
+            this.ObtenerCategorias()
+        },
+
+        props:{
+            plazas:Array,
+        },
+
+        data() {
+        return {
+
+            campoBusqueda:'estatus',
+
+            //Info para poder obtener los permisos del usuario
+            items: [],
+            userID:this.$page.props.auth.user.id, // Obtiene el ID del usuario
+            ListaRoles:[],
+            Rol:"",
+            Permiso:"",
+            decision:"",
+            resultadosBusqueda:"",
+
+        infoEditar: {
+            categoria:'',
+            horas:0,
+            estatus:''
+        },
+
+        ListaCategorias:[],
+
+        isVisible: false,
+        isvisibleDelete:false,
+
+        idBorrarSeleccionado:0,
+
+        PlazaBuscar:'',
+        //Mensajes
+        mensajeCategoria:null,
+        mensajePlazaNueva:null,
+
+        NuevaPlaza:{
+            idCategoria:0,
+            horas:0,
+            estatus:'',
+            diagonal:'',
+            unidad:'',
+            subunidad:'',
+        }
+
+        }
+    },
+
+    methods: {
+
+        HacerBusqueda(){
+
+            this.mensajePlazaNueva=null;
+
+            console.log(this.PlazaBuscar);
+
+            axios.get('Plazas.buscar',{   params:{ plaza:this.PlazaBuscar,campo:this.campoBusqueda}   })
+            .then(response => {
+
+                this.resultadosBusqueda=response.data;
+                console.log('RESULTADOS:');
+                console.log(this.$page.props.plazas);
+
+                this.$page.props.plazas=this.resultadosBusqueda;
+            })
+            .catch(error => {
+                console.error('Error al hacer la busqueda:', error);
+            });
+        },
+
+        async canPermiso(Permiso){
+            const userID=this.userID
+            const response=await axios.post('/Permisos/can',{userID,Permiso})
+            .catch(error => {
+                console.error('Error al obtener datos:', error);
+                return false;
+            });
+            this.decision=response.data.decision;
+            console.log("Tiene permisos de",Permiso,":",this.decision);
+            return this.decision
+        },
+
+        async crearPlaza(){
+
+            if(this.NuevaPlaza.idCategoria==0){
+                this.mensajeCategoria="Por favor ingresa una categoria";
+            }
+            else{
+                await this.$inertia.post(route('Plazas.store'),this.NuevaPlaza)
+                this.hideElement()
+                this.mensajePlazaNueva='Plaza registrada correctamente'
+            }
+
+
+        },
+
+        showElement() {
+        this.isVisible = true;
+        },
+        hideElement() {
+        this.isVisible = false;
+        this.mensajeCategoria=null;
+        },
+
+        showDelete(id){
+
+            this.idBorrarSeleccionado=id;
+
+            this.isvisibleDelete = true;
+        },
+        hideDelete(){
+            this.isvisibleDelete = false;
+        },
+
+        PonerSubunidad(unidad){
+            console.log(unidad);
+
+            if(unidad=='14'){
+                this.NuevaPlaza.subunidad='1';
+            }
+            else if(unidad=='18'){
+                this.NuevaPlaza.subunidad='2';
+            }
+            else if(unidad=='68'){
+                this.NuevaPlaza.subunidad='14';
+            }
+        },
+
+
+        async ObtenerCategorias(){
+
+
+        await axios.get( route("categorias.index") ) // Ruta de la API en Laravel
+        .then(response => {
+
+            console.log("Lista categorias:",response.data.categorias);
+
+            this.ListaCategorias=response.data.categorias;
+
+        })
+        .catch(error => {
+            console.error('Error al obtener lista de categorias:', error);
+        });
+
+
+        },
+
+
+    }
+};
+</script>
 
 <script setup>
 
-    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import Pagination from '@/Components/Pagination.vue'
-    import { Head } from '@inertiajs/vue3';
-    import { Link } from '@inertiajs/vue3'
+    //import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+    //import { Head } from '@inertiajs/vue3';
+    //import { Link } from '@inertiajs/vue3';
 
-
-
-
-</script>
-
-<script>
-import axios from 'axios';
-
-export default {
-
-    components:{
-        Link
-    },
-
-    mounted() {
-        this.hideDelete()
-    },
-
-    props:{
-         plazas:Array
-    },
-
-    data() {
-    return {
-
-       infoEditar: {
-          categoria:'',
-          horas:0,
-          estatus:''
-      },
-
-
-      isVisible: false,
-      isvisibleDelete:false,
-
-      idBorrarSeleccionado:0,
-
-
-      NuevaPlaza:{
-          categoria:'',
-          horas:0,
-          estatus:''
-      }
-
-    }
-  },
-
-  methods: {
-
-    async crearPlaza(){
-        await this.$inertia.post(route('Plazas.store'),this.NuevaPlaza)
-        this.hideElement()
-
-    },
-
-    showElement() {
-      this.isVisible = true;
-    },
-    hideElement() {
-      this.isVisible = false;
-    },
-
-    showDelete(id){
-
-        this.idBorrarSeleccionado=id;
-
-        this.isvisibleDelete = true;
-    },
-    hideDelete(){
-        this.isvisibleDelete = false;
-    },
-
-  }
-};
 </script>
