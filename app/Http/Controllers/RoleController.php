@@ -28,6 +28,45 @@ class RoleController extends Controller
     }
 
 
+    public function verDashboard(){
+
+        $roleName = 'Administrador'; // Reemplaza con el nombre del rol que deseas contar.
+        $role = Role::where('name', $roleName)->first();
+        if ($role) {
+            $numAdmin = $role->users()->count();
+
+        } else {
+            $numAdmin=0;
+        }
+
+
+        $roleName = 'Usuario RH'; // Reemplaza con el nombre del rol que deseas contar.
+        $role = Role::where('name', $roleName)->first();
+        if ($role) {
+            $numRH = $role->users()->count();
+
+        } else {
+            $numRH=0;
+        }
+
+        $roleName = 'Profesor'; // Reemplaza con el nombre del rol que deseas contar.
+        $role = Role::where('name', $roleName)->first();
+        if ($role) {
+            $numProfes = $role->users()->count();
+
+        } else {
+            $numProfes=0;
+        }
+
+        $infoGrafica[0]=$numAdmin;
+        $infoGrafica[1]=$numRH;
+        $infoGrafica[2]=$numProfes;
+
+
+
+        return Inertia::render('Dashboard',['InfoGrafica'=>$infoGrafica]);
+    }
+
     public function store(Request $request){
         $Role=new Role();
         $Role->name=$request->name;

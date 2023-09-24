@@ -147,10 +147,6 @@
         import { Head, useForm } from '@inertiajs/vue3';
         import { Link } from '@inertiajs/vue3'
 
-        //  const props = defineProps({
-        //     aula: Array
-        //  });
-
         const props=defineProps({
             plaza:{
                 type:Array,

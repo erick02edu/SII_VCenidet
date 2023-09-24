@@ -32,19 +32,19 @@
                 <thead>
                     <tr class="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
 
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             id Aplicacion
                         </th>
 
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Descripcion de la aplicacion
                         </th>
 
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Periodo
                         </th>
 
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Opciones
                         </th>
                     </tr>
@@ -53,18 +53,18 @@
                 <tbody>
                     <tr v-for="(aplicacion,index) in aplicaciones" :key="aplicacion.id" class="text-gray-700">
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-4 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ aplicacion.id }}</p>
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ aplicacion.id }}</p>
 
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-4 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ aplicacion.descripcion }}</p>
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ aplicacion.descripcion }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
 
-                            <select name="aplicaciones" v-model="ListaIDPeriodos[index]">
+                            <select name="aplicaciones" v-model="ListaIDPeriodos[index]" class="dark:bg-slate-700 dark:text-slate-200 rounded-sm ">
                                 <option
                                     v-for="periodo in periodos"
                                     :key="periodo.id"
@@ -77,7 +77,7 @@
                             </select>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
                             <a type="button" @click="showDelete(aplicacion.id,index)" class="p-3 rounded-md bg-[#dc2626] mx-2">
                                     <i class="fa-solid fa-trash text-white"></i>
                             </a>
@@ -239,7 +239,7 @@ export default {
         });
 
         this.mensajeActualizar=null;
-        
+
         this.mensajeActualizar="Se ha actualizado el periodo de las aplicaciones";
         this.mensajeEliminar=null;
     }

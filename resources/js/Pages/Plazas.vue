@@ -8,7 +8,7 @@
                 Lista de Plazas
         </template>
 
-        <h3 class="text-m  text-gray-900 dark:text-white py-1 ml-1">
+        <h3 class="text-m text-gray-900 dark:text-white py-1 ml-1">
                 Buscar por:
 
                 <input type="radio" value="estatus" name="Campos" v-model="campoBusqueda" required > estatus
@@ -20,9 +20,9 @@
 
         <div class="inline-flex w-full" >
 
-            <div class="relative text-gray-700 focus-within:text-gray-700">
+            <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200">
                 <input
-                    class=" border-gray-300 bg-white h-10 px-4 pr-16 rounded-lg text-sm focus:outline-none"
+                class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
                     type="text"
                     placeholder="Buscar..."
                     v-model="PlazaBuscar"
@@ -39,19 +39,11 @@
         </div>
 
 
+            <!-- Capa oscura -->
+    <div :class="{ hidden: !isVisible }" class="fixed inset-0 bg-black opacity-50">
+    </div>
+
     <div id="modalContainer">
-
-        <span>
-            <!-- <button :type="type" @click="showElement" class="rounded-md bg-[#014E82] px-5 py-3 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
-            v-canPermiso="'Agregar Plazas'" v-show="none">
-                Nuevo
-            </button> -->
-
-
-        </span>
-
-        <!-- <input type="text" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-        placeholder="Buscar Plaza" v-model="PlazaBuscar" @input="HacerBusqueda()"> -->
 
 
         <div v-if="mensajePlazaNueva!=null" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-3 mb-3" role="alert">
@@ -65,7 +57,7 @@
                 <div class="relative w-full max-w-2xl max-h-full">
 
                 <!-- Modal content -->
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
                 <!-- Modal header -->
                 <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -85,7 +77,7 @@
 
                             <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
 
-                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
                                     Categoria de la plaza
                                 </label>
 
@@ -110,7 +102,7 @@
 
                             <div class="w-full md:w-1/3 px-3">
 
-                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2"  for="grid-last-name">
                                     Unidad
                                 </label>
 
@@ -132,7 +124,7 @@
 
 
                             <div class="w-full md:w-1/2 px-3">
-                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2"  for="grid-last-name">
                                     Subunidad
                                 </label>
                                 <select class="md:w-1/3 appearance-none bg-white border-gray-300 py-3 px-4 rounded leading-tight focus:outline-none focus-border blue-500 text-gray-700 border" name="aplicaciones" v-model="NuevaPlaza.subunidad" required>
@@ -146,12 +138,12 @@
                                        14
                                     </option>
                                 </select>
-                                
+
                             </div>
 
 
                             <div class="w-full md:w-1/2 px-3">
-                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2"  for="grid-last-name">
                                     Diagonal
                                 </label>
                                 <input id="diagonal" v-model="NuevaPlaza.diagonal"  class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="Diagonal" required>
@@ -159,19 +151,19 @@
 
 
                             <div class="w-full md:w-1/2 px-3">
-                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2"  for="grid-last-name">
                                     Horas/min a la semana de la plaza
                                 </label>
                                 <input id="horas" v-model="NuevaPlaza.horas" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"  type="number" placeholder="0" required>
                             </div>
 
                             <div class="w-full md:w-1/2 px-3">
-                                <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-last-name">
+                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2"  for="grid-last-name">
                                     Estatus
                                 </label>
 
-                                <input type="radio" value="A" name="Estatus" v-model="NuevaPlaza.estatus" required> Alta <br>
-                                <input type="radio" value="B" name="Estatus" v-model="NuevaPlaza.estatus" required> Baja
+                                <input type="radio" value="A" name="Estatus" v-model="NuevaPlaza.estatus"  required> <span class="dark:text-gray-200">Alta</span>  <br>
+                                <input type="radio" value="B" name="Estatus" v-model="NuevaPlaza.estatus" required>  <span class="dark:text-gray-200">Baja</span>
                             </div>
 
                         <!-- Modal footer -->
@@ -196,29 +188,29 @@
             <table class="w-full whitespace-no-wrap">
                 <!--Encabezados-->
                 <thead>
-                    <tr class="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                    <tr class="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500" >
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             ID
                         </th>
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Descripcion Categoria
                         </th>
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Diagonal
                         </th>
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Unidad
                         </th>
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Subunidad
                         </th>
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Horas a la semana
                         </th>
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Estatus de la plaza
                         </th>
-                        <th class="border-b-1 border-gray-300 bg-gray-300 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Opciones
                         </th>
                     </tr>
@@ -227,37 +219,37 @@
                 <tbody>
                     <tr v-for="plaza in plazas" :key="plaza.id" class="text-gray-700">
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-4 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ plaza.id }}</p>
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ plaza.id }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
                             <div v-for="(categoria,index) in ListaCategorias">
-                                <p v-if="plaza.idCategoria==categoria.id" class="text-gray-900 whitespace-no-wrap">{{ categoria.Descripcion }}</p>
+                                <p v-if="plaza.idCategoria==categoria.id" class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ categoria.Descripcion }}</p>
                             </div>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ plaza.diagonal }}</p>
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ plaza.diagonal }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ plaza.unidad }}</p>
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ plaza.unidad }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ plaza.subunidad }}</p>
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ plaza.subunidad }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ plaza.horas }}</p>
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ plaza.horas }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ plaza.estatus }}</p>
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ plaza.estatus }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
 
                             <!-- v-canPermiso="'Editar Plazas'" v-show="none" -->
                             <Link :href="route('Plazas.edit',plaza.id)"  class="p-3 rounded-md bg-[#014E82] mx-2 " >
@@ -268,6 +260,10 @@
                             <a type="button" @click="showDelete(plaza.id)" class="p-3 rounded-md bg-[#dc2626] mx-2" >
                                         <i class="fa-solid fa-trash text-white"></i>
                             </a>
+
+                            <!-- Capa oscura -->
+                            <div :class="{ hidden: !isvisibleDelete }" class="fixed inset-0 bg-black opacity-50">
+                            </div>
 
                             <div>
                                         <div :class="{ hidden: !isvisibleDelete }" v-bind:id="`Modal${plaza.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">

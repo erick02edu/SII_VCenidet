@@ -6,16 +6,16 @@
             Lista de Roles
     </template>
 
-        <h3 class="text-m  text-gray-900 dark:text-white py-1 ml-1">
+        <h3 class="text-m text-gray-900 dark:text-white py-1 ml-1">
                 Buscar por:
                 <input type="radio" value="name" name="Campos" v-model="campoBusqueda" required > Nombre
         </h3>
 
         <div class="inline-flex w-full" >
 
-            <div class="relative text-gray-700 focus-within:text-gray-700">
+            <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200">
                 <input
-                    class=" border-gray-300 bg-white h-10 px-4 pr-16 rounded-lg text-sm focus:outline-none"
+                class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
                     type="text"
                     placeholder="Buscar..."
                     v-model="RolBuscar"
@@ -32,12 +32,12 @@
 
         </div>
 
+    <!-- Capa oscura -->
+    <div :class="{ hidden: !isVisible }" class="fixed inset-0 bg-black opacity-50">
+    </div>
+
 
     <div id="modalContainer">
-        <button :type="type" @click="showElement" class="rounded-md bg-[#014E82] px-5 py-3 mb-4 text-center text-sm text-white hover:bg-[#0284c7] ">
-            Nuevo
-        </button>
-
         <!-- Main modal -->
         <div :class="{ hidden: !isVisible }">
 
@@ -45,7 +45,7 @@
                 <div class="relative w-full max-w-2xl max-h-full">
 
                 <!-- Modal content -->
-                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
                 <!-- Modal header -->
                 <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
@@ -64,17 +64,17 @@
                     <div class="flex flex-wrap -mx-3 mb-6">
 
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2" for="grid-first-name">
+                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
                                 Nombre del Rol
                             </label>
-                            <input id="Nombre" v-model="NuevoRol.name"  class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="nombre" required>
+                            <input id="Nombre" v-model="NuevoRol.name"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="nombre" required>
                         </div>
 
 
                         <br>
-                        <strong class="pl-8 pt-10">Marque los permisos que tendra este rol</strong>
+                        <strong class="pl-8 pt-10 dark:text-gray-200">Marque los permisos que tendra este rol</strong>
                         <br>
-                        <div class="pl-8">
+                        <div class="pl-8 dark:text-gray-200">
                             <label v-for="(permiso, index) in Permisos" :key="index">
                                 <input type="checkbox" v-model="NuevoRol.PermisosSeleccionados" :value="permiso.id" />
 
@@ -106,13 +106,13 @@
                 <!--Encabezados-->
                 <thead>
                     <tr class="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200" >
                             ID
                         </th>
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Nombre del Rol
                         </th>
-                        <th class="border-b-1 border-gray-300 bg-gray-300 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Opciones
                         </th>
                     </tr>
@@ -121,16 +121,16 @@
                 <tbody>
                     <tr v-for="rol in roles" :key="roles.id" class="text-gray-700">
 
-                        <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ rol.id }}</p>
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ rol.id }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ rol.name }}</p>
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ rol.name }}</p>
                         </td>
 
 
-                        <td class="border-b border-gray-200 bg-white px-5 py-5 text-sm">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
 
                             <Link :href="route('Roles.edit',rol.id)" class="p-3 rounded-md bg-[#014E82] mx-2 ">
                                 <i class="fa-solid fa-pen text-white"></i>
@@ -144,6 +144,12 @@
                             <Link :href="route('Roles.editPermisos',rol.id)" class="p-3 rounded-md bg-[#FFD200]  mx-2 ">
                                 <strong>Ver permisos <span>  <i class="fa-solid fa-user-plus pl-1"></i> </span> </strong>
                             </Link>
+
+
+
+                            <!-- Capa oscura -->
+                            <div :class="{ hidden: !isvisibleDelete }" class="fixed inset-0 bg-black opacity-50">
+                            </div>
 
                             <div>
                                         <div :class="{ hidden: !isvisibleDelete }" v-bind:id="`Modal${rol.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">

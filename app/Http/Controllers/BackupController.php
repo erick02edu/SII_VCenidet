@@ -1,10 +1,15 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\User;
 use Spatie\Backup\BackupDestination\Backup;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Artisan;
 use Exception;
+
+
+
 
 class BackupController extends Controller
 {
@@ -38,6 +43,14 @@ class BackupController extends Controller
         }
 
         return response()->json($output);
+    }
+
+
+    public function Prueba(){
+
+        $User=User::all();
+
+        return inertia::render('Prueba',['usuarios'=> $User]);
     }
 }
 

@@ -1,4 +1,5 @@
 <script setup>
+
 import { Head, Link, useForm } from '@inertiajs/vue3';
 import AuthenticationCard from '@/Components/AuthenticationCard.vue';
 import AuthenticationCardLogo from '@/Components/AuthenticationCardLogo.vue';
@@ -27,6 +28,7 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
+
 </script>
 
 <template>
@@ -60,16 +62,21 @@ const submit = () => {
                 </div>
 
                 <div class="mt-4">
-                    <InputLabel for="password" value="Password" />
-                    <TextInput
-                        id="password"
-                        v-model="form.password"
-                        type="password"
-                        class="mt-1 block w-full"
-                        required
-                        autocomplete="current-password"
-                    />
-                    <InputError class="mt-2" :message="form.errors.password" />
+                    <span>
+                        <InputLabel for="password" value="Password" />
+                        <TextInput
+                            id="password"
+                            v-model="form.password"
+                            :type="inputType"
+                            class="mt-1 w-1/2"
+                            required
+                            autocomplete="current-password"
+                        />
+                        <InputError class="mt-5 mb-5" :message="form.errors.password" />
+
+                         <Checkbox class="ml-4" v-model:checked="bandera" @change="CambiarInput"/>
+                        <span class="text-sm ml-1">Mostrar contraseña </span>
+                    </span>
                 </div>
 
                 <div class="block mt-4">
@@ -98,10 +105,39 @@ const submit = () => {
 
         </div>
 
-
     </div>
 
-
-
-
 </template>
+
+
+<script>
+
+    export default {
+
+        mounted() {
+            this.inputType='password',
+            this.bandera=false
+        },
+
+        methods:{
+            CambiarInput(){
+                console.log(this.bandera)
+                if(this.bandera==true){
+                    this.inputType='text'
+                }
+                else{
+                    this.inputType='password'
+                }
+            }
+        },
+
+        data() {
+            return {
+
+                inputType:'',
+                bandera:'',
+            }
+        },
+    }
+
+</script>

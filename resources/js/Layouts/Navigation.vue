@@ -2,30 +2,23 @@
 
 
     <div :class="$page.props.showingMobileMenu ? 'block' : 'hidden'" @click="$page.props.showingMobileMenu = false"
-         class="fixed inset-0 z-20 bg-[#014E82] transition-opacity lg:hidden"></div>
+         class="fixed inset-0 z-20 bg-[#014e8200] transition-opacity lg:hidden"></div>
 
     <div :class="$page.props.showingMobileMenu ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
-         class="overflow-y-auto fixed inset-y-0 left-0 z-30 w-64 bg-[#014E82] transition duration-300 transform lg:translate-x-0 lg:static lg:inset-0">
+         class="overflow-y-auto fixed inset-y-0 left-0 z-30 w-68 bg-[#014E82] dark:bg-slate-900 transition duration-300 transform lg:translate-x-0 lg:static lg:inset-0">
 
-         <div class="flex justify-center items-center mt-8">
+         <div class="flex ml-8 items-center mt-8 mb-6">
             <div class="flex items-center">
-                <svg class="w-12 h-12" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path
-                        d="M364.61 390.213C304.625 450.196 207.37 450.196 147.386 390.213C117.394 360.22 102.398 320.911 102.398 281.6C102.398 242.291 117.394 202.981 147.386 172.989C147.386 230.4 153.6 281.6 230.4 307.2C230.4 256 256 102.4 294.4 76.7999C320 128 334.618 142.997 364.608 172.989C394.601 202.981 409.597 242.291 409.597 281.6C409.597 320.911 394.601 360.22 364.61 390.213Z"
-                        fill="#014E82" stroke="#014E82" stroke-width="2" stroke-linecap="round"
-                        stroke-linejoin="round"/>
-                    <path
-                        d="M201.694 387.105C231.686 417.098 280.312 417.098 310.305 387.105C325.301 372.109 332.8 352.456 332.8 332.8C332.8 313.144 325.301 293.491 310.305 278.495C295.309 263.498 288 256 275.2 230.4C256 243.2 243.201 320 243.201 345.6C201.694 345.6 179.2 332.8 179.2 332.8C179.2 352.456 186.698 372.109 201.694 387.105Z"
-                        fill="white"/>
-                </svg>
 
-                <span class="mx-2 text-2xl font-semibold text-white">Dashboard</span>
+
+                    <img src="/img/LogoTecNacional3.png" alt="Descripción de la imagen" class="w-30 h-20  ">
+
 
             </div>
         </div>
 
 
-        <nav class="mt-10" x-data="{ isMultiLevelMenuOpen: false }" >
+        <nav class="mt-4" x-data="{ isMultiLevelMenuOpen: false }" >
             <nav-link :href="route('dashboard')" :active="route().current('dashboard')">
                 <template #icon>
                     <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -41,14 +34,21 @@
             </nav-link>
 
 
-            <nav-link :href="route('FechaReinscripcion.index')" :active="route().current('Plazas.Index')" v-canPermiso="'Ver Roles'" v-show="none" >
+            <nav-link :href="route('Prueba.index')" target="_blank" :active="route().current('Plazas.Index')"  >
+                <template #icon>
+                    <i class="fa-solid fa-briefcase"></i>
+                </template>
+                    Descargar PDF
+            </nav-link>
+
+            <nav-link :href="route('FechaReinscripcion.index')" :active="route().current('Plazas.Index')"  >
                 <template #icon>
                     <i class="fa-solid fa-briefcase"></i>
                 </template>
                     Horario reinscripcion
             </nav-link>
 
-            <nav-link :href="route('Aplicaciones.index')" :active="route().current('Aplicaciones.index')" v-canPermiso="'Ver Roles'" v-show="none" >
+            <nav-link :href="route('Aplicaciones.index')" :active="route().current('Aplicaciones.index')"  >
                 <template #icon>
                     <i class="fa-solid fa-calendar-days"></i>
                 </template>
@@ -72,7 +72,7 @@
 
             </nav-link>
 
-            <nav-link :href="route('Roles.index')" :active="route().current('Roles.Index')" v-canPermiso="'Ver Roles'" v-show="none" >
+            <nav-link :href="route('Roles.index')" :active="route().current('Roles.Index')"  >
 
                 <template #icon>
                     <i class="fa-solid fa-users"></i>
@@ -82,7 +82,15 @@
             </nav-link>
 
 
-            <nav-link :href="route('Plazas.index')" :active="route().current('Plazas.index')" v-canPermiso="'Ver Plazas'" v-show="none" >
+            <nav-link :href="route('Personal.index')" :active="route().current('Personal.index')"  >
+                <template #icon>
+                    <i class="fa-solid fa-person"></i>
+                </template>
+                Personal
+            </nav-link>
+
+
+            <nav-link :href="route('Plazas.index')" :active="route().current('Plazas.index')" >
                 <template #icon>
                     <i class="fa-solid fa-briefcase"></i>
                 </template>
@@ -90,14 +98,33 @@
             </nav-link>
 
 
+            <nav-link :href="route('Plazas.index')" :active="route().current('Plazas.index')"  >
+                <template #icon>
+                    <i class="fa-regular fa-calendar"></i>
+                </template>
+                Consultar horario
+            </nav-link>
+
+
+            <nav-link :href="route('Departamentos.index')" :active="route().current('Personal.index')"  >
+                <template #icon>
+                    <i class="fa-solid fa-person"></i>
+                </template>
+                Departamentos
+            </nav-link>
+
+
+
             <nav-link :href="route('backup.index')" :active="route().current('backup.index')" >
                 <template #icon>
-                    <i class="fa-solid fa-briefcase"></i>
+                    <i class="fa-solid fa-database"></i>
                 </template>
                 Respaldar Base
             </nav-link>
 
         </nav>
+
+        <br>
     </div>
 
 
@@ -237,3 +264,25 @@ export default {
 
 }
 </script>
+
+
+
+<style scoped>
+.max-h-64 {
+  /* Establece una altura máxima */
+  max-height: 16rem;
+}
+
+.overflow-y-auto::-webkit-scrollbar {
+  width: 3px; /* Ancho de la barra de desplazamiento */
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background-color:#757c81a5; /* Color del pulgar de la barra de desplazamiento */
+  border-radius: 2px; /* Bordes redondeados del pulgar */
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background-color: #b8bdc1; /* Color del pulgar de la barra de desplazamiento al pasar el mouse */
+}
+</style>

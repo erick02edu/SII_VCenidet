@@ -66,6 +66,12 @@ class PlazaController extends Controller
         //
     }
 
+    public function ObtenerPlazas()
+    {
+        $plazas=Plaza::all();
+        return $plazas;
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

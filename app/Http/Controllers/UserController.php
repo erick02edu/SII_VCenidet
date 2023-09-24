@@ -57,6 +57,7 @@ class UserController extends Controller
         return redirect::route('Users.index');
     }
 
+    //Funcion para eliminar un usuario
     public function destroy(String $id)
     {
         $User = User::find($id);
@@ -64,7 +65,7 @@ class UserController extends Controller
         return Redirect::route('Users.index');
     }
 
-
+    //Funcion para eliminar un usuario
     public function buscarUsuario(Request $request){
         $Usuario=$request->input('usuario');
 
@@ -73,6 +74,11 @@ class UserController extends Controller
         $result=User::where($campo, 'LIKE', '%'.$Usuario.'%')->get();
 
         return $result;
+    }
+
+    public function ObtenerUsuarios(){
+        $Users=User::all();
+        return $Users;
     }
 
 }

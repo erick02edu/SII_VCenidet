@@ -15,7 +15,10 @@ use App\Http\Controllers\PeriodoController;
 use App\Http\Controllers\AplicacionPeriodoController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\PersonalController;
+use App\Http\Controllers\DepartamentoController;
 use App\Models\categoria;
+use App\Models\Departamentos;
 use App\Models\User;
 use Spatie\Permission\Contracts\Permission;
 
@@ -46,10 +49,15 @@ Route::middleware([
      config('jetstream.auth_session'),
      'verified',
  ])->group(function () {
-     Route::get('/dashboard', function () {
-         return Inertia::render('Dashboard');
-     })->name('dashboard');
 
+    //  Route::get('/dashboard', function () {
+    //      return Inertia::render('Dashboard');
+    //  })->name('dashboard');
+
+    //Rutas para crud Plazas
+    Route::resource('Plazas',PlazaController::class);
+
+    Route::get('/dashboard',[RoleController::class,'verDashboard'])->name('dashboard');
 
  });
 
@@ -58,9 +66,9 @@ Route::middleware([
  ->middleware('auth:sanctum','verified');
 
 
- //Rutas para crud Plazas
- Route::resource('Plazas',PlazaController::class)
- ->middleware('auth:sanctum','verified');
+//  //Rutas para crud Plazas
+//  Route::resource('Plazas',PlazaController::class)
+//  ->middleware('auth:sanctum','verified');
 
 Route::get('Plazas.buscar',[PlazaController::class,'buscarPlaza'])
 ->middleware('auth:sanctum','verified');
@@ -77,6 +85,16 @@ Route::get('Plazas.buscar',[PlazaController::class,'buscarPlaza'])
  ->middleware('auth:sanctum','verified');
 
  Route::get('Roles.buscar',[RoleController::class,'buscarRol'])
+->middleware('auth:sanctum','verified');
+
+//Rutas para crud de personal
+Route::resource('Personal',PersonalController::class)
+->middleware('auth:sanctum','verified');
+
+ //Rutas para crud departamentos
+ Route::resource('Departamentos',DepartamentoController::class)
+ ->middleware('auth:sanctum','verified');
+ Route::get('Departamentos.buscar',[DepartamentoController::class,'buscarDepartamento'])
 ->middleware('auth:sanctum','verified');
 
  //Rutas para definir Role a Usuario
@@ -129,3 +147,7 @@ Route::resource('categorias',CategoriaController::class)
  ->middleware('auth:sanctum','verified')->only(['index']);
 
  Route::get('GenerarBackup',[BackupController::class,'Generar'])->name('GenerarBackup')->middleware('auth:sanctum','verified');
+
+
+
+ Route::get('Preuba.index',[BackupController::class,'Prueba'])->name('Prueba.index')->middleware('auth:sanctum','verified');

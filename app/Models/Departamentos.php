@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class historial_Alumno extends Model
+class Departamentos extends Model
 {
     use HasFactory;
- 
-    protected $fillable=["no_control","materia","periodo","calificacion"];
+    public $timestamps = false;
+    protected $fillable=['Nombre','Descripcion','idEncargado'];
+    
 }
