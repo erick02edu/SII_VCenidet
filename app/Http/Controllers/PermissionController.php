@@ -11,60 +11,17 @@ use App\Models\User;
 
 class PermissionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    public function __construct()
+    {
+        $this->middleware('can:Asignar Permisos a los roles')->only('EditPermisos','asignarPermisos');
+
+    }
+
+
     public function index()
     {
-        //
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 
     public function GetPermisos(){
@@ -85,9 +42,21 @@ class PermissionController extends Controller
 
     //Funcion para ir al formulario para editar los permisos de un rol
     public function EditPermisos(String $id){
+
         $Role = Role::find($id);
+
+        $permissions = $Role->permissions;
+        $permissionsArray = $permissions->pluck('name')->toArray();
+        $permissionsID = $permissions->pluck('id')->toArray();
+
+        $ListaPermisos=Permission::all();
+
+
         return Inertia::render ('AsignarPermisos',[
             'rol'=>$Role,
+            'permisosAsignados'=>$permissionsArray,
+            'permisosIDAsignados'=>$permissionsID,
+            'ListaPermisosTotal'=>$ListaPermisos
         ]);
     }
 

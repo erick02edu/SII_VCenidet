@@ -13,9 +13,9 @@
 
         <div class="inline-flex w-full" >
 
-            <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200">
+            <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200 pb-3">
                 <input
-                class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
+                class=" border-gray-100  dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
                     type="text"
                     placeholder="Buscar..."
                     v-model="RolBuscar"
@@ -25,7 +25,7 @@
 
             <button :type="type" @click="showElement"
             class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
-            >
+            v-if="$page.props.user.permissions.includes('Crear roles')">
                 Nuevo
             </button>
 
@@ -41,8 +41,8 @@
         <!-- Main modal -->
         <div :class="{ hidden: !isVisible }">
 
-            <div id="defaultModal" tabindex="-1" aria-hidden="true"  class="fixed inset-0 flex items-center justify-center z-50">
-                <div class="relative w-full max-w-2xl max-h-full">
+            <div id="defaultModal" tabindex="-1" aria-hidden="true"  class="fixed inset-0 flex items-center justify-center ">
+                <div class="absolute max-w-2xl max-h-screen overflow-auto">
 
                 <!-- Modal content -->
                     <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
@@ -59,9 +59,12 @@
                 </button>
         </div>
         <!-- Modal body -->
-        <div class="p-6 space-y-6">
-            <form @submit.prevent="crearRol" class="w-full max-w-lg">
-                    <div class="flex flex-wrap -mx-3 mb-6">
+        <div class="p-6 space-y-6 ">
+            <form @submit.prevent="crearRol" class="w-full max-w-lg ">
+
+                <!-- <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Crear Rol</button> -->
+
+                    <div class="flex flex-wrap -mx-3 mb-6 ">
 
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
@@ -72,9 +75,9 @@
 
 
                         <br>
-                        <strong class="pl-8 pt-10 dark:text-gray-200">Marque los permisos que tendra este rol</strong>
+                        <strong class="pl-4 pt-2 dark:text-gray-200">Marque los permisos que tendra este rol</strong>
                         <br>
-                        <div class="pl-8 dark:text-gray-200">
+                        <div class="pl-4 dark:text-gray-200">
                             <label v-for="(permiso, index) in Permisos" :key="index">
                                 <input type="checkbox" v-model="NuevoRol.PermisosSeleccionados" :value="permiso.id" />
 
@@ -112,7 +115,9 @@
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Nombre del Rol
                         </th>
-                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200"
+                        v-if="$page.props.user.permissions.includes('Editar información de los roles')
+                        || $page.props.user.permissions.includes('Eliminar roles') || $page.props.user.permissions.includes('Asignar Permisos a los roles')">
                             Opciones
                         </th>
                     </tr>
@@ -132,23 +137,26 @@
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
 
-                            <Link :href="route('Roles.edit',rol.id)" class="p-3 rounded-md bg-[#014E82] mx-2 ">
+                            <Link :href="route('Roles.edit',rol.id)" class="p-3 rounded-md bg-[#014E82] mx-2 "
+                            v-if="$page.props.user.permissions.includes('Editar información de los roles')">
                                 <i class="fa-solid fa-pen text-white"></i>
                             </Link>
 
 
-                            <a type="button" @click="showDelete(rol.id,rol.name)" class="p-3 rounded-md bg-[#dc2626] mx-2">
+                            <a type="button" @click="showDelete(rol.id,rol.name)" class="p-3 rounded-md bg-[#dc2626] mx-2"
+                            v-if="$page.props.user.permissions.includes('Eliminar roles')">
                                         <i class="fa-solid fa-trash text-white"></i>
                             </a>
 
-                            <Link :href="route('Roles.editPermisos',rol.id)" class="p-3 rounded-md bg-[#FFD200]  mx-2 ">
+                            <Link :href="route('Roles.editPermisos',rol.id)" class="p-3 rounded-md bg-[#FFD200]  mx-2 "
+                            v-if="$page.props.user.permissions.includes('Asignar Permisos a los roles')">
                                 <strong>Ver permisos <span>  <i class="fa-solid fa-user-plus pl-1"></i> </span> </strong>
                             </Link>
 
 
 
                             <!-- Capa oscura -->
-                            <div :class="{ hidden: !isvisibleDelete }" class="fixed inset-0 bg-black opacity-50">
+                            <div :class="{ hidden: !isvisibleDelete }" class="fixed inset-0 bg-black opacity-25">
                             </div>
 
                             <div>

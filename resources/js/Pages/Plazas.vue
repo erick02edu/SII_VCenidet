@@ -8,6 +8,7 @@
                 Lista de Plazas
         </template>
 
+
         <h3 class="text-m text-gray-900 dark:text-white py-1 ml-1">
                 Buscar por:
 
@@ -20,9 +21,9 @@
 
         <div class="inline-flex w-full" >
 
-            <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200">
+            <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200 pb-4">
                 <input
-                class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
+                class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 dark:text-gray-200 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none "
                     type="text"
                     placeholder="Buscar..."
                     v-model="PlazaBuscar"
@@ -30,11 +31,12 @@
                 />
             </div>
 
-            <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
-            v-canPermiso="'Agregar Plazas'" v-show="none">
-                Nuevo
-            </button>
-
+            <div v-if="$page.props.user.permissions.includes('Agregar Plazas')" class="w-full">
+                <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
+                >
+                    Nuevo
+                </button>
+            </div>
 
         </div>
 
@@ -81,12 +83,12 @@
                                     Categoria de la plaza
                                 </label>
 
-                                <select class="md:w-6/7 appearance-none bg-white border-gray-300 py-3 px-4 rounded leading-tight focus:outline-none focus-border blue-500 text-gray-700 border" name="categorias" v-model="NuevaPlaza.idCategoria" required>
+                                <select class="md:w-6/7 appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" name="categorias" v-model="NuevaPlaza.idCategoria" required>
 
                                 <option :value="0"> Seleccione categoria </option>
 
                                 <option
-                                    v-for="(categoria,index) in ListaCategorias"
+                                    v-for="(categoria,index) in categorias"
                                     :key="categoria.id"
                                     :value="categoria.id"
                                 >
@@ -106,7 +108,7 @@
                                     Unidad
                                 </label>
 
-                                <select name="aplicaciones" class="md:w-2/3 appearance-none bg-white border-gray-300 py-3 px-4 rounded leading-tight focus:outline-none focus-border blue-500 text-gray-700 border" v-model="NuevaPlaza.unidad" @change="PonerSubunidad(NuevaPlaza.unidad)" required>
+                                <select name="aplicaciones" class="md:w-2/3 appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" v-model="NuevaPlaza.unidad" @change="PonerSubunidad(NuevaPlaza.unidad)" required>
 
                                     <option :value="14">
                                        14
@@ -127,7 +129,7 @@
                                 <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2"  for="grid-last-name">
                                     Subunidad
                                 </label>
-                                <select class="md:w-1/3 appearance-none bg-white border-gray-300 py-3 px-4 rounded leading-tight focus:outline-none focus-border blue-500 text-gray-700 border" name="aplicaciones" v-model="NuevaPlaza.subunidad" required>
+                                <select class="md:w-1/3 appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" name="aplicaciones" v-model="NuevaPlaza.subunidad" required>
                                     <option :value='1'>
                                        01
                                     </option>
@@ -146,7 +148,7 @@
                                 <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2"  for="grid-last-name">
                                     Diagonal
                                 </label>
-                                <input id="diagonal" v-model="NuevaPlaza.diagonal"  class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="Diagonal" required>
+                                <input id="diagonal" v-model="NuevaPlaza.diagonal"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="Diagonal" required>
                             </div>
 
 
@@ -154,17 +156,9 @@
                                 <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2"  for="grid-last-name">
                                     Horas/min a la semana de la plaza
                                 </label>
-                                <input id="horas" v-model="NuevaPlaza.horas" class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"  type="number" placeholder="0" required>
+                                <input id="horas" v-model="NuevaPlaza.horas" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="number" placeholder="0" required>
                             </div>
 
-                            <div class="w-full md:w-1/2 px-3">
-                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2"  for="grid-last-name">
-                                    Estatus
-                                </label>
-
-                                <input type="radio" value="A" name="Estatus" v-model="NuevaPlaza.estatus"  required> <span class="dark:text-gray-200">Alta</span>  <br>
-                                <input type="radio" value="B" name="Estatus" v-model="NuevaPlaza.estatus" required>  <span class="dark:text-gray-200">Baja</span>
-                            </div>
 
                         <!-- Modal footer -->
                         <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
@@ -210,7 +204,7 @@
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Estatus de la plaza
                         </th>
-                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                        <th v-if="$page.props.user.permissions.includes('Editar Plazas') || $page.props.user.permissions.includes('Eliminar Plazas')" class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Opciones
                         </th>
                     </tr>
@@ -224,8 +218,8 @@
                         </td>
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
-                            <div v-for="(categoria,index) in ListaCategorias">
-                                <p v-if="plaza.idCategoria==categoria.id" class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ categoria.Descripcion }}</p>
+                            <div v-for="(categoria,index) in categorias">
+                                <p v-if="plaza.idCategoria==categoria.id" class="text-gray-900 dark:text-gray-200 whitespace-no-wrap"> {{categoria.Clave}}-{{ categoria.Descripcion }}</p>
                             </div>
                         </td>
 
@@ -246,21 +240,30 @@
                         </td>
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
-                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ plaza.estatus }}</p>
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap" v-if="plaza.estatus==0">
+                                SIN ASIGNAR
+                            </p>
+
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap" v-if="plaza.estatus==1">
+                                ASIGNADA
+                            </p>
                         </td>
 
-                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm" v-if="$page.props.user.permissions.includes('Editar Plazas') || $page.props.user.permissions.includes('Eliminar Plazas')">
 
-                            <!-- v-canPermiso="'Editar Plazas'" v-show="none" -->
-                            <Link :href="route('Plazas.edit',plaza.id)"  class="p-3 rounded-md bg-[#014E82] mx-2 " >
-                                <i class="fa-solid fa-pen text-white"></i>
-                            </Link>
 
-                            <!-- v-canPermiso="'Eliminar Plazas'" v-show="none" -->
-                            <a type="button" @click="showDelete(plaza.id)" class="p-3 rounded-md bg-[#dc2626] mx-2" >
-                                        <i class="fa-solid fa-trash text-white"></i>
-                            </a>
 
+                            <div v-if="$page.props.user.permissions.includes('Editar Plazas')">
+                                <Link :href="route('Plazas.edit',plaza.id)"  class="p-3 rounded-md bg-[#014E82] mx-2 " >
+                                    <i class="fa-solid fa-pen text-white"></i>
+                                </Link>
+                            </div>
+
+                            <div v-if="$page.props.user.permissions.includes('Eliminar Plazas')">
+                                <a type="button" @click="showDelete(plaza.id)" class="p-3 rounded-md bg-[#dc2626] mx-2" >
+                                            <i class="fa-solid fa-trash text-white"></i>
+                                </a>
+                            </div>
                             <!-- Capa oscura -->
                             <div :class="{ hidden: !isvisibleDelete }" class="fixed inset-0 bg-black opacity-50">
                             </div>
@@ -302,23 +305,19 @@
     </AuthenticatedLayout>
 
 
-</template>
 
+
+</template>
 
 
 <script>
 
     import axios from 'axios';
-    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import { Head }   from '@inertiajs/vue3';
-    import { Link }  from '@inertiajs/vue3';
+
+
     export default {
 
-        components: {
-            'AuthenticatedLayout': AuthenticatedLayout, // Registra el componente para su uso en la plantilla
-            'Head': Head, // Registra el componente para su uso en la plantilla
-            'Link': Link,
-        },
+
 
         directives:{
 
@@ -364,16 +363,24 @@
         },
 
         mounted() {
-            this.hideDelete(),
-            this.ObtenerCategorias()
+            this.hideDelete()
         },
 
         props:{
             plazas:Array,
+            categorias:Array,
         },
 
         data() {
         return {
+
+
+            links:[
+                { label: "1", url: "/page/1", active: true },
+                { label: "2", url: "/page/2", active: false },
+                { label: "3", url: "/page/3", active: false },
+                { label: "4", url: "/page/4", active: false },
+            ],
 
             campoBusqueda:'estatus',
 
@@ -392,7 +399,6 @@
             estatus:''
         },
 
-        ListaCategorias:[],
 
         isVisible: false,
         isvisibleDelete:false,
@@ -497,23 +503,6 @@
         },
 
 
-        async ObtenerCategorias(){
-
-
-        await axios.get( route("categorias.index") ) // Ruta de la API en Laravel
-        .then(response => {
-
-            console.log("Lista categorias:",response.data.categorias);
-
-            this.ListaCategorias=response.data.categorias;
-
-        })
-        .catch(error => {
-            console.error('Error al obtener lista de categorias:', error);
-        });
-
-
-        },
 
 
     }
@@ -522,8 +511,11 @@
 
 <script setup>
 
-    //import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    //import { Head } from '@inertiajs/vue3';
-    //import { Link } from '@inertiajs/vue3';
+    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+    import { Head } from '@inertiajs/vue3';
+    import { Link } from '@inertiajs/vue3';
+    import  Pagination from '@/Components/Pagination.vue';
+    import { ref, computed } from 'vue';
+
 
 </script>

@@ -17,7 +17,7 @@
 
     <div class="inline-flex w-full" >
 
-        <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200">
+        <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200 pb-3">
             <input
                 class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
                 type="text"
@@ -27,7 +27,7 @@
             />
         </div>
 
-        <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  ">
+        <button :type="type" v-if="$page.props.user.permissions.includes('Agregar Usuarios')" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  ">
             Nuevo
         </button>
 
@@ -35,7 +35,7 @@
     </div>
 
     <!-- Capa oscura -->
-    <div :class="{ hidden: !isVisible }" class="fixed inset-0 bg-black opacity-50">
+    <div :class="{ hidden: !isVisible }" class="fixed inset-0  bg-black opacity-50">
     </div>
 
 
@@ -129,7 +129,14 @@
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Email
                         </th>
-                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                            Estatus de la cuenta
+                        </th>
+
+                        <th v-if="$page.props.user.permissions.includes('Editar Usuarios')
+                        || $page.props.user.permissions.includes('Eliminar Usuarios') || $page.props.user.permissions.includes('Asignar roles a los usuarios')"
+                        class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Opciones
                         </th>
                     </tr>
@@ -151,17 +158,29 @@
                         </td>
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap" v-if="usuario.Estatus==0">
+                                SIN ASIGNAR
+                            </p>
 
-                            <Link :href="route('Users.edit',usuario.id)" class="p-3 rounded-md bg-[#014E82] mx-2 ">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap" v-if="usuario.Estatus==1">
+                                ASIGNADA
+                            </p>
+                        </td>
+
+                        <td v-if="$page.props.user.permissions.includes('Editar Usuarios') ||
+                        $page.props.user.permissions.includes('Eliminar Usuarios') || $page.props.user.permissions.includes('Asignar roles a los usuarios')"
+                        class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+
+                            <Link v-if="$page.props.user.permissions.includes('Editar Usuarios')" :href="route('Users.edit',usuario.id)" class="p-3 rounded-md bg-[#014E82] mx-2 " >
                                 <i class="fa-solid fa-pen text-white"></i>
                             </Link>
 
 
-                            <a type="button" @click="showDelete(usuario.id,usuario.name)" class="p-3 rounded-md bg-[#dc2626] mx-2">
+                            <a v-if="$page.props.user.permissions.includes('Eliminar Usuarios')" type="button" @click="showDelete(usuario.id,usuario.name)" class="p-3 rounded-md bg-[#dc2626] mx-2">
                                         <i class="fa-solid fa-trash text-white"></i>
                             </a>
 
-                            <Link :href="route('Users.editRole',usuario.id)" class="p-3 rounded-md bg-[#FFD200]  mx-2 ">
+                            <Link  v-if="$page.props.user.permissions.includes('Asignar roles a los usuarios')" :href="route('Users.editRole',usuario.id)" class="p-3 rounded-md bg-[#FFD200]  mx-2 ">
                                 <strong>Ver Rol <span>  <i class="fa-solid fa-user-plus pl-1"></i> </span> </strong>
                             </Link>
 

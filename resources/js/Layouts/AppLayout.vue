@@ -3,21 +3,12 @@
 
     <AuthenticatedLayout>
         <template #header>
-            Dashboard
+            Sistema Integral de Información del CENIDET
         </template>
 
         <div class="bg-white dark:bg-slate-700 overflow-hidden shadow-sm sm:rounded-lg ">
             <div class="p-6 border-b border-gray-200  dark:border-gray-700 dark:text-gray-200">
                 Bienvenido {{ $page.props.auth.user.name }}
-
-                <br>
-
-                Roles: <span v-for="(Rol, index) in Roles" :key="index">
-                    {{Rol}}<span v-if="Roles.length-1!=index">, </span>
-                </span>
-                <span v-if="Roles.length==0">No se tiene ningun rol asignado</span>
-
-
             </div>
         </div>
 
@@ -58,21 +49,21 @@
 
 
         mounted() {
-            this.ObtenerRoleUsuario()
-
-
+            //this.ObtenerRoleUsuario()
+            console.log('controlador:',this.$page.props.rolesName)
+            this.ListaRoles=this.$page.props.rolesName
         },
 
         beforeCreate(){
 
             this.total=[80,72,8]
             console.log('Numero de personal por Rol',this.$page.props.InfoGrafica)
-            console.log('Modo oscuro desde App Layout:',isDark.value);
 
         },
 
         props:{
-            InfoGrafica:Array
+            InfoGrafica:Array,
+            rolesName:Array
         },
 
         data() {

@@ -4,8 +4,49 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "783c3acc2e94024be43cf786845978b1",
+    "content-hash": "0759cefa495d7d410d54054032e638ef",
     "packages": [
+        {
+            "name": "ahmedsaoud31/laravel-permission-to-vuejs",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ahmedsaoud31/laravel-permission-to-vuejs.git",
+                "reference": "0c2a5d6a02a1a00b6257a19929e4cb4b49c4dde5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ahmedsaoud31/laravel-permission-to-vuejs/zipball/0c2a5d6a02a1a00b6257a19929e4cb4b49c4dde5",
+                "reference": "0c2a5d6a02a1a00b6257a19929e4cb4b49c4dde5",
+                "shasum": ""
+            },
+            "require": {
+                "spatie/laravel-permission": ">=2.0"
+            },
+            "default-branch": true,
+            "type": "plugin",
+            "autoload": {
+                "psr-4": {
+                    "LaravelAndVueJS\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ahmed Abeoelsaoud",
+                    "email": "ahmedsaoud31@gmail.com"
+                }
+            ],
+            "description": "Laravel Permission Package To Use it in VueJs",
+            "support": {
+                "issues": "https://github.com/ahmedsaoud31/laravel-permission-to-vuejs/issues",
+                "source": "https://github.com/ahmedsaoud31/laravel-permission-to-vuejs/tree/master"
+            },
+            "time": "2023-08-07T03:31:54+00:00"
+        },
         {
             "name": "bacon/bacon-qr-code",
             "version": "2.0.8",
@@ -6979,6 +7020,45 @@
                 "source": "https://github.com/webmozarts/assert/tree/1.11.0"
             },
             "time": "2022-06-03T18:03:27+00:00"
+        },
+        {
+            "name": "zodexnl/spatie-permission-to-vue-inertia",
+            "version": "v1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ZodexNL/spatie-permission-to-vue-inertia.git",
+                "reference": "ae3069e48be4d8f57f71417bb06fc166abe668f5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ZodexNL/spatie-permission-to-vue-inertia/zipball/ae3069e48be4d8f57f71417bb06fc166abe668f5",
+                "reference": "ae3069e48be4d8f57f71417bb06fc166abe668f5",
+                "shasum": ""
+            },
+            "require": {
+                "spatie/laravel-permission": ">=5.4.0"
+            },
+            "type": "plugin",
+            "autoload": {
+                "psr-4": {
+                    "SpatiePermissionsToVueInertia\\Traits\\": "src/Traits"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "ZodexNL",
+                    "email": "zodexnl@gmail.com"
+                }
+            ],
+            "description": "Use the Spatie permission package in Vue with Inertia",
+            "support": {
+                "source": "https://github.com/ZodexNL/spatie-permission-to-vue-inertia/tree/v1.0.1"
+            },
+            "time": "2023-05-16T17:58:49+00:00"
         }
     ],
     "packages-dev": [
@@ -9417,7 +9497,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "ahmedsaoud31/laravel-permission-to-vuejs": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

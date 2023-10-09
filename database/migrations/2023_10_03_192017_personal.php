@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('personals', function (Blueprint $table) {
+        Schema::create('personal', function (Blueprint $table) {
             $table->id('id');
             $table->string('RFC',13); // Agrega la nueva columna
             $table->string('Nombre'); // Agrega la nueva columna
             $table->string('ApellidoP'); // Agrega la nueva columna
             $table->string('ApellidoM'); // Agrega la nueva columna
+            $table->string('CURP',18); // Agrega la nueva columna
+            $table->string('Telefono',15); // Agrega la nueva columna
+            $table->string('Direccion'); // Agrega la nueva columna
+            $table->string('CorreoPers'); // Agrega la nueva columna
             $table->date('FechaNacimiento'); // Agrega la nueva columna
             $table->integer('numTarjeta'); // Agrega la nueva columna
             $table->string('Estatus',1);

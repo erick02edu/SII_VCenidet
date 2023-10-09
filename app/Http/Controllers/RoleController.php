@@ -15,11 +15,14 @@ class RoleController extends Controller
 
     public function __construct()
     {
-        $this->middleware('can:Agregar Roles')->only('store');
-        $this->middleware('can:Ver Roles')->only('index');
-        $this->middleware('can:Editar Roles')->only('edit','update');
-        //$this->middleware('can:Borrar Roles')->only('destroy');
+        $this->middleware('can:Asignar roles a los usuarios')->only('AsignarRol');
 
+
+        
+        $this->middleware(['permission:Ver Roles|Crear roles|Editar información de los roles|Eliminar roles|Asignar Permisos a los roles'])->only('index');
+        $this->middleware('can:Crear roles')->only('store');
+        $this->middleware('can:Editar información de los roles')->only('edit','update');
+        $this->middleware('can:Eliminar roles')->only('destroy');
     }
 
     public function index(){
@@ -63,8 +66,17 @@ class RoleController extends Controller
         $infoGrafica[2]=$numProfes;
 
 
+        $User = Auth::user();
 
-        return Inertia::render('Dashboard',['InfoGrafica'=>$infoGrafica]);
+        $roles = $User->roles; // Esto obtendrá una colección de roles asignados al usuario
+
+        $roleNames = $roles->pluck('name')->toArray();
+
+
+        return Inertia::render('Dashboard',[
+            'InfoGrafica'=>$infoGrafica,
+            'rolesName'=>$roleNames
+        ]);
     }
 
     public function store(Request $request){
@@ -123,19 +135,22 @@ class RoleController extends Controller
     }
 
 
-    //Funcion para obtener todos los roles existentes
-    public function GetRoles()
-    {
-        $Role=Role::all();
-        return response()->json(['ListaRoles'=>$Role]);
-    }
-
     //Funcion para redirigir al formulario de edicion del Role
     public function EditRole(String $id)
     {
         $User = User::find($id);
+
+        $roles = $User->getRoleNames();
+
+        $roleIds = $User->roles->pluck('id')->all();
+
+        $ListaRoles=Role::all();
+
         return Inertia::render ('AsignarRol',[
             'usuario'=>$User,
+            'RolesActuales'=>$roles,
+            'ListaRolesTotal'=>$ListaRoles,
+            'rolesMarcar'=>$roleIds
         ]);
     }
 
@@ -148,22 +163,6 @@ class RoleController extends Controller
         //return redirect()->route('Users.editRole',$id)->with('Info','Se asigno los roles correctamente');
 
         return back()->with([$id]);
-
-    }
-
-    public function can(Request $request){
-
-        //Recuperamos los datos
-        $id = $request->input('userID');
-        $Rol = $request->input('Rol');
-
-        //Obtenemos el usuario por su ID
-        $User = User::find($id);
-
-        //Obtenemos lista de roles
-        $roles = $User->roles; // Esto obtendrá una colección de roles asignados al usuario
-        $roleNames = $roles->pluck('name')->toArray();//Obtener solo un array con el nombre de los roles
-        return response()->json(['roles'=>$roleNames]);
 
     }
 

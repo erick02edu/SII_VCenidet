@@ -9,13 +9,9 @@ use App\Models\Periodos;
 class PromedioController extends Controller
 {
     public function index(){
-
-
-
         $calificaciones=historial_Alumno::all();
         $periodos=Periodos::all();
         //return redirect()->route('Periodo.index', ['calificaciones'=>$calificaciones]);
-
 
         return Inertia::render('Promedio',['calificaciones'=>$calificaciones,'periodos'=>$periodos]);
 

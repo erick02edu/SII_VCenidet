@@ -12,14 +12,20 @@ use Laravel\Sanctum\HasApiTokens;
 
 use Spatie\Permission\Traits\HasRoles;
 
+use SpatiePermissionsToVueInertia\Traits\SpatiePermissionsToVue;
+
+
 class User extends Authenticatable
 {
+
     use HasApiTokens;
     use HasFactory;
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
     use HasRoles;
+    use SpatiePermissionsToVue;
+
 
     /**
      * The attributes that are mass assignable.
@@ -61,4 +67,6 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+
+
 }

@@ -13,13 +13,7 @@ class AulaController extends Controller
     public function index()
     {
         $Aulas=Aula::all();
-        return Inertia::render('Mostrar',['aulas'=>$Aulas]); //Regresar a la vista mostrar
-    }
-
-    //Funcion que retorna al formulario para crear una nueva aula
-    public function create()
-    {
-        return Inertia::render('FormCrear');
+        return Inertia::render('Aulas',['aulas'=>$Aulas]); //Regresar a la vista mostrar
     }
 
     //Funcion para registrar una nueva Aula
@@ -39,7 +33,7 @@ class AulaController extends Controller
     public function edit(String $id)
     {
         $Aula = Aula::find($id);
-        return Inertia::render ('formEditar',[
+        return Inertia::render ('formEditarAulas',[
             'aula'=>$Aula,
         ]);
     }
@@ -64,5 +58,10 @@ class AulaController extends Controller
         $Aula = Aula::find($id);
         $Aula->delete();
         return Redirect::route('Aulas.index');
+    }
+
+    public function ObtenerAulas(){
+        $Aulas=Aula::all();
+        return $Aulas;
     }
 }

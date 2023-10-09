@@ -18,8 +18,11 @@
         </div>
 
 
+
+
         <nav class="mt-4" x-data="{ isMultiLevelMenuOpen: false }" >
-            <nav-link :href="route('dashboard')" :active="route().current('dashboard')">
+            <nav-link :href="route('dashboard')" :active="route().current('dashboard')"
+            >
                 <template #icon>
                     <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
@@ -34,36 +37,39 @@
             </nav-link>
 
 
-            <nav-link :href="route('Prueba.index')" target="_blank" :active="route().current('Plazas.Index')"  >
+            <!-- <nav-link :href="route('Prueba.index')" target="_blank" :active="route().current('Plazas.Index')"  >
                 <template #icon>
                     <i class="fa-solid fa-briefcase"></i>
                 </template>
                     Descargar PDF
-            </nav-link>
+            </nav-link> -->
 
-            <nav-link :href="route('FechaReinscripcion.index')" :active="route().current('Plazas.Index')"  >
+
+            <!-- <nav-link :href="route('FechaReinscripcion.index')" :active="route().current('Plazas.Index')"  >
                 <template #icon>
                     <i class="fa-solid fa-briefcase"></i>
                 </template>
                     Horario reinscripcion
-            </nav-link>
+            </nav-link> -->
 
-            <nav-link :href="route('Aplicaciones.index')" :active="route().current('Aplicaciones.index')"  >
+            <nav-link :href="route('Aplicaciones.index')" :active="route().current('Aplicaciones.index')"
+            v-if="$page.props.user.permissions.includes('Ver periodos de aplicacion') || $page.props.user.permissions.includes('Agregar Periodos de aplicacion') ||
+            $page.props.user.permissions.includes('Editar Información de los periodos de aplicacion') || $page.props.user.permissions.includes('Eliminar Periodos de Aplicacion') ||
+            $page.props.user.permissions.includes('Actualizar fechas en los periodos de aplicacion')"
+            >
                 <template #icon>
-                    <i class="fa-solid fa-calendar-days"></i>
+                    <i class="fa-solid fa-clock"></i>
                 </template>
                     Periodo aplicación
             </nav-link>
 
-            <nav-link :href="route('Promedio.index')" :active="route().current('Plazas.Index')" v-canPermiso="'Ver Roles'" v-show="none" >
-                <template #icon>
-                    <i class="fa-solid fa-briefcase"></i>
-                </template>
-                    Promedio Semestres
-            </nav-link>
 
-            <!--Poner v show=none en elemento seguido de la directiva can-->
-            <nav-link :href="route('Users.index')" :active="route().current('Users.Index')" >
+
+            <nav-link :href="route('Users.index')" :active="route().current('Users.index')"
+            v-if="$page.props.user.permissions.includes('Agregar Usuarios') || $page.props.user.permissions.includes('Editar Usuarios') ||
+            $page.props.user.permissions.includes('Eliminar Usuarios') || $page.props.user.permissions.includes('Ver usuarios') ||
+             $page.props.user.permissions.includes('Asignar roles a los usuarios')"
+            >
 
                 <template #icon>
                     <i class="fa-solid fa-user"></i>
@@ -72,12 +78,14 @@
 
             </nav-link>
 
-            <nav-link :href="route('Roles.index')" :active="route().current('Roles.Index')"  >
+
+
+            <nav-link :href="route('Roles.index')" :active="route().current('Roles.index')"  >
 
                 <template #icon>
                     <i class="fa-solid fa-users"></i>
                 </template>
-                Roles
+                Roles/Permisos
 
             </nav-link>
 
@@ -90,7 +98,10 @@
             </nav-link>
 
 
-            <nav-link :href="route('Plazas.index')" :active="route().current('Plazas.index')" >
+            <nav-link :href="route('Plazas.index')" :active="route().current('Plazas.index')"
+            v-if="$page.props.user.permissions.includes('Editar Plazas') || $page.props.user.permissions.includes('Eliminar Plazas') ||
+            $page.props.user.permissions.includes('Agregar Plazas') || $page.props.user.permissions.includes('Ver Plazas')"
+            >
                 <template #icon>
                     <i class="fa-solid fa-briefcase"></i>
                 </template>
@@ -98,21 +109,50 @@
             </nav-link>
 
 
-            <nav-link :href="route('Plazas.index')" :active="route().current('Plazas.index')"  >
+            <nav-link :href="route('Profesores.index')" :active="route().current('Profesores.index')"  >
                 <template #icon>
-                    <i class="fa-regular fa-calendar"></i>
+                    <i class="fa-solid fa-chalkboard-user"></i>
                 </template>
-                Consultar horario
+                Profesores
+            </nav-link>
+
+            <!-- <nav-link :href="route('Promedio.index')" :active="route().current('Promedio.index')" >
+                <template #icon>
+                    <i class="fa-solid fa-calculator"></i>
+                </template>
+                    Promedio Semestres
+            </nav-link> -->
+
+
+            <nav-link :href="route('Materias.index')" :active="route().current('Materias.index')"  >
+                <template #icon>
+                    <i class="fa-solid fa-book"></i>
+                </template>
+                    Materias
             </nav-link>
 
 
-            <nav-link :href="route('Departamentos.index')" :active="route().current('Personal.index')"  >
+            <nav-link :href="route('HorariosDocentes.index')" :active="route().current('HorariosDocentes.index')"  >
                 <template #icon>
-                    <i class="fa-solid fa-person"></i>
+                    <i class="fa-regular fa-calendar"></i>
+                </template>
+                Crear Horario
+            </nav-link>
+
+            <nav-link :href="route('Departamentos.index')" :active="route().current('Departamentos.index')"  >
+                <template #icon>
+                    <i class="fa-solid fa-building-user"></i>
                 </template>
                 Departamentos
             </nav-link>
 
+
+            <nav-link :href="route('Aulas.index')" :active="route().current('Aulas.index')"  >
+                <template #icon>
+                    <i class="fa-solid fa-school"></i>
+                </template>
+                Aulas
+            </nav-link>
 
 
             <nav-link :href="route('backup.index')" :active="route().current('backup.index')" >
@@ -137,7 +177,9 @@ import { ref } from 'vue'
 
 import axios from 'axios';
 
+
 export default {
+
 
     directives:{
         'canRol':{
@@ -192,7 +234,8 @@ export default {
                     el.style.display = 'none';  // Ocultar elemento
                 }
             }
-        }
+        },
+
     },
     //Objeto DATA
     data() {
@@ -204,6 +247,8 @@ export default {
         Permiso:"",
         decision:"",
 
+
+        tooltipContent:'Soy el contenido'
         };
     },
 
@@ -261,6 +306,8 @@ export default {
 
 
     },
+
+
 
 }
 </script>

@@ -13,8 +13,9 @@ class PlazaController extends Controller
 
     public function __construct()
     {
+        $this->middleware(['permission:Ver Plazas|Editar Plazas|Agregar Plazas|Eliminar Plazas'])->only('index');
+
         $this->middleware('can:Agregar Plazas')->only('store');
-        $this->middleware('can:Ver Plazas')->only('index');
         $this->middleware('can:Editar Plazas')->only('edit','update');
         $this->middleware('can:Eliminar Plazas')->only('destroy');
     }
@@ -24,7 +25,13 @@ class PlazaController extends Controller
     public function index()
     {
         $Plazas=Plaza::all();//Este bombre aulas debe coincidir con el props en el scrip de vue
-        return Inertia::render('Plazas',['plazas'=>$Plazas]);
+
+        $Categorias=app(CategoriaController::class)->ObtenerCategorias();
+
+        return Inertia::render('Plazas',[
+            'plazas'=>$Plazas,
+            'categorias'=>$Categorias
+        ]);
     }
 
     public function create()
@@ -46,12 +53,13 @@ class PlazaController extends Controller
             return Inertia::render ('Plazas',['plazas'=>$Plazas,'mensajeCategorias'=>'Por favor ingresa una categoria']);
         }
 
+        $Estatus = False; // asigna el valor TRUE a $foo
         $Plaza->idCategoria=$request->idCategoria;
         $Plaza->unidad=$request->unidad;
         $Plaza->subunidad=$request->subunidad;
         $Plaza->diagonal=$request->diagonal;
         $Plaza->horas=$request->horas;
-        $Plaza->estatus=$request->estatus;
+        $Plaza->estatus=$Estatus;
 
         $Plaza->save();
 
@@ -70,6 +78,12 @@ class PlazaController extends Controller
     {
         $plazas=Plaza::all();
         return $plazas;
+    }
+
+    public function ObtenerPlazasDisponibles()
+    {
+        $plazasDisponibles=Plaza::where('estatus','0')->get();
+        return $plazasDisponibles;
     }
 
     /**
@@ -95,8 +109,10 @@ class PlazaController extends Controller
     {
         $Plaza=Plaza::find($id);
 
+        $Plaza->idCategoria=$request->input('idCategoria');
+        $Plaza->save();
+        //return response()->json(['idCategoria:',$request->input('idCategoria')]);
         $Plaza->update($request->all());
-
         return redirect::route('Plazas.index');
     }
 

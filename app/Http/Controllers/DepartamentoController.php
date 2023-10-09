@@ -86,6 +86,8 @@ class DepartamentoController extends Controller
             $request=new Request();
             $parametros=['usuario'=>$Departamento,'campo'=>'name'];
 
+
+            //Unir $parametros a request
             $request->merge($parametros);
 
             $users=app(UserController::class)->buscarUsuario($request);

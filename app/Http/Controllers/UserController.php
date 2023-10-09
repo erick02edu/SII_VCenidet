@@ -11,10 +11,19 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware(['permission:Agregar Usuarios|Editar Usuarios|Ver usuarios|Eliminar Usuarios|Asignar roles a los usuarios'])->only('index');
+        $this->middleware('can:Agregar Usuarios')->only('store');
+        $this->middleware('can:Editar Usuarios')->only('edit','update');
+        $this->middleware('can:Eliminar Usuarios')->only('destroy');
+    }
 
     //Funcion para mostrar todos los usuarios retorna a la vista de Usuarios
     public function index()
@@ -30,7 +39,7 @@ class UserController extends Controller
         $User->name=$request->name;
         $User->email=$request->email;
         $User->password = Hash::make($request->input('password'));
-
+        $User->Estatus='0';
         $User->save();
 
         $newUserId = $User->id;

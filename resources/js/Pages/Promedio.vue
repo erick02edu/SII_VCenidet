@@ -19,20 +19,20 @@
                 <thead>
                     <tr class="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
 
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
 
                         </th>
 
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             noControl
                         </th>
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Materia
                         </th>
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Calificacion
                         </th>
-                        <th class="border-b-2 border-gray-300 bg-gray-300 px-2 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Periodo
                         </th>
 
@@ -43,42 +43,29 @@
                 <tbody>
                     <tr v-for="calificacion in calificaciones" :key="calificacion.id" class="text-gray-700">
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-4 text-sm">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
                             <input type="checkbox" v-model="AlumnosSeleccionados" :value="calificacion.noControl">
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ calificacion.noControl }}</p>
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ calificacion.noControl }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ calificacion.Materia }}</p>
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ calificacion.Materia }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">{{ calificacion.Calificacion }}</p>
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ calificacion.Calificacion }}</p>
                         </td>
 
 
-                        <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
-                            <p class="text-gray-900 whitespace-no-wrap">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">
                                 {{ periodos[calificacion.idPeriodo-1].mesInicio}} {{ periodos[calificacion.idPeriodo-1].AñoInicio}}-{{ periodos[calificacion.idPeriodo-1].mesTermino}} {{ periodos[calificacion.idPeriodo-1].AñoTermino}}
 
                             </p>
                         </td>
-
-
-                        <!-- <td class="border-b border-gray-200 bg-white px-2 py-5 text-sm">
-                            <select name="transporte">
-
-                                <option>Otra opcion</option>
-
-                                <option>Otra opcion</option>
-
-                                <option selected>{{ periodos[calificacion.idPeriodo-1].mesInicio}} {{ periodos[calificacion.idPeriodo-1].AñoInicio}}-{{ periodos[calificacion.idPeriodo-1].mesTermino}} {{ periodos[calificacion.idPeriodo-1].AñoTermino}}  </option>
-
-                                </select>
-                        </td> -->
 
                     </tr>
                 </tbody>

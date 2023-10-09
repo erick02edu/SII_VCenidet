@@ -15,9 +15,15 @@ use App\Http\Controllers\PeriodoController;
 use App\Http\Controllers\AplicacionPeriodoController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\CategoriaController;
+use App\Http\Controllers\ClasesController;
 use App\Http\Controllers\PersonalController;
 use App\Http\Controllers\DepartamentoController;
+use App\Http\Controllers\GruposController;
+use App\Http\Controllers\horariosDocentesController;
+use App\Http\Controllers\MateriasController;
+use App\Http\Controllers\ProfesoresController;
 use App\Models\categoria;
+use App\Models\Clases;
 use App\Models\Departamentos;
 use App\Models\User;
 use Spatie\Permission\Contracts\Permission;
@@ -57,7 +63,28 @@ Route::middleware([
     //Rutas para crud Plazas
     Route::resource('Plazas',PlazaController::class);
 
+
+    //Rutas para crud Grupos
+    Route::resource('Grupos',GruposController::class);
+
+    //Rutas para crud Profesores
+    Route::resource('Profesores',ProfesoresController::class);
+
+    //Rutas para crud horarios docentes
+    Route::resource('HorariosDocentes',horariosDocentesController::class);
+
+    //Rutas para crud horarios docentes
+    Route::resource('Clases',ClasesController::class)->only(['store','destroy']);
+
+    //Rutas para crud horarios docentes
+    Route::resource('Materias',MateriasController::class);
+    Route::get('Materias.buscar',[MateriasController::class,'buscar']);
+
+
+    //Ruta dashboard
     Route::get('/dashboard',[RoleController::class,'verDashboard'])->name('dashboard');
+
+
 
  });
 
@@ -89,6 +116,15 @@ Route::get('Plazas.buscar',[PlazaController::class,'buscarPlaza'])
 
 //Rutas para crud de personal
 Route::resource('Personal',PersonalController::class)
+->middleware('auth:sanctum','verified');
+
+Route::get('Personal.buscar',[PersonalController::class,'buscarPersonal'])
+->middleware('auth:sanctum','verified');
+
+Route::post('Personal.asignarPlaza',[PersonalController::class,'asignarPlaza'])->name('Personal.asignarPlaza')
+->middleware('auth:sanctum','verified');
+
+Route::post('Personal.asignarCuenta',[PersonalController::class,'asignarCuenta'])->name('Personal.asignarCuenta')
 ->middleware('auth:sanctum','verified');
 
  //Rutas para crud departamentos
@@ -132,9 +168,11 @@ Route::get('Periodo',[PeriodoController::class,'index'])->name('Periodo.index')-
 //Periodo de aplicacion
 
 Route::resource('Aplicaciones',AplicacionPeriodoController::class)
-->middleware('auth:sanctum','verified')->only(['index','destroy']);
+->middleware('auth:sanctum','verified')->only(['index','destroy','store']);
 
 Route::post('AplicacionActualizar',[AplicacionPeriodoController::class,'actualizar'])->name('Aplicaciones.actualizar')->middleware('auth:sanctum','verified');
+Route::get('Aplicaciones.buscar',[AplicacionPeriodoController::class,'buscarAplicacion'])->middleware('auth:sanctum','verified');
+
 
 //Rutas a categorias
 
@@ -151,3 +189,4 @@ Route::resource('categorias',CategoriaController::class)
 
 
  Route::get('Preuba.index',[BackupController::class,'Prueba'])->name('Prueba.index')->middleware('auth:sanctum','verified');
+
