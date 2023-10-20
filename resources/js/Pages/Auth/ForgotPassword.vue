@@ -21,41 +21,44 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Forgot Password" />
 
-    <AuthenticationCard>
-        <template #logo>
-            <AuthenticationCardLogo />
-        </template>
 
-        <div class="mb-4 text-sm text-gray-600">
-            Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
-        </div>
 
-        <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
-            {{ status }}
-        </div>
+    <div class="min-h-screen flex flex-col sm:justify-start items-center pt-6 sm:pt-12 bg-gray-100">
 
-        <form @submit.prevent="submit">
-            <div>
-                <InputLabel for="email" value="Email" />
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="mt-1 block w-full"
-                    required
-                    autofocus
-                    autocomplete="username"
-                />
-                <InputError class="mt-2" :message="form.errors.email" />
+            <img src="/img/IconoTec.png" alt="Error al cargar imagen" class="w-50 h-20 pl-4">
+    <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg  border-t-4 border-[#316385]">
+
+            <p class="flex items-center justify-center w-full py-4 text-lg font-black"> Restablecimiento de contraseña</p>
+            <div class="mb-4 text-sm text-gray-600">
+                Ingrese su direccion de correo electrónico y le enviaremos un enlace para restablecer su contraseña que le permitirá elegir una nueva.
             </div>
 
-            <div class="flex items-center justify-end mt-4">
-                <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                    Email Password Reset Link
-                </PrimaryButton>
+            <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+                {{ status }}
             </div>
-        </form>
-    </AuthenticationCard>
+
+            <form @submit.prevent="submit">
+                <div>
+                    <InputLabel for="email" value="Email" />
+                    <TextInput
+                        id="email"
+                        v-model="form.email"
+                        type="email"
+                        class="mt-1 block w-full"
+                        required
+                        autofocus
+                        autocomplete="username"
+                    />
+                    <InputError class="mt-2" :message="form.errors.email" />
+                </div>
+
+                <div class="flex items-center justify-end mt-7 mb-7">
+                    <PrimaryButton :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        Enviar enlace a mi correo
+                    </PrimaryButton>
+                </div>
+            </form>
+        </div>
+    </div>
 </template>

@@ -7,7 +7,7 @@
             <Header />
 
         <!-- Aqui cambiar para el modo oscuro bg-gray-200 -->
-            <main class="flex-1 overflow-y-auto overflow-x-hidden bg-gray-200 dark:bg-gray-800" >
+            <main class="flex-1 overflow-y-auto overflow-x-auto bg-gray-200 dark:bg-gray-800" >
                 <div class="container mx-auto px-6 py-8"  >
                     <!-- Cambiar texto text-gray-700 -->
                     <h3 class="mb-4 text-3xl font-medium text-gray-700 dark:text-white ">

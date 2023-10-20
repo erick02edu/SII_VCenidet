@@ -11,6 +11,8 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
+use App\Mail\UsuarioRegistrado;
+use Illuminate\Support\Facades\Mail;
 
 use Spatie\Permission\Models\Role;
 
@@ -28,21 +30,36 @@ class UserController extends Controller
     //Funcion para mostrar todos los usuarios retorna a la vista de Usuarios
     public function index()
     {
-        $Usuarios=User::all();//Este bombre aulas debe coincidir con el props en el scrip de vue
-        return Inertia::render('Usuarios',['usuarios'=>$Usuarios]);
+        $Pagination=User::paginate(10);//Este bombre aulas debe coincidir con el props en el scrip de vue
+
+        $Usuarios=$Pagination->items();
+
+        $roles=Role::all();
+
+        return Inertia::render('Modulos/Administrador/Usuarios/Usuarios',[
+            'usuarios'=>$Usuarios,
+            'roles'=>$roles,
+            'Paginator'=>$Pagination
+        ]);
     }
 
     //Funcion para crear un usuario
     public function store(Request $request){
-        $User=new User();
+        $user=new User();
 
-        $User->name=$request->name;
-        $User->email=$request->email;
-        $User->password = Hash::make($request->input('password'));
-        $User->Estatus='0';
-        $User->save();
+        $user->name=$request->name;
+        $user->email=$request->email;
+        $user->password = Hash::make($request->input('password'));
+        $user->Estatus='0';
+        $user->save();
 
-        $newUserId = $User->id;
+        $newUserId = $user->id;
+
+        // Envía el correo electrónico
+        //$email = new UsuarioRegistrado($User);
+
+        Mail::to($user->email)->send(new UsuarioRegistrado($user));
+
 
         return redirect()->route('Roles.asignar', ['id' => $newUserId, 'RolesSeleccionados'=>$request->input('RolesSeleccionados')]);
 
@@ -53,7 +70,7 @@ class UserController extends Controller
     public function edit(String $id)
     {
         $User = User::find($id);
-        return Inertia::render ('formEditarUsuario',[
+        return Inertia::render ('Modulos/Administrador/Usuarios/formEditarUsuario',[
             'usuario'=>$User,
         ]);
     }

@@ -30,7 +30,7 @@
     export default {
 
         mounted() {
-            this.ObtenerListaRoles()
+
             this.ObtenerRolesUsuario()
 
             this.NuevoRol.RolesSeleccionados=this.$page.props.rolesMarcar
@@ -75,22 +75,6 @@
                     console.error('Error al obtener datos:', error);
                 });
 
-
-
-            },
-
-            async ObtenerListaRoles(){
-
-                await axios.get('/GetRoles') // Ruta de la API en Laravel
-                .then(response => {
-                    this.ListaRoles = response.data.ListaRoles;
-
-                    this.Roles=this.ListaRoles;
-
-                })
-                .catch(error => {
-                    console.error('Error al obtener datos:', error);
-                });
 
 
             },

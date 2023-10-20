@@ -65,21 +65,8 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <main class="inset-0 h-screen w-screen bg-gray-200 dark:bg-gray-800 overflow-x-auto" >
+<div class="bg-gray-200 w-screen min-h-screen dark:bg-gray-800 overflow-x-auto overflow-y-auto">
+    <main class="inset-0 h-auto w-screen bg-gray-200 dark:bg-gray-800 overflow-x-auto overflow-y-auto pb-10" >
 
         <!-- {{ NuevasClasesLunes }} -->
 
@@ -87,7 +74,7 @@
 
         <p class="flex font-roboto dark:text-gray-200 justify-center w-full items-center pt-5 ">Editar Horario</p>
 
-        <div class="container mx-auto px-6 py-4"  >
+        <div class="container mx-auto px-6 py-4 w-auto "  >
 
                 <table class="w-full whitespace-no-wrap">
                     <thead class="bg-slate-700 text-gray-200 align-left" >
@@ -144,11 +131,17 @@
                         <td>
                             <tr class="dark:text-gray-200P"  v-for="(clase,index) in NuevasClasesMartes" :key="index"  id="Martes"  @click="showElement('Martes',clase,index)" >
 
-                                <div :style="{ backgroundColor: clase.color }" class="px-10 py-5 mt-1 dark:text-gray-200 flex items-center">
-                                Clase Martes<br>
-                                {{ clase.HInicio }}-{{ clase.HFin }}
-                                </div>
+                                <div :style="{ backgroundColor: clase.color }" class="px-10 py-5 mt-1 dark:text-gray-200">
+                                    <span v-for="materia in materias">
+                                        <span v-if="materia.id==clase.idMateria">{{ materia.Nombre }}</span>
+                                    </span>
 
+                                    <span v-for="aula in aulas">
+                                        <p v-if="aula.id==clase.idAula">{{ aula.NombreAula }}</p>
+                                    </span>
+
+                                    {{ clase.HInicio }}-{{ clase.HFin }}
+                                </div>
                             </tr>
 
                             <tr class="dark:text-gray-200 hover:bg-slate-300 hover:cursor-pointer  "  @click="Aumentar('Martes')">
@@ -162,12 +155,17 @@
 
                         <td>
                             <tr class="dark:text-gray-200P"  v-for="(clase,index) in NuevasClasesMiercoles" :key="index"  id="Miercoles"  @click="showElement('Miercoles',clase,index)" >
+                                <div :style="{ backgroundColor: clase.color }" class="px-10 py-5 mt-1 dark:text-gray-200">
+                                    <span v-for="materia in materias">
+                                        <span v-if="materia.id==clase.idMateria">{{ materia.Nombre }}</span>
+                                    </span>
 
-                                <div :style="{ backgroundColor: clase.color }" class="px-10 py-5 mt-1 dark:text-gray-200 flex items-center">
-                                Clase Miercoles<br>
-                                {{ clase.HInicio }}-{{ clase.HFin }}
+                                    <span v-for="aula in aulas">
+                                        <p v-if="aula.id==clase.idAula">{{ aula.NombreAula }}</p>
+                                    </span>
+
+                                    {{ clase.HInicio }}-{{ clase.HFin }}
                                 </div>
-
                             </tr>
 
                             <tr class="dark:text-gray-200 hover:bg-slate-300 hover:cursor-pointer  "  @click="Aumentar('Miercoles')">
@@ -182,9 +180,17 @@
                         <td>
                             <tr class="dark:text-gray-200P"  v-for="(clase,index) in NuevasClasesJueves" :key="index"  id="Jueves"  @click="showElement('Jueves',clase,index)" >
 
-                                <div :style="{ backgroundColor: clase.color }" class="px-10 py-5 mt-1 dark:text-gray-200 flex items-center">
-                                Clase Jueves<br>
-                                {{ clase.HInicio }}-{{ clase.HFin }}
+                                <div :style="{ backgroundColor: clase.color }" class="px-10 py-5 mt-1 dark:text-gray-200">
+
+                                    <span v-for="materia in materias">
+                                        <span v-if="materia.id==clase.idMateria">{{ materia.Nombre }}</span>
+                                    </span>
+
+                                    <span v-for="aula in aulas">
+                                        <p v-if="aula.id==clase.idAula">{{ aula.NombreAula }}</p>
+                                    </span>
+
+                                    {{ clase.HInicio }}-{{ clase.HFin }}
                                 </div>
 
                             </tr>
@@ -201,9 +207,16 @@
                         <td>
                             <tr class="dark:text-gray-200P"  v-for="(clase,index) in NuevasClasesViernes" :key="index"  id="Viernes"  @click="showElement('Viernes',clase,index)" >
 
-                                <div :style="{ backgroundColor: clase.color }" class="px-10 py-5 mt-1 dark:text-gray-200 flex items-center">
-                                Clase Viernes<br>
-                                {{ clase.HInicio }}-{{ clase.HFin }}
+                                <div :style="{ backgroundColor: clase.color }" class="px-10 py-5 mt-1 dark:text-gray-200">
+                                    <span v-for="materia in materias">
+                                        <span v-if="materia.id==clase.idMateria">{{ materia.Nombre }}</span>
+                                    </span>
+
+                                    <span v-for="aula in aulas">
+                                        <p v-if="aula.id==clase.idAula">{{ aula.NombreAula }}</p>
+                                    </span>
+
+                                    {{ clase.HInicio }}-{{ clase.HFin }}
                                 </div>
 
                             </tr>
@@ -290,6 +303,8 @@
 
                                                                                         </option>
                                                                                     </select>
+
+
                                                                                 </div>
 
 
@@ -366,7 +381,7 @@
                                             </div>
 
     </main>
-
+</div>
 
     <!-- Capa oscura -->
     <div :class="{ hidden: !isVisible }" class="fixed inset-0  bg-black opacity-50">
@@ -378,7 +393,7 @@
 <script setup>
     import { Head } from '@inertiajs/vue3';
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-    import Header from '@/Layouts/HeaderPanel.vue';
+    //import Header from '@/Layouts/HeaderPanel.vue';
 </script>
 
 <script>
@@ -614,5 +629,7 @@ export default {
     },
 }
 </script>
+
+
 
 

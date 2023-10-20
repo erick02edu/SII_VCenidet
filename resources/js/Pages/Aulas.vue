@@ -17,7 +17,7 @@
 
     <div class="inline-flex w-full" >
 
-        <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200">
+        <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200 mb-3">
             <input
                 class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
                 type="text"
@@ -27,7 +27,8 @@
             />
         </div>
 
-        <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  ">
+        <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  "
+        v-if="$page.props.user.permissions.includes('Agregar aulas')">
             Nuevo
         </button>
 
@@ -118,7 +119,9 @@
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Ubicacion
                         </th>
-                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200"
+                        v-if="$page.props.user.permissions.includes('Editar aulas')
+                        || $page.props.user.permissions.includes('Eliminar aulas')">
                             Opciones
                         </th>
                     </tr>
@@ -138,15 +141,19 @@
                             <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ aula.Ubicacion }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm"
+                        v-if="$page.props.user.permissions.includes('Editar aulas')
+                        || $page.props.user.permissions.includes('Eliminar aulas')">
 
-                            <Link :href="route('Aulas.edit',aula.id)" class="p-3 rounded-md bg-[#014E82] mx-2 ">
+                            <Link :href="route('Aulas.edit',aula.id)" class="p-3 rounded-md bg-[#014E82] mx-2 inline-flex mb-1"
+                            v-if="$page.props.user.permissions.includes('Editar aulas')">
                                 <i class="fa-solid fa-pen text-white"></i>
                             </Link>
 
 
-                            <a type="button" @click="showDelete(aula.id)" class="p-3 rounded-md bg-[#dc2626] mx-2">
-                                        <i class="fa-solid fa-trash text-white"></i>
+                            <a type="button" @click="showDelete(aula.id)" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1"
+                            v-if="$page.props.user.permissions.includes('Eliminar aulas')">
+                                <i class="fa-solid fa-trash text-white"></i>
                             </a>
 
                                     <div>

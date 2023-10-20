@@ -119,8 +119,4 @@ class ClasesController extends Controller
         return $Clases;
     }
 
-    public function destroy(string $id)
-    {
-        //
-    }
 }

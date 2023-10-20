@@ -119,17 +119,9 @@ export default {
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
         };
 
-
         var pdf=new html2pdf().from(element).set(pdfOptions);
-
         pdf.save()
-
         window.history.back();
-
-
-
-
-
     },
 
   },

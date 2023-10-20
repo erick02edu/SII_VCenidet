@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class categoria extends Model
 {
     use HasFactory;
+    public $timestamps = false;
     protected $fillable=['Descripcion','Clave','Horas'];
 }

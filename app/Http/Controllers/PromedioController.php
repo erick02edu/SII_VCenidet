@@ -8,6 +8,10 @@ use App\Models\Periodos;
 
 class PromedioController extends Controller
 {
+
+    
+
+
     public function index(){
         $calificaciones=historial_Alumno::all();
         $periodos=Periodos::all();

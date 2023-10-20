@@ -249,18 +249,19 @@
                             </p>
                         </td>
 
-                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm" v-if="$page.props.user.permissions.includes('Editar Plazas') || $page.props.user.permissions.includes('Eliminar Plazas')">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm"
+                        v-if="$page.props.user.permissions.includes('Editar Plazas') || $page.props.user.permissions.includes('Eliminar Plazas')">
 
 
 
                             <div v-if="$page.props.user.permissions.includes('Editar Plazas')">
-                                <Link :href="route('Plazas.edit',plaza.id)"  class="p-3 rounded-md bg-[#014E82] mx-2 " >
+                                <Link :href="route('Plazas.edit',plaza.id)"  class="p-3 rounded-md bg-[#014E82] mx-2 inline-flex mb-1" >
                                     <i class="fa-solid fa-pen text-white"></i>
                                 </Link>
                             </div>
 
                             <div v-if="$page.props.user.permissions.includes('Eliminar Plazas')">
-                                <a type="button" @click="showDelete(plaza.id)" class="p-3 rounded-md bg-[#dc2626] mx-2" >
+                                <a type="button" @click="showDelete(plaza.id)" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1" >
                                             <i class="fa-solid fa-trash text-white"></i>
                                 </a>
                             </div>

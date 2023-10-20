@@ -18,7 +18,7 @@
 
     <div class="inline-flex w-full" >
 
-        <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200">
+        <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200 mb">
             <input
                 class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
                 type="text"
@@ -28,7 +28,8 @@
             />
         </div>
 
-        <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] ">
+        <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
+        v-if="$page.props.user.permissions.includes('Agregar Departamentos')">
             Nuevo
         </button>
 
@@ -63,7 +64,7 @@
                 </button>
         </div>
         <!-- Modal body -->
-        <div class="p-6 space-y-6">
+        <div class="p-6 space-y-6 w-full">
             <form @submit.prevent="crearUsuario"  class="w-full max-w-lg">
                     <div class="flex flex-wrap -mx-3 mb-6">
 
@@ -94,19 +95,20 @@
                                     :key="persona.id"
                                     :value="persona.id"
                                 >
-                                    {{ persona.name }}
+                                    {{ persona.Nombre }} {{ persona.ApellidoP }} {{ persona.ApellidoM }}
 
 
                                 </option>
                             </select>
-                        </div>
 
-                        <!-- Modal footer -->
+                                                    <!-- Modal footer -->
 
                         <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
                             <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar</button>
                             <button @click="hideElement" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar</button>
                         </div>
+                        </div>
+
                 </div>
             </form>
         </div>
@@ -137,7 +139,9 @@
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Encargado
                         </th>
-                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200"
+                        v-if="$page.props.user.permissions.includes('Editar información de los departamentos')
+                        || $page.props.user.permissions.includes('Eliminar departamentos')">
                             Opciones
                         </th>
                     </tr>
@@ -160,18 +164,24 @@
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
                             <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap" v-for="persona in personal" >
-                                <p v-if="persona.id==departamento.idEncargado">{{ persona.name }} </p>
+                                <p v-if="persona.id==departamento.idEncargado">
+                                    {{ persona.Nombre }} {{ persona.ApellidoP }} {{ persona.ApellidoM }}
+                                </p>
                             </p>
                         </td>
 
-                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm"
+                        v-if="$page.props.user.permissions.includes('Editar información de los departamentos')
+                        || $page.props.user.permissions.includes('Eliminar departamentos')">
 
-                            <Link :href="route('Departamentos.edit',departamento.id)" class="p-3 rounded-md bg-[#014E82] mx-2 ">
+                            <Link :href="route('Departamentos.edit',departamento.id)" class="p-3 rounded-md bg-[#014E82] mx-2 "
+                            v-if="$page.props.user.permissions.includes('Editar información de los departamentos')">
                                 <i class="fa-solid fa-pen text-white"></i>
                             </Link>
 
 
-                            <a type="button" @click="showDelete(departamento.id,departamento.Nombre)" class="p-3 rounded-md bg-[#dc2626] mx-2">
+                            <a type="button" @click="showDelete(departamento.id,departamento.Nombre)" class="p-3 rounded-md bg-[#dc2626] mx-2"
+                            v-if="$page.props.user.permissions.includes('Eliminar departamentos')">
                                         <i class="fa-solid fa-trash text-white"></i>
                             </a>
 

@@ -12,14 +12,12 @@ use Illuminate\Support\Facades\Redirect;
 class RoleController extends Controller
 {
 
-
     public function __construct()
     {
+
+        $this->middleware(['role_or_permission:Administrador|Ver Roles|Crear roles|Editar información de los roles|Eliminar roles']);
         $this->middleware('can:Asignar roles a los usuarios')->only('AsignarRol');
 
-
-        
-        $this->middleware(['permission:Ver Roles|Crear roles|Editar información de los roles|Eliminar roles|Asignar Permisos a los roles'])->only('index');
         $this->middleware('can:Crear roles')->only('store');
         $this->middleware('can:Editar información de los roles')->only('edit','update');
         $this->middleware('can:Eliminar roles')->only('destroy');
@@ -27,7 +25,7 @@ class RoleController extends Controller
 
     public function index(){
         $Roles=Role::all();
-        return Inertia::render('Roles',['roles'=>$Roles]);
+        return Inertia::render('Modulos/Administrador/RolesPermisos/Roles',['roles'=>$Roles]);
     }
 
 
@@ -92,7 +90,7 @@ class RoleController extends Controller
     public function edit(String $id)
     {
         $Role = Role::find($id);
-        return Inertia::render ('formEditarRol',[
+        return Inertia::render ('Modulos/Administrador/RolesPermisos/formEditarRol',[
             'rol'=>$Role,
         ]);
     }
@@ -125,6 +123,8 @@ class RoleController extends Controller
     }
 
     //Funcion para obtener rol de un usuario por medio de su id
+
+
     public function ObtenerRolUsuario(String $id)
     {
         $User = User::find($id); //obtener usuario autenticado
@@ -146,7 +146,7 @@ class RoleController extends Controller
 
         $ListaRoles=Role::all();
 
-        return Inertia::render ('AsignarRol',[
+        return Inertia::render ('Modulos/Administrador/RolesPermisos/AsignarRol',[
             'usuario'=>$User,
             'RolesActuales'=>$roles,
             'ListaRolesTotal'=>$ListaRoles,
@@ -163,6 +163,7 @@ class RoleController extends Controller
         //return redirect()->route('Users.editRole',$id)->with('Info','Se asigno los roles correctamente');
 
         return back()->with([$id]);
+
 
     }
 

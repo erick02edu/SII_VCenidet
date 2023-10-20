@@ -14,10 +14,8 @@ class PermissionController extends Controller
 
     public function __construct()
     {
-        $this->middleware('can:Asignar Permisos a los roles')->only('EditPermisos','asignarPermisos');
-
+        $this->middleware(['role:Administrador'])->only(['editPermisos','asignar']);
     }
-
 
     public function index()
     {
@@ -25,7 +23,6 @@ class PermissionController extends Controller
     }
 
     public function GetPermisos(){
-
         $Permisos=Permission::all();
         return response()->json(['ListaPermisos'=>$Permisos]);
     }
@@ -52,7 +49,7 @@ class PermissionController extends Controller
         $ListaPermisos=Permission::all();
 
 
-        return Inertia::render ('AsignarPermisos',[
+        return Inertia::render ('Modulos/Administrador/RolesPermisos/AsignarPermisos',[
             'rol'=>$Role,
             'permisosAsignados'=>$permissionsArray,
             'permisosIDAsignados'=>$permissionsID,
@@ -70,21 +67,4 @@ class PermissionController extends Controller
     }
 
 
-    public function can(Request $request){
-
-        //Recuperamos los datos
-        $id = $request->input('userID');
-        $permiso = $request->input('Permiso');
-
-        //Obtenemos el usuario por su ID
-        $User = User::find($id);
-
-        //Verificamos si el usuario tiene el permiso enviado
-        //hasPermissionTo retorna true o false de acuerdo a si tiene la funcion
-        $desicion=$User->hasPermissionTo($permiso,'web');
-
-        //Obtenemos lista de roles
-        return response()->json(['decision'=>$desicion]);
-
-    }
 }

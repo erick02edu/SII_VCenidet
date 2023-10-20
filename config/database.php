@@ -46,7 +46,7 @@ return [
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DATABASE_URL'),
-            'host' => env('DB_HOST', '127.0.0.1'),
+            'host' => env('DB_HOST', 'localhost'),
             'port' => env('DB_PORT', '3306'),
             'database' => env('DB_DATABASE', 'forge'),
             'username' => env('DB_USERNAME', 'forge'),
@@ -64,6 +64,8 @@ return [
 
             'dump' => [
                 'dump_binary_path' => 'C:\laragon\bin\mysql\mysql-8.0.30-winx64\bin', // Agrega aquí la ruta a mysqldump
+
+                
             ],
 
         ],

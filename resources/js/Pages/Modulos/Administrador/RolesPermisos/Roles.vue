@@ -6,10 +6,10 @@
             Lista de Roles
     </template>
 
-        <h3 class="text-m text-gray-900 dark:text-white py-1 ml-1">
+        <!-- <h3 class="text-m text-gray-900 dark:text-white py-1 ml-1">
                 Buscar por:
                 <input type="radio" value="name" name="Campos" v-model="campoBusqueda" required > Nombre
-        </h3>
+        </h3> -->
 
         <div class="inline-flex w-full" >
 
@@ -22,6 +22,34 @@
                     @input="HacerBusqueda()"
                 />
             </div>
+
+
+        <div class="relative inline-block text-left pl-3 pr-3">
+            <div>
+                <button type="button"  @click="MostrarOpcionesFiltro" class="inline-flex justify-center w-full rounded-md border border-gray-300 dark:border-slate-500 shadow-sm px-4 py-2 bg-white dark:bg-slate-700  text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 focus:outline-none focus:ring focus:[#014E82] active:bg-gray-200" id="dropdown-menu-button" aria-haspopup="true" aria-expanded="true">
+                <span class="pr-2"> <i class="fa-solid fa-filter"></i>  </span>{{ campoBusquedaVer }}
+                <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M9.293 5.293a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L10 7.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 010 0z" clip-rule="evenodd" />
+                </svg>
+                </button>
+            </div>
+
+            <div v-if="MostrarFiltro" class="origin-top-right mr-3 absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-menu-button" tabindex="-1">
+
+                <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-1" href="#">
+                <span @click="SeleccionarCampo('name','Nombre')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Nombre</span>
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+
+
+
+
 
             <button :type="type" @click="showElement"
             class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
@@ -117,7 +145,7 @@
                         </th>
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200"
                         v-if="$page.props.user.permissions.includes('Editar información de los roles')
-                        || $page.props.user.permissions.includes('Eliminar roles') || $page.props.user.permissions.includes('Asignar Permisos a los roles')">
+                        || $page.props.user.permissions.includes('Eliminar roles') || $page.props.user.roles.includes('Administrador')">
                             Opciones
                         </th>
                     </tr>
@@ -135,22 +163,24 @@
                         </td>
 
 
-                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm"
+                        v-if="$page.props.user.permissions.includes('Editar información de los roles')
+                        || $page.props.user.permissions.includes('Eliminar roles') || $page.props.user.roles.includes('Administrador')" >
 
-                            <Link :href="route('Roles.edit',rol.id)" class="p-3 rounded-md bg-[#014E82] mx-2 "
+                            <Link :href="route('Roles.edit',rol.id)" class="p-3 rounded-md bg-[#014E82] mx-2 inline-flex "
                             v-if="$page.props.user.permissions.includes('Editar información de los roles')">
                                 <i class="fa-solid fa-pen text-white"></i>
                             </Link>
 
 
-                            <a type="button" @click="showDelete(rol.id,rol.name)" class="p-3 rounded-md bg-[#dc2626] mx-2"
+                            <a type="button" @click="showDelete(rol.id,rol.name)" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex"
                             v-if="$page.props.user.permissions.includes('Eliminar roles')">
                                         <i class="fa-solid fa-trash text-white"></i>
                             </a>
 
-                            <Link :href="route('Roles.editPermisos',rol.id)" class="p-3 rounded-md bg-[#FFD200]  mx-2 "
-                            v-if="$page.props.user.permissions.includes('Asignar Permisos a los roles')">
-                                <strong>Ver permisos <span>  <i class="fa-solid fa-user-plus pl-1"></i> </span> </strong>
+                            <Link :href="route('Roles.editPermisos',rol.id)" class="p-3  rounded-md bg-[#FFD200] inline-flex mt-2  "
+                            v-if="$page.props.user.roles.includes('Administrador')">
+                                <strong class="text-sm">Ver permisos <span>  <i class="fa-solid fa-user-plus pl-1"></i> </span> </strong>
                             </Link>
 
 
@@ -160,29 +190,29 @@
                             </div>
 
                             <div>
-                                        <div :class="{ hidden: !isvisibleDelete }" v-bind:id="`Modal${rol.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">
-                                            <div class="relative w-full max-w-md max-h-full">
-                                                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                                    <button @click="hideDelete" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
-                                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                                        </svg>
-                                                        <span class="sr-only">Close modal</span>
-                                                    </button>
-                                                    <div class="p-6 text-center">
-                                                        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                                                        </svg>
-                                                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Esta seguro de eliminar este rol: {{ nameBorrarSeleccionado }} </h3>
-                                                        <Link @click="hideDelete" method="delete" :href="route('Roles.destroy', idBorrarSeleccionado)" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
-                                                            Si, estoy seguro
-                                                        </Link>
-                                                        <button @click="hideDelete" data-modal-hide="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancelar</button>
-                                                    </div>
-                                                </div>
+                                <div :class="{ hidden: !isvisibleDelete }" v-bind:id="`Modal${rol.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">
+                                    <div class="relative w-full max-w-md max-h-full">
+                                        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                            <button @click="hideDelete" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
+                                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                </svg>
+                                                <span class="sr-only">Close modal</span>
+                                            </button>
+                                            <div class="p-6 text-center">
+                                                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                </svg>
+                                                <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Esta seguro de eliminar este rol: {{ nameBorrarSeleccionado }} </h3>
+                                                <Link @click="hideDelete" method="delete" :href="route('Roles.destroy', idBorrarSeleccionado)" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                                                    Si, estoy seguro
+                                                </Link>
+                                                <button @click="hideDelete" data-modal-hide="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancelar</button>
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
 
                         </td>
 
@@ -254,10 +284,30 @@ export default {
       Permisos:Array,
       ListaPermisos:[],
 
+      campoBusquedaVer:'Nombre',
+      MostrarFiltro:false,
+
     }
   },
 
   methods: {
+
+    MostrarOpcionesFiltro(){
+
+        if(this.MostrarFiltro==true){
+            this.MostrarFiltro=false
+        }
+        else{
+            this.MostrarFiltro=true
+        }
+
+    },
+
+    SeleccionarCampo(campo,campoVer){
+        this.campoBusqueda=campo
+        this.campoBusquedaVer=campoVer
+        this.MostrarFiltro=false
+    },
 
 
     HacerBusqueda(){

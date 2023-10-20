@@ -11,9 +11,19 @@ use Inertia\Inertia;
 
 class MateriasController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->middleware(['permission:Ver materias|Agregar Materias|Editar Materias|Eliminar Materias'])->only('index');
+        $this->middleware('can:Agregar Materias')->only('store');
+        $this->middleware('can:Editar Materias')->only('edit','update');
+        $this->middleware('can:Eliminar Materias')->only('destroy');
+    }
+
+
     public function index(){
         $Materias=Materias::all();
-        return inertia::render('Materias',[
+        return inertia::render('Modulos/RH/Materias/Materias',[
             'materias'=>$Materias
         ]);
     }
@@ -33,7 +43,7 @@ class MateriasController extends Controller
 
     public function edit(String $id){
         $Materia = Materias::find($id);
-        return Inertia::render ('formEditarMateria',[
+        return Inertia::render ('Modulos/RH/Materias/formEditarMateria',[
             'materia'=>$Materia,
         ]);
     }

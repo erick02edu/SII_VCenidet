@@ -180,7 +180,6 @@ return [
         'mail' => [
             'to' => 'erickrra11@gmail.com',
 
-
             'from' => [
                 'address' => env('MAIL_FROM_ADDRESS', 'erickrra11@gmail.com'),
                 'name' => env('MAIL_FROM_NAME', 'Example'),

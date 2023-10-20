@@ -25,7 +25,9 @@ use App\Http\Controllers\ProfesoresController;
 use App\Models\categoria;
 use App\Models\Clases;
 use App\Models\Departamentos;
+use App\Models\horariosDocentes;
 use App\Models\User;
+use FontLib\Table\Type\name;
 use Spatie\Permission\Contracts\Permission;
 
 /*
@@ -72,17 +74,29 @@ Route::middleware([
 
     //Rutas para crud horarios docentes
     Route::resource('HorariosDocentes',horariosDocentesController::class);
+    Route::get('HorariosDocentes/{idHorario}/ver',[horariosDocentesController::class,'Ver'])->name('HorariosDocentes.ver');
+    //reporte PDF
+    Route::get('HorariosDocentesPDF/{idHorario}',[horariosDocentesController::class,'GenerarPDF'])->name('HorariosDocentes.PDF')->middleware('auth:sanctum','verified');
+    Route::get('HorariosDocentesExcel/{idHorario}',[horariosDocentesController::class,'GenerarExcel'])->name('HorariosDocentes.Excel')->middleware('auth:sanctum','verified');
 
-    //Rutas para crud horarios docentes
+
+
+    //Rutas para crud clases
     Route::resource('Clases',ClasesController::class)->only(['store','destroy']);
 
-    //Rutas para crud horarios docentes
+
+    //Rutas para Materias
     Route::resource('Materias',MateriasController::class);
     Route::get('Materias.buscar',[MateriasController::class,'buscar']);
 
-
+    //Rutas a categorias
+    Route::resource('categorias',CategoriaController::class);
+    Route::get('categorias.buscar',[CategoriaController::class,'buscar']);
+    Route::get('categorias.paginacion',[CategoriaController::class,'cambiarPaginacion']);
     //Ruta dashboard
     Route::get('/dashboard',[RoleController::class,'verDashboard'])->name('dashboard');
+
+
 
 
 
@@ -151,7 +165,7 @@ Route::get('GetPermisosRol{id}',[PermissionController::class,'ObtenerPermisosRol
 
  Route::get('GetPermisos',[PermissionController::class,'GetPermisos'])->name('Permisos.getPermisos')->middleware('auth:sanctum','verified');//Ruta que permite obtener todos los Roles
  Route::get('AsignarPermisos',[PermissionController::class,'asignarPermisos'])->name('Permisos.asignar')->middleware('auth:sanctum','verified');//Ruta que permite obtener todos los Roles
- Route::get('Roles/{Role}/editPermisos',[PermissionController::class,'EditPermisos'])->name('Roles.editPermisos')->middleware('auth:sanctum','verified');//Ruta que redirige a la vista para asignar un Rol
+ Route::get('Roles/{Role}/editPermisos',[PermissionController::class,'editPermisos'])->name('Roles.editPermisos')->middleware('auth:sanctum','verified');//Ruta que redirige a la vista para asignar un Rol
 
 
  Route::post('Permisos/can',[PermissionController::class,'can'])->name('Permisos.can')->middleware('auth:sanctum','verified');
@@ -174,11 +188,6 @@ Route::post('AplicacionActualizar',[AplicacionPeriodoController::class,'actualiz
 Route::get('Aplicaciones.buscar',[AplicacionPeriodoController::class,'buscarAplicacion'])->middleware('auth:sanctum','verified');
 
 
-//Rutas a categorias
-
-Route::resource('categorias',CategoriaController::class)
-->middleware('auth:sanctum','verified')->only(['index']);
-
 
  //Rutas para respaldo
  Route::resource('backup',BackupController::class)
@@ -190,3 +199,15 @@ Route::resource('categorias',CategoriaController::class)
 
  Route::get('Preuba.index',[BackupController::class,'Prueba'])->name('Prueba.index')->middleware('auth:sanctum','verified');
 
+
+
+ //Prueba mail
+Route::get('PruebaMail.index',function(){
+    return Inertia::render('PruebaMail');
+})->name('PruebaMail.index');
+
+Route::get('/reporte', function () {
+    return view('Reportes.Horarios');
+});
+
+Route::get('/reporte/{id}',[horariosDocentesController::class,'verExcel'])->name('/reporte{id}');

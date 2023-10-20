@@ -5,13 +5,11 @@
             Periodos de aplicacion
     </template>
 
-    <h3 class="text-m text-gray-900 dark:text-white py-1 ml-1">
+    <!-- <h3 class="text-m text-gray-900 dark:text-white py-1 ml-1">
         Buscar periodo por:
 
         <input type="radio" value="descripcion" name="Campos" v-model="campoBusqueda" required > Descripcion
-        <!-- <input type="radio" value="idPeriodo" name="Campos" v-model="campoBusqueda" required> Periodo -->
-
-    </h3>
+    </h3> -->
 
 
     <div class="inline-flex w-full" >
@@ -25,6 +23,34 @@
             @input="HacerBusqueda()"
         />
     </div>
+
+
+    <div class="relative inline-block text-left pl-3 pr-3 pt-2">
+            <div>
+                <button type="button"  @click="MostrarOpcionesFiltro" class="inline-flex justify-center w-full rounded-md border border-gray-300 dark:border-slate-500 shadow-sm px-4 py-2 bg-white dark:bg-slate-700  text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 focus:outline-none focus:ring focus:[#014E82] active:bg-gray-200" id="dropdown-menu-button" aria-haspopup="true" aria-expanded="true">
+                <span class="pr-2"> <i class="fa-solid fa-filter"></i>  </span>{{ campoBusquedaVer }}
+                <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M9.293 5.293a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L10 7.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 010 0z" clip-rule="evenodd" />
+                </svg>
+                </button>
+            </div>
+
+            <div v-if="MostrarFiltro" class="origin-top-right mr-3 absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-menu-button" tabindex="-1">
+
+                <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-1" href="#">
+                <span @click="SeleccionarCampo('descripcion','Descripcion')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Descripcion</span>
+                </div>
+
+            </div>
+        </div>
+
+
+
+
+
+
+
+
     <form @submit.prevent="AplicarCambios()" class="flex justify-end w-full ">
         <div id="modalContainer" class=" mt-3" v-if="$page.props.user.permissions.includes('Actualizar fechas en los periodos de aplicacion')">
             <button :type="type" class="rounded-md bg-[#014E82] px-5 py-3 mb-2 text-center text-sm text-white hover:bg-[#0284c7]  ">
@@ -41,22 +67,25 @@
     </div>
 
 
-    <!-- Capa oscura -->
+    <!-- IDAPLICACIONES:{{ ListaIDAplicaciones }}
+    IDPERIODOS:{{ ListaIDPeriodos }} -->
+
+
     <div :class="{ hidden: !isVisible }" class="fixed inset-0 bg-black opacity-50">
     </div>
 
 
 
     <div id="modalContainer">
-        <!-- Main modal -->
+
         <div :class="{ hidden: !isVisible }">
 
             <div id="defaultModal" tabindex="-1" aria-hidden="true"  class="fixed inset-0 flex items-center justify-center z-50">
                 <div class="relative w-full max-w-2xl max-h-full">
 
-                <!-- Modal content -->
+
                     <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
-                <!-- Modal header -->
+
                 <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
                         Generar nueva aplicacion de periodos
@@ -68,7 +97,7 @@
                     <span class="sr-only">Close modal</span>
                 </button>
         </div>
-        <!-- Modal body -->
+
         <div class="p-6 space-y-6">
             <form @submit.prevent="crearAplicacion"  class="w-full max-w-lg">
                     <div class="flex flex-wrap -mx-3 mb-6">
@@ -101,7 +130,6 @@
                             </select>
                         </div>
 
-                        <!-- Modal footer -->
                         <div class="block items-center p-8 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-700 mr-10">
                             <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar</button>
                             <button @click="hideElement" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar</button>
@@ -115,19 +143,6 @@
     </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     <div v-if="mensajeActualizar!=null" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-3 mb-3" role="alert">
@@ -146,16 +161,16 @@
     </div>
 
 
-        <!--TABLA DE APLICACION DE PERIODOS-->
+
         <div class="inline-block min-w-full overflow-hidden rounded-lg shadow">
             <table class="w-full whitespace-no-wrap">
-                <!--Encabezados-->
+
                 <thead>
                     <tr class="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
 
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             id Aplicacion
-                            {{ AplicacionBuscar }}
+
                         </th>
 
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
@@ -171,9 +186,11 @@
                         </th>
                     </tr>
                 </thead>
-                <!--FILAS-->
+
                 <tbody>
                     <tr v-for="(aplicacion,index) in aplicaciones" :key="aplicacion.id" class="text-gray-700">
+
+
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
                             <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ aplicacion.id }}</p>
@@ -186,6 +203,8 @@
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
 
+
+
                             <select name="aplicaciones" v-model="ListaIDPeriodos[index]" class="dark:bg-slate-700 dark:text-slate-200 rounded-sm ">
                                 <option
                                     v-for="periodo in periodos"
@@ -194,7 +213,7 @@
                                     :selected="aplicacion.idPeriodo==periodo.id"
                                 >
                                     {{ periodo.mesInicio }} {{ periodo.AñoInicio }}-{{ periodo.mesTermino }} {{ periodo.AñoTermino }}
-                                    <!-- --id:{{ periodo.id }} -->
+
                                 </option>
                             </select>
                         </td>
@@ -263,17 +282,12 @@ export default {
     props:{
          aplicaciones:Array,
          periodos:Array,
-    },
+         ListaIDAplicaciones:Array,
+         ListaIDPeriodos:Array
+        },
 
     mounted(){
 
-        this.aplicaciones.forEach((aplicacion, index) => {
-            this.ListaIDPeriodos[index]=aplicacion.idPeriodo;
-            this.ListaIDAplicaciones[index]=aplicacion.id;
-
-        });
-
-        this.ListaCompleta=this.$page.props.aplicaciones;
 
     },
 
@@ -284,8 +298,8 @@ export default {
       idEliminar:0,
       idBorrarSeleccionado:0,
 
-      ListaIDPeriodos:[],
-      ListaIDAplicaciones:[],
+    //    ListaIDPeriodos:[],
+    //   ListaIDAplicaciones:[],
 
       mensajeActualizar:null,
       mensajeEliminar:null,
@@ -301,10 +315,31 @@ export default {
       AplicacionBuscar:'',
 
       ListaCompleta:'',
+      campoBusquedaVer:'Descripcion',
+      MostrarFiltro:false,
     }
   },
 
   methods: {
+
+
+    MostrarOpcionesFiltro(){
+
+        if(this.MostrarFiltro==true){
+            this.MostrarFiltro=false
+        }
+        else{
+            this.MostrarFiltro=true
+        }
+
+    },
+
+    SeleccionarCampo(campo,campoVer){
+        this.campoBusqueda=campo
+        this.campoBusquedaVer=campoVer
+        this.MostrarFiltro=false
+    },
+
     showDelete(id,index){
         this.idBorrarSeleccionado=id;
         this.idEliminar=index
@@ -316,6 +351,13 @@ export default {
 
     async crearAplicacion(){
         await this.$inertia.post(route('Aplicaciones.store'),this.NuevaAplicacion)
+
+        this.$page.props.aplicaciones.forEach((aplicacion, index) => {
+            this.ListaIDPeriodos[index]=aplicacion.idPeriodo;
+            this.ListaIDAplicaciones[index]=aplicacion.id;
+        });
+
+
         this.hideElement()
         this.mensajeEliminar=null;
         this.mensajeActualizar=null;

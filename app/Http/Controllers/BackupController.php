@@ -13,6 +13,13 @@ use Exception;
 
 class BackupController extends Controller
 {
+
+
+    public function __construct()
+    {
+        $this->middleware(['permission:Hacer respaldo de la base de datos|Hacer restauración de la base de datos'])->only('index');
+    }
+
     public function index()
     {
         $backups =' Backup::all();';
@@ -23,27 +30,20 @@ class BackupController extends Controller
 
     public function Generar(){
 
-        // Ejecutar la operación de respaldo
-        try {
+        // Artisan::call('backup:run');
 
-            Artisan::call('backup:run', [
-                '--only-db' => true,
-                '--disable-notifications' => true,
-            ]);
+        // $salida=Artisan::output();
 
-            // Obtén la salida del comando (opcional)
-            $output = Artisan::output();
+        // return response()->json(['salida'=>$salida]);
+
+        // $backupFileName = 'backup_SII_CENIDET' . date('Y-m-d_H-i-s') . '.sql';
+        // $command = "mysqldump -u root -p sii_del_cenidet > " . storage_path('app/backups/') . $backupFileName;
+        // exec($command);
+
+        // return response()->download(storage_path('app/backups/') . $backupFileName);
 
 
-        } catch (Exception $e) {
-            // Manejar el error de manera adecuada
-             echo 'Error: ' . $e->getMessage();
-             return response()->json($e);
-
-        }
-
-        return response()->json($output);
-    }
+     }
 
 
     public function Prueba(){

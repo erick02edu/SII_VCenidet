@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id('id');
             $table->string('Descripcion'); // Agrega la nueva columna
             $table->string('Clave'); // Agrega la nueva columna
-            $table->interger('Horas'); // Agrega la nueva columna
+            $table->integer('Horas'); // Agrega la nueva columna
         });
     }
 

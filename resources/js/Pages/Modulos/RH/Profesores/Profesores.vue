@@ -3,23 +3,23 @@
     <Head title="Usuarios" />
     <AuthenticatedLayout>
     <template #header>
-            Lista de Usuario
+            Lista de Profesores
     </template>
 
     <h3 class="text-m text-gray-900 dark:text-white py-1 ml-1">
         Buscar por:
 
-        <input type="radio" value="name" name="Campos" v-model="campoBusqueda" required > Nombre
-        <input type="radio" value="email" name="Campos" v-model="campoBusqueda" required> Email
+        <input type="radio" value="Nombre" name="Campos" v-model="campoBusqueda" required > Nombre
+        <input type="radio" value="ApellidoP" name="Campos" v-model="campoBusqueda" required> Apellido Paterno
 
     </h3>
 
 
-    <div class="inline-flex w-full" >
+    <div class="inline-flex w-full pb-3" >
 
-        <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200 pb-3">
+        <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200">
             <input
-                class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
+                class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 dark:text-gray-200 px-4 pr-20 rounded-lg text-sm focus:outline-none"
                 type="text"
                 placeholder="Buscar..."
                 v-model="UsuarioBuscar"
@@ -27,7 +27,8 @@
             />
         </div>
 
-        <button :type="type" v-if="$page.props.user.permissions.includes('Agregar Usuarios')" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  ">
+        <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  "
+        v-if="$page.props.user.permissions.includes('Agregar profesores')" >
             Nuevo
         </button>
 
@@ -35,7 +36,7 @@
     </div>
 
     <!-- Capa oscura -->
-    <div :class="{ hidden: !isVisible }" class="fixed inset-0  bg-black opacity-50">
+    <div :class="{ hidden: !isVisible }" class="fixed inset-0 bg-black opacity-50">
     </div>
 
 
@@ -52,7 +53,7 @@
                 <!-- Modal header -->
                 <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Agregar Usuario
+                        Agregar Profesor
                     </h3>
                 <button type="button" @click="hideElement" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -63,42 +64,76 @@
         </div>
         <!-- Modal body -->
         <div class="p-6 space-y-6">
-            <form @submit.prevent="crearUsuario"  class="w-full max-w-lg">
+            <form @submit.prevent="crearProfesor"  class="w-full max-w-lg">
                     <div class="flex flex-wrap -mx-3 mb-6">
 
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
                                 Nombre
                             </label>
-                            <input id="Nombre" v-model="NuevoUsuario.name"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="nombre" required>
+                            <input id="Nombre" v-model="NuevoProfesor.Nombre"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="nombre" required>
                         </div>
 
                         <div class="w-full md:w-1/2 px-3">
                             <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
-                                email
+                                Apelldio Paterno
                             </label>
-                            <input id="email" v-model="NuevoUsuario.email" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"   type="text" placeholder="email" required>
+                            <input id="text" v-model="NuevoProfesor.ApellidoP" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"   type="text" placeholder="Apellido Paterno" required>
                         </div>
 
-                        <div class="w-full px-3">
-                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-password">
-                                    Contraseña
-                                </label>
-                                <input id="password" v-model="NuevoUsuario.password" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="password" placeholder="contraseña" required>
+                        <div class="w-full md:w-1/2 px-3">
+                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
+                                Apelldio Materno
+                            </label>
+                            <input id="text" v-model="NuevoProfesor.ApellidoM" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"   type="text" placeholder="Apellido Materno" required>
+                        </div>
+
+                        <div class="w-full md:w-1/2 px-3">
+                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
+                                Fecha Nacimiento
+                            </label>
+                            <input type="date" v-model="NuevoProfesor.FechaNac" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  required>
                         </div>
 
 
-                        <br>
-                        <strong class="pl-8 dark:text-gray-200">Marque los roles que tendra este usuario</strong>
-                        <div class="pl-8 dark:text-gray-200">
-                            <label v-for="(Rol, index) in Roles" :key="index">
-                                <input type="checkbox" v-model="NuevoUsuario.RolesSeleccionados" :value="Rol.id" />
-                                <span class="pl-2 pt-6">{{Rol.name}}</span>
+
+                        <div class="w-full md:w-1/2 px-3">
+                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
+                                Genero
                             </label>
+
+                            <select  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" name="aplicaciones" v-model="NuevoProfesor.genero" required>
+                                    <option :value="'Masculino'">
+                                       Masculino
+                                    </option>
+                                    <option :value="'Femenino'">
+                                       Femenino
+                                    </option>
+                                    <option :value="'NoBinario'">
+                                       No binario
+                                    </option>
+                            </select>
+
+                        </div>
+
+
+                        <div class="w-full md:w-1/2 px-3">
+                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
+                                Numero de telefono
+                            </label>
+                            <input type="tel" v-model="NuevoProfesor.NumeroTel" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" required placeholder="Ingrese su numero">
+                        </div>
+
+
+                        <div class="w-full md:w-full px-3">
+                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
+                                Especialidad
+                            </label>
+                            <input id="text" v-model="NuevoProfesor.Especialidad" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"   type="text" placeholder="Especialidad" required>
                         </div>
 
                         <!-- Modal footer -->
-                        <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-200">
+                        <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-500">
                             <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar</button>
                             <button @click="hideElement" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar</button>
                         </div>
@@ -124,65 +159,70 @@
                             ID
                         </th>
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
-                            Nombre
+                            Nombre completo
                         </th>
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
-                            Email
+                           Fecha nacimiento
                         </th>
-
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
-                            Estatus de la cuenta
+                           Genero
                         </th>
-
-                        <th v-if="$page.props.user.permissions.includes('Editar Usuarios')
-                        || $page.props.user.permissions.includes('Eliminar Usuarios') || $page.props.user.permissions.includes('Asignar roles a los usuarios')"
-                        class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                           Numero telefonico
+                        </th>
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                           Especialidad
+                        </th>
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200"
+                        v-if="$page.props.user.permissions.includes('Editar Información de los profesores') ||
+                        $page.props.user.permissions.includes('Eliminar Profesores')">
                             Opciones
                         </th>
                     </tr>
                 </thead>
                 <!--FILAS-->
                 <tbody>
-                    <tr v-for="usuario in usuarios" :key="usuario.id" class="text-gray-700">
+                    <tr v-for="profesor in profesores" :key="profesor.id" class="text-gray-700">
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
-                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ usuario.id }}</p>
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ profesor.id }}</p>
                         </td>
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
-                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ usuario.name }}</p>
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ profesor.Nombre }} {{ profesor.ApellidoP }} {{ profesor.ApellidoM }}</p>
                         </td>
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
-                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ usuario.email }}</p>
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ profesor.FechaNac }}</p>
                         </td>
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
-                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap" v-if="usuario.Estatus==0">
-                                SIN ASIGNAR
-                            </p>
-
-                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap" v-if="usuario.Estatus==1">
-                                ASIGNADA
-                            </p>
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ profesor.genero }}</p>
                         </td>
 
-                        <td v-if="$page.props.user.permissions.includes('Editar Usuarios') ||
-                        $page.props.user.permissions.includes('Eliminar Usuarios') || $page.props.user.permissions.includes('Asignar roles a los usuarios')"
-                        class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ profesor.NumeroTel }}</p>
+                        </td>
 
-                            <Link v-if="$page.props.user.permissions.includes('Editar Usuarios')" :href="route('Users.edit',usuario.id)" class="p-3 rounded-md bg-[#014E82] mx-2 " >
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ profesor.Especialidad }}</p>
+                        </td>
+
+
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm"
+                        v-if="$page.props.user.permissions.includes('Editar Información de los profesores') ||
+                        $page.props.user.permissions.includes('Eliminar Profesores')">
+
+                            <Link :href="route('Profesores.edit',profesor.id)" class="p-3 rounded-md bg-[#014E82] mx-2 "
+                            v-if="$page.props.user.permissions.includes('Editar Información de los profesores')">
                                 <i class="fa-solid fa-pen text-white"></i>
                             </Link>
 
 
-                            <a v-if="$page.props.user.permissions.includes('Eliminar Usuarios')" type="button" @click="showDelete(usuario.id,usuario.name)" class="p-3 rounded-md bg-[#dc2626] mx-2">
+                            <a v-if="$page.props.user.permissions.includes('Eliminar Profesores')" type="button" @click="showDelete(profesor.id,profesor.Nombre,profesor.ApellidoP,profesor.ApellidoM)" class="p-3 rounded-md bg-[#dc2626] mx-2">
                                         <i class="fa-solid fa-trash text-white"></i>
                             </a>
 
-                            <Link  v-if="$page.props.user.permissions.includes('Asignar roles a los usuarios')" :href="route('Users.editRole',usuario.id)" class="p-3 rounded-md bg-[#FFD200]  mx-2 ">
-                                <strong>Ver Rol <span>  <i class="fa-solid fa-user-plus pl-1"></i> </span> </strong>
-                            </Link>
 
 
                             <!-- Capa oscura -->
@@ -190,7 +230,7 @@
                             </div>
 
                             <div>
-                                        <div :class="{ hidden: !isvisibleDelete }" v-bind:id="`Modal${usuario.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">
+                                        <div :class="{ hidden: !isvisibleDelete }" v-bind:id="`Modal${profesor.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">
                                             <div class="relative w-full max-w-md max-h-full">
                                                 <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
                                                     <button @click="hideDelete" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
@@ -203,8 +243,8 @@
                                                         <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                                             <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                                         </svg>
-                                                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Esta seguro de eliminar al usuario: {{ nameBorrarSeleccionado }} </h3>
-                                                        <Link @click="hideDelete" method="delete" :href="route('Users.destroy', idBorrarSeleccionado)" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                                                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Esta seguro de eliminar al profesor: {{ nameBorrarSeleccionado }} </h3>
+                                                        <Link @click="hideDelete" method="delete" :href="route('Profesores.destroy', idBorrarSeleccionado)" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                                                             Si, estoy seguro
                                                         </Link>
                                                         <button @click="hideDelete" data-modal-hide="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancelar</button>
@@ -250,22 +290,16 @@ export default {
     },
 
     mounted() {
-        this.ObtenerListaRoles()
+
         this.hideDelete()
     },
 
     props:{
-         usuarios:Array
+         profesores:Array
     },
 
     data() {
     return {
-
-       infoEditar: {
-          name:'',
-          email:''
-      },
-
 
       isVisible: false,
       isvisibleDelete:false,
@@ -276,12 +310,17 @@ export default {
       idBorrarSeleccionado:0,
       nameBorrarSeleccionado:"",
 
-      NuevoUsuario:{
-          name:'',
-          email:'',
-          password:'',
-          RolesSeleccionados:[],
+      NuevoProfesor:{
+          Nombre:'',
+          ApellidoP:'',
+          ApellidoM:'',
+          FechaNac:'',
+          genero:'',
+          NumeroTel:'',
+          Especialidad:'',
       },
+
+
 
       Roles:Array,
       ListaRoles:[],
@@ -311,25 +350,11 @@ export default {
         });
     },
 
-    async crearUsuario(){
-        await this.$inertia.post(route('Users.store'),this.NuevoUsuario)
+    async crearProfesor(){
+        await this.$inertia.post(route('Profesores.store'),this.NuevoProfesor)
         this.hideElement()
     },
 
-    async ObtenerListaRoles(){
-
-        await axios.get('/GetRoles') // Ruta de la API en Laravel
-        .then(response => {
-            this.ListaRoles = response.data.ListaRoles;
-            console.log("Lista Roles:",response.data.ListaRoles[0].name);
-
-            this.Roles=this.ListaRoles;
-
-        })
-        .catch(error => {
-            console.error('Error al obtener datos:', error);
-        });
-    },
 
     showElement() {
       this.isVisible = true;
@@ -338,9 +363,9 @@ export default {
       this.isVisible = false;
     },
 
-    showDelete(id,name){
+    showDelete(id,name,ApellidoP,apellidoM){
         this.idBorrarSeleccionado=id;
-        this.nameBorrarSeleccionado=name;
+        this.nameBorrarSeleccionado=name+' '+ApellidoP+' '+apellidoM;
         this.isvisibleDelete = true;
     },
     hideDelete(){

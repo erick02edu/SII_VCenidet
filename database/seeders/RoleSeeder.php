@@ -16,39 +16,87 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        $guardName='sanctum';
+
+        //EJECUTAR php artisan migrate:fresh --seed para ejecutar todos los seeder
 
         $roleAdmin=Role::create(['name'=>'Administrador']);
         $roleRH=Role::create(['name'=>'Usuario RH']);
         $roleProfesor=Role::create(['name'=>'Profesor']);
 
 
-        //PLAZAS
-        Permission::create(['name'=>'Agregar Plazas']);
-        Permission::create(['name'=>'Editar Plazas']);
-        Permission::create(['name'=>'Eliminar Plazas']);
-        Permission::create(['name'=>'Ver Plazas']);
+        //PERIODOS DE APLICACION
+        Permission::create(['name'=>'Ver periodos de aplicacion']);
+        Permission::create(['name'=>'Agregar Periodos de aplicacion']);
+        Permission::create(['name'=>'Eliminar Periodos de Aplicacion']);
+        Permission::create(['name'=>'Actualizar fechas en los periodos de aplicacion']);
 
-        //ROLES
-        Permission::create(['name'=>'Agregar Roles']);
-        Permission::create(['name'=>'Editar Roles']);
-        Permission::create(['name'=>'Eliminar Roles']);
-        Permission::create(['name'=>'Ver Roles']);
-
-        //USUARIOS
+        //Usuarios
         Permission::create(['name'=>'Agregar Usuarios']);
         Permission::create(['name'=>'Editar Usuarios']);
         Permission::create(['name'=>'Eliminar Usuarios']);
-        Permission::create(['name'=>'Ver Usuarios']);
+        Permission::create(['name'=>'Ver usuarios']);
+        Permission::create(['name'=>'Asignar roles a los usuarios']);
+
+        //Roles/Permisos
+        Permission::create(['name'=>'Ver Roles']);
+        Permission::create(['name'=>'Crear roles']);
+        Permission::create(['name'=>'Editar información de los roles']);
+        Permission::create(['name'=>'Eliminar roles']);
+
+        //Personal
+        Permission::create(['name'=>'Ver informacion del personal']);
+        Permission::create(['name'=>'Agregar Personal']);
+        Permission::create(['name'=>'Asignar cuentas de usuarios al personal']);
+        Permission::create(['name'=>'Asignar Plazas al personal']);
+        Permission::create(['name'=>'Editar información del personal']);
+        Permission::create(['name'=>'Eliminar al personal']);
+
+        //Plazas
+        Permission::create(['name'=>'Ver Plazas']);
+        Permission::create(['name'=>'Agregar Plazas']);
+        Permission::create(['name'=>'Editar Plazas']);
+        Permission::create(['name'=>'Eliminar Plazas']);
+
+        //Profesores
+        Permission::create(['name'=>'Ver profesores']);
+        Permission::create(['name'=>'Agregar profesores']);
+        Permission::create(['name'=>'Editar Información de los profesores']);
+        Permission::create(['name'=>'Eliminar Profesores']);
+
+        //Materias
+        Permission::create(['name'=>'Ver materias']);
+        Permission::create(['name'=>'Agregar Materias']);
+        Permission::create(['name'=>'Editar Materias']);
+        Permission::create(['name'=>'Eliminar Materias']);
+
+        //Horarios
+        Permission::create(['name'=>'Ver horarios']);
+        Permission::create(['name'=>'Crear y Editar Horarios']);
+        Permission::create(['name'=>'Eliminar Horarios']);
+
+
+        //Departamentos
+        Permission::create(['name'=>'Ver departamentos']);
+        Permission::create(['name'=>'Agregar Departamentos']);
+        Permission::create(['name'=>'Editar información de los departamentos']);
+        Permission::create(['name'=>'Eliminar departamentos']);
 
         //AULAS
-        Permission::create(['name'=>'Agregar Aulas']);
-        Permission::create(['name'=>'Editar Aulas']);
-        Permission::create(['name'=>'Eliminar Aulas']);
-        Permission::create(['name'=>'Ver Aulas']);
+        Permission::create(['name'=>'Ver aulas']);
+        Permission::create(['name'=>'Agregar aulas']);
+        Permission::create(['name'=>'Editar aulas']);
+        Permission::create(['name'=>'Eliminar aulas']);
 
-        //FECHA REINSCRIPCION
-        Permission::create(['name'=>'Generar fechas de reinscripciones']);
+        //Categorias
+        Permission::create(['name'=>'Ver categorias de plaza']);
+        Permission::create(['name'=>'Agregar categorias de plaza']);
+        Permission::create(['name'=>'Editar informacion de categorias plaza']);
+        Permission::create(['name'=>'Eliminar categorias plaza']);
+
+        //Respaldo
+        Permission::create(['name'=>'Hacer respaldo de la base de datos']);
+        Permission::create(['name'=>'Hacer restauración de la base de datos']);
+
     }
 
 }

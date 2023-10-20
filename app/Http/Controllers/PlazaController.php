@@ -13,8 +13,7 @@ class PlazaController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['permission:Ver Plazas|Editar Plazas|Agregar Plazas|Eliminar Plazas'])->only('index');
-
+        $this->middleware(['permission:Ver Plazas|Agregar Plazas|Editar Plazas|Eliminar Plazas'])->only('index');
         $this->middleware('can:Agregar Plazas')->only('store');
         $this->middleware('can:Editar Plazas')->only('edit','update');
         $this->middleware('can:Eliminar Plazas')->only('destroy');
@@ -28,21 +27,12 @@ class PlazaController extends Controller
 
         $Categorias=app(CategoriaController::class)->ObtenerCategorias();
 
-        return Inertia::render('Plazas',[
+        return Inertia::render('Modulos/RH/Plazas/Plazas',[
             'plazas'=>$Plazas,
             'categorias'=>$Categorias
         ]);
     }
 
-    public function create()
-    {
-        //
-        return Inertia::render('FormCrear');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
 
@@ -98,7 +88,7 @@ class PlazaController extends Controller
 
 
 
-        return Inertia::render ('formEditarPlaza',[
+        return Inertia::render ('Modulos/RH/Plazas/formEditarPlaza',[
             'plaza'=>$Plaza,
             'categoriaEditar'=>$categoriaEditar,
             'ListaCategorias'=>$Listacategorias,

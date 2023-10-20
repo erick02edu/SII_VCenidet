@@ -23,6 +23,7 @@
 
             </div>
 
+            
 
 
         </div>
@@ -139,10 +140,16 @@ import DropdownLink from '@/Components/DropdownLink.vue';
             if(isDark.value==false){
                 this.icono='fa-solid fa-moon'
                 this.LogoCenidetURL='/img/CenidetLogoClaro.png'
+                this.$page.props.colorModal="#f1f5f9"
+                this.$page.props.textoModal="#014E82"
             }
             else{
                 this.LogoCenidetURL='/img/CenidetLogoOscuro.png'
                 this.icono='fa-solid fa-sun'
+
+
+                this.$page.props.colorModal="#1f2937"
+                this.$page.props.textoModal="#f1f5f9"
             }
 
 
@@ -154,10 +161,14 @@ import DropdownLink from '@/Components/DropdownLink.vue';
                 if(isDark.value==true){
                     this.LogoCenidetURL='/img/CenidetLogoClaro.png'
                     this.icono='fa-solid fa-moon'
+                    this.$page.props.colorModal="#f1f5f9"
+                    this.$page.props.textoModal="#014E82"
                 }
                 else{
                     this.LogoCenidetURL='/img/CenidetLogoOscuro.png'
                     this.icono='fa-solid fa-sun'
+                    this.$page.props.colorModal="#1f2937"
+                    this.$page.props.textoModal="#f1f5f9"
                 }
             }
         },

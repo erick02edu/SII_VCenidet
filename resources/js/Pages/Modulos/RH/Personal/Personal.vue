@@ -26,25 +26,19 @@
                 />
             </div>
 
-
             <div class="justyfy-end flex w-full">
-
-
                 <button :type="type" @click="VerificarUsuario()" class="ml-auto  rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]"  :class="{'ml-auto rounded-md bg-slate-500 opacity-30 px-6 py-2.5 mb-4 text-center text-sm text-gray-500 hover:bg-gray-300 cursor-not-allowed' : !seleccionado}" :disabled="!seleccionado"
-                >
+                v-if="$page.props.user.permissions.includes('Asignar cuentas de usuarios al personal')">
                     Asignar cuenta de usuario
                 </button>
 
-
                 <button :type="type" @click="VerificarPlaza()" class="ml-3  rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]"  :class="{'ml-3 rounded-md bg-slate-500 opacity-30 px-6 py-2.5 mb-4 text-center text-sm text-gray-500 hover:bg-gray-300 cursor-not-allowed' : !seleccionado}" :disabled="!seleccionado"
-                >
+                v-if="$page.props.user.permissions.includes('Asignar Plazas al personal')" >
                     Asignar Plaza
                 </button>
 
-
-
                 <button :type="type" @click="showElement" class=" ml-3 mr-2 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
-                >
+                v-if="$page.props.user.permissions.includes('Agregar Personal')">
                     Nuevo
                 </button>
             </div>
@@ -97,7 +91,7 @@
                             <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
                                 RFC
                             </label>
-                            <input id="NombreAula" v-model="NuevoPersonal.RFC"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-1 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="XXXXXXXXXXXXX">
+                            <input id="NombreAula" maxlength="13" v-model="NuevoPersonal.RFC"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-1 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="XXXXXXXXXXXXX">
 
                             <p v-if="MostrarmensajeRFC!=false" :class="{ 'text-sm text-green-500':exitoRFC, 'text-sm text-red-600':!exitoRFC }">{{  mensajeRFC }}</p>
 
@@ -202,7 +196,8 @@
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Telefono
                         </th>
-                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200"
+                        v-if="$page.props.user.permissions.includes('Editar información del personal') || $page.props.user.permissions.includes('Eliminar al personal')">
                             Opciones
                         </th>
                     </tr>
@@ -226,14 +221,17 @@
                             <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ persona.Telefono }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-6 py-5 text-sm">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-6 py-5 text-sm"
+                        v-if="$page.props.user.permissions.includes('Editar información del personal') || $page.props.user.permissions.includes('Eliminar al personal')">
 
 
-                            <Link :href="route('Personal.edit',persona.id)" class="p-3 rounded-md bg-[#014E82] mx-2 ">
+                            <Link :href="route('Personal.edit',persona.id)" class="p-3 rounded-md bg-[#014E82] mx-2 inline-flex mb-1"
+                            v-if="$page.props.user.permissions.includes('Editar información del personal')">
                                 <i class="fa-solid fa-pen text-white"></i>
                             </Link>
 
-                            <a type="button" @click="showDelete(persona.id)" class="p-3 rounded-md bg-[#dc2626] mx-2">
+                            <a type="button" @click="showDelete(persona.id)" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1"
+                            v-if="$page.props.user.permissions.includes('Eliminar al personal')">
                                         <i class="fa-solid fa-trash text-white"></i>
                             </a>
 

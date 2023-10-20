@@ -51,6 +51,7 @@
                 },
 
                 Activado:[],
+                isCheckad:false,
 
                 data:[],
 
@@ -68,6 +69,26 @@
                 this.$inertia.get(route("Permisos.asignar",this.NuevoPermiso))
 
             },
+
+
+            MarcarTotalPermisos(){
+
+                console.log('Marcar todos')
+
+                if (this.isCheckad==true) {
+
+                    console.log('Marcado')
+                    this.NuevoPermiso.PermisosSeleccionados=[];
+
+                    for (var permiso of this.ListaPermisosTotal ) {
+                        this.NuevoPermiso.PermisosSeleccionados.push(permiso.id);
+                    }
+                }
+                else{
+
+                    this.NuevoPermiso.PermisosSeleccionados=[];
+                }
+            }
         },
 
     };
@@ -100,7 +121,7 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 -8 mt-5 mx-7">
                                 <div class='flex-inline '>
 
-                                    <label class="uppercase md:text-sm text-xs text-gray-500 dark:text-gray-200 text-light font-semibold">Nombre del Rol                   </label>
+                                    <label class="uppercase md:text-sm text-xs text-gray-500 dark:text-gray-200 text-light font-semibold">Nombre del Rol</label>
 
                                             <input readonly
                                                 id="name"
@@ -133,8 +154,19 @@
 
 
                             <br>
-
+                            
                             <strong class="pl-8 dark:text-gray-200">Marque los permisos que tendra este rol</strong>
+
+                            <div class="inline-flex justify-end items-end w-1/2">
+
+
+                                    <span class="dark:text-gray-200">Seleccionar todos</span>
+                                    <input type="checkbox" v-model="isCheckad" @change="MarcarTotalPermisos" class="ml-1 mb-1"/>
+
+                            </div>
+
+
+
                             <div class="pl-8 mt-2 mb-2 dark:text-gray-200 w-full">
                                 <label v-for="(permisos, index) in ListaPermisosTotal" :key="index">
 
@@ -144,11 +176,13 @@
                                     </div>
 
                                 </label>
+
                             </div>
 
 
 
-                            <div class='flex justify-end md:gap-8 gap-4 pt-5 pb-5 pr-5'>
+                            <div class='flex justify-end md:gap-8 gap-4 pt-5 pb-5 pr-5 w-full'>
+
                                 <Link
                                     :href="route('Roles.index')"
                                     class='w-auto bg-gray-500 hover:bg-gray-700 rounded-lg shadow-xl font-medium text-white px-4 py-2' type="button">

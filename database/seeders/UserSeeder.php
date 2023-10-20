@@ -15,14 +15,7 @@ class UserSeeder extends Seeder
     public function run(): void
     {
 
-
-        User::create([
-            'name' => 'Jorge Perez',
-            'email' => 'Jorge@gmail.com',
-            'password' => Hash::make('password'),
-        ])->syncRoles(['Administrador','Profesor','Usuario RH']) ;
-
-        $User=User::factory()->times(10)->create();
+        $User=User::factory()->times(80)->create();
 
     }
 }

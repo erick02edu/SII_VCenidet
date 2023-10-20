@@ -10,6 +10,17 @@ use Inertia\Inertia;
 class PersonalController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware(['permission:Ver informacion del personal|Agregar Personal|Asignar cuentas de usuarios al personal|Asignar Plazas al personal|Editar información del personal|Eliminar al personal'])->only('index');
+        $this->middleware('can:Agregar Personal')->only('store');
+        $this->middleware('can:Editar información del personal')->only('edit','update');
+        $this->middleware('can:Eliminar al personal')->only('destroy');
+
+        $this->middleware('can:Asignar cuentas de usuarios al personal')->only('asignarCuenta');
+        $this->middleware('can:Asignar Plazas al personal')->only('asignarPlaza');
+    }
+
     public function index()
     {
         $personal=personal::all();
@@ -30,7 +41,7 @@ class PersonalController extends Controller
             array_push($ArregloFilas,false);
         }
 
-        return Inertia::render('Personal',[
+        return Inertia::render('Modulos/RH/Personal/Personal',[
             'personal'=>$personal,
             'plazas'=>$plazas,
             'plazasDisponibles'=>$plazasDisponibles,
@@ -114,4 +125,9 @@ class PersonalController extends Controller
 
     }
 
+    public function ObtenerPersonal(){
+
+        $Personal=personal::all();
+        return $Personal;
+    }
 }

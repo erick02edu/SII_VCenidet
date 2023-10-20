@@ -17,7 +17,7 @@
 
         </h3>
 
-        <div class="inline-flex w-full" >
+        <div class="inline-flex w-full pb-3" >
 
             <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200">
                 <input
@@ -29,7 +29,8 @@
                 />
             </div>
 
-            <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] ">
+            <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
+            v-if="$page.props.user.permissions.includes('Agregar Materias')" >
                 Nuevo
             </button>
 
@@ -132,7 +133,8 @@
                             Descripcion
                         </th>
 
-                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200"
+                        v-if="$page.props.user.permissions.includes('Editar Materias') || $page.props.user.permissions.includes('Eliminar Materias')">
                             Opciones
                         </th>
                     </tr>
@@ -159,15 +161,18 @@
                         </td>
 
 
-                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm"
+                        v-if="$page.props.user.permissions.includes('Editar Materias') || $page.props.user.permissions.includes('Eliminar Materias')">
 
 
-                            <Link :href="route('Materias.edit',materia.id)"  class="p-3 rounded-md bg-[#014E82] mx-2 " >
+                            <Link :href="route('Materias.edit',materia.id)"  class="p-3 rounded-md bg-[#014E82] mx-2 "
+                            v-if="$page.props.user.permissions.includes('Editar Materias')">
                                 <i class="fa-solid fa-pen text-white"></i>
                             </Link>
 
 
-                            <a type="button" @click="showDelete(materia.id)" class="p-3 rounded-md bg-[#dc2626] mx-2" >
+                            <a type="button" @click="showDelete(materia.id)" class="p-3 rounded-md bg-[#dc2626] mx-2"
+                            v-if="$page.props.user.permissions.includes('Eliminar Materias')">
                                         <i class="fa-solid fa-trash text-white"></i>
                             </a>
 
@@ -293,6 +298,7 @@
             await this.$inertia.post(route('Materias.store'),this.NuevaMateria)
             this.hideElement()
             this.mensajeMateriaNueva='Materia registrada correctamente'
+            
         },
 
         showElement() {

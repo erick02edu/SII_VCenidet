@@ -51,14 +51,15 @@
 
                                 <div class="grid grid-cols-1">
                                 <label class="uppercase md:text-sm text-xs text-gray-500 dark:text-gray-200 text-light font-semibold">Genero</label>
-                                     <select  class="appearance-none block w-full mt-1 bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4  leading-tight focus:outline-none focus:bg-white" name="aplicaciones" v-model="InfoEditar.genero" required>
-                                            <option :value="'M'">
+                                     <select  class="appearance-none block w-full mt-1 bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4  leading-tight focus:outline-none focus:bg-white" name="aplicaciones"
+                                     v-model="InfoEditar.genero" required>
+                                            <option :value="'Masculino'">
                                             Masculino
                                             </option>
-                                            <option :value="'F'">
+                                            <option :value="'Femenino'">
                                             Femenino
                                             </option>
-                                            <option :value="'NB'">
+                                            <option :value="'NoBinario'">
                                             No binario
                                             </option>
                                     </select>

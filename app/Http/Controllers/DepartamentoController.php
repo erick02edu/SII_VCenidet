@@ -10,15 +10,21 @@ use Illuminate\Support\Facades\Redirect;
 
 class DepartamentoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
+    public function __construct()
+    {
+        $this->middleware(['permission:Ver departamentos|Agregar Departamentos|Editar información de los departamentos|Eliminar departamentos'])->only('index');
+        $this->middleware('can:Agregar Departamentos')->only('store');
+        $this->middleware('can:Editar información de los departamentos')->only('edit','update');
+        $this->middleware('can:Eliminar departamentos')->only('destroy');
+    }
+
     public function index()
     {
         $departamentos=Departamentos::all();
 
-        $users=app(UserController::class)->ObtenerUsuarios();
-        return Inertia::render('Departamentos',['departamentos'=>$departamentos,'personal'=>$users]);
+        $personal=app(PersonalController::class)->ObtenerPersonal();
+        return Inertia::render('Departamentos',['departamentos'=>$departamentos,'personal'=>$personal]);
     }
 
     //Crear nuevo departamento
@@ -49,7 +55,7 @@ class DepartamentoController extends Controller
     public function edit(string $id)
     {
         $Departamento = Departamentos::find($id);
-        $personal=app(UserController::class)->ObtenerUsuarios();
+        $personal=app(PersonalController::class)->ObtenerPersonal();
 
         return Inertia::render ('formEditarDepartamento',[
             'departamento'=>$Departamento,

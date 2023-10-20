@@ -24,7 +24,27 @@ class AplicacionPeriodoController extends Controller
 
         $AplicacionPeriodo=AplicacionPeriodos::all();
         $periodos=Periodos::all();
-        return Inertia::render('PeriodoAplicacion',['aplicaciones'=>$AplicacionPeriodo,'periodos'=>$periodos]); //Regresar a la vista mostrar
+
+        $ListaIdPeriodos=AplicacionPeriodos::all()->pluck('idPeriodo')->toArray();
+        $ListaIdAplicaciones= AplicacionPeriodos::all()->pluck('id')->toArray();
+
+        return Inertia::render('PeriodoAplicacion',[
+            'aplicaciones'=>$AplicacionPeriodo,
+            'periodos'=>$periodos,
+            'ListaIDAplicaciones'=>$ListaIdAplicaciones,
+            'ListaIDPeriodos'=>$ListaIdPeriodos
+        ]); //Regresar a la vista mostrar
+
+
+        // $AplicacionPeriodo = AplicacionPeriodos::with('periodos')->get()->map(function ($Aplicacion) {
+        //     return [
+        //         'id' => $Aplicacion->id,
+        //         'descripcion' => $Aplicacion->descripcion,
+        //         'periodo' => $Aplicacion->periodos->AñoInicio,
+
+        //     ];
+        // });
+        // return Inertia::render('PeriodoAplicacion2',['aplicaciones'=>$AplicacionPeriodo]);
     }
 
 
@@ -57,7 +77,9 @@ class AplicacionPeriodoController extends Controller
             $Aplicacion->save();
             $cont=$cont+1;
         };
-        return response()->json(['respuesta'=>'Aplicaciones actualizadas']);
+
+        return Redirect::route('Aplicaciones.index');
+        //return response()->json(['respuesta'=>'Aplicaciones actualizadas']);
     }
 
     public function buscarAplicacion(Request $request){

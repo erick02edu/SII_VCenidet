@@ -9,6 +9,16 @@ use Inertia\Response;
 
 class AulaController extends Controller
 {
+
+
+    public function __construct()
+    {
+        $this->middleware(['permission:Ver aulas|Agregar aulas|Editar aulas|Eliminar aulas'])->only('index');
+        $this->middleware('can:Agregar aulas')->only('store');
+        $this->middleware('can:Editar aulas')->only('edit','update');
+        $this->middleware('can:Eliminar aulas')->only('destroy');
+    }
+
     //Funcion para obtener los datos de todas las aulas
     public function index()
     {

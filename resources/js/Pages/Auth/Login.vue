@@ -36,12 +36,10 @@ const submit = () => {
 
     <div class="flex h-screen">
 
-        <div class="w-1/2 justify-center items-center px-12 py-20">
-            <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
+        <div class="w-1/2 justify-center items-center px-10 pt-10">
+            <div v-if="status" class="mb-4 font-medium text-sm text-green-600 pl-7">
                 {{ status }}
             </div>
-
-
 
             <form @submit.prevent="submit" class="py-20 px-10">
 

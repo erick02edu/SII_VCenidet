@@ -9,9 +9,20 @@ use Illuminate\Support\Facades\Redirect;
 
 class ProfesoresController extends Controller
 {
+
+
+    public function __construct()
+    {
+        $this->middleware(['permission:Ver profesores|Agregar profesores|Editar Información de los profesores|Eliminar Profesores'])->only('index');
+        $this->middleware('can:Agregar profesores')->only('store');
+        $this->middleware('can:Editar Información de los profesores')->only('edit','update');
+        $this->middleware('can:Eliminar Profesores')->only('destroy');
+    }
+
+
     public function index(){
         $profesores=Profesores::all();
-        return inertia::render('Profesores',['profesores'=>$profesores]);
+        return inertia::render('Modulos/RH/Profesores/Profesores',['profesores'=>$profesores]);
     }
 
     public function store(Request $request){
@@ -31,7 +42,7 @@ class ProfesoresController extends Controller
     }
     public function edit(String $id){
         $Profesor = Profesores::find($id);
-        return Inertia::render ('formEditarProfesor',[
+        return Inertia::render ('Modulos/RH/Profesores/formEditarProfesor',[
             'profesor'=>$Profesor,
         ]);
     }
