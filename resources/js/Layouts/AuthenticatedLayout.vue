@@ -51,5 +51,19 @@ import Navigation from '@/Layouts/Navigation.vue';
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background-color: #3371a3; /* Color del pulgar de la barra de desplazamiento al pasar el mouse */
 }
+
+.overflow-x-auto::-webkit-scrollbar {
+  width: 4px; /* Ancho de la barra de desplazamiento */
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background-color:#757c81a5; /* Color del pulgar de la barra de desplazamiento */
+  border-radius: 2px; /* Bordes redondeados del pulgar */
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background-color: #3371a3; /* Color del pulgar de la barra de desplazamiento al pasar el mouse */
+}
+
 </style>
 

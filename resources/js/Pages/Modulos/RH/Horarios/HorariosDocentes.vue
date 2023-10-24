@@ -179,10 +179,10 @@
                         <td class="border-b border-t-8 border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
 
                             <div class="dark:text-gray-200 p-3">
-                                Informacion:
+                                Informacion del horario:
                                 <div v-for="(profesor,index) in profesores">
                                     <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap" v-if="profesor.id==horario.idProfesor">
-                                        Nombre del profesor:{{ profesor.Nombre }} {{ profesor.ApellidoP }} {{ profesor.ApellidoM }}
+                                        Profesor:{{ profesor.Nombre }} {{ profesor.ApellidoP }} {{ profesor.ApellidoM }}
                                     </p>
                                 </div>
 
@@ -285,6 +285,53 @@
             </table>
     </div>
 
+
+        <nav aria-label="Page navigation example mt-4">
+                <ul class="inline-flex -space-x-px text-sm">
+
+
+                    <li v-if="this.Paginator.prev_page_url!=null" >
+                    <a :href="this.Paginator.prev_page_url" class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >Previous</a>
+                    </li>
+
+                    <li v-if="Paginator.current_page-2 >0">
+                        <a :href="`${urlPaginacion}${Paginator.current_page-2}`"  aria-current="page" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            {{ Paginator.current_page-2 }}</a>
+                    </li>
+
+                    <li v-if="Paginator.current_page-1 >0">
+
+
+                        <a :href="`${urlPaginacion}${Paginator.current_page-1}`" aria-current="page" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            {{ Paginator.current_page-1 }} </a>
+                    </li>
+
+                    <li>
+                        <a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">
+                            {{ Paginator.current_page }}</a>
+                    </li>
+
+                    <li v-if="Paginator.current_page+1<=cantidadPaginas">
+                        <a :href="`${urlPaginacion}${Paginator.current_page+1}`" aria-current="page" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >{{ Paginator.current_page+1 }}</a>
+                    </li>
+
+                    <li v-if="Paginator.current_page+2<=cantidadPaginas">
+                        <a :href="`${urlPaginacion}${Paginator.current_page+2}`" aria-current="page" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            {{ Paginator.current_page+2 }}</a>
+                    </li>
+
+                    <li v-if="this.Paginator.next_page_url!=null">
+                    <a :href="this.Paginator.next_page_url" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >Next</a>
+                    </li>
+
+                </ul>
+            </nav>
+
+
+
     </AuthenticatedLayout>
 
 
@@ -323,20 +370,31 @@ export default {
         this.Urls=this.$page.props.ListaUrl
         this.isVisible=false
         this.isvisibleDelete=false
+
+        if(this.Paginator.next_page_url!=null){
+            this.urlPaginacion = this.Paginator.next_page_url.slice(0, -1);
+        }
+        else if(this.Paginator.prev_page_url!=null){
+            this.urlPaginacion = this.Paginator.prev_page_url.slice(0, -1);
+        }
+
+        this.cantidadPaginas=this.Paginator.last_page
+
     },
 
     props:{
          profesores:Array,
          horarios:Array,
          periodos:Array,
-         ListaUrl:Array
+         ListaUrl:Array,
+         Paginator:Array
     },
 
     data() {
     return {
 
+        urlPaginacion:'',
         iframeSrc: '/HorariosDocentes/1/edit',
-
         // Urls:['/HorariosDocentes/1/edit','/HorariosDocentes/2/edit', '/HorariosDocentes/3/edit'],
         Urls:[],
         NuevoHorario:{

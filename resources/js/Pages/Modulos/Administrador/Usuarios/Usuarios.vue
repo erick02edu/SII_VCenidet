@@ -31,7 +31,7 @@
         <div class="relative inline-block text-left pl-3">
         <div>
             <button type="button"  @click="MostrarOpcionesFiltro" class="inline-flex justify-center w-full rounded-md border border-gray-300 dark:border-slate-500 shadow-sm px-4 py-2 bg-white dark:bg-slate-700  text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 focus:outline-none focus:ring focus:[#014E82] active:bg-gray-200" id="dropdown-menu-button" aria-haspopup="true" aria-expanded="true">
-             <span class="pr-2"> <i class="fa-solid fa-filter"></i>  </span>{{ campoBusquedaVer }} 
+             <span class="pr-2"> <i class="fa-solid fa-filter"></i>  </span>{{ campoBusquedaVer }}
             <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path fill-rule="evenodd" d="M9.293 5.293a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L10 7.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 010 0z" clip-rule="evenodd" />
             </svg>
@@ -342,6 +342,7 @@ export default {
     data() {
     return {
 
+        urlPaginacion:'',
        infoEditar: {
           name:'',
           email:''
@@ -369,7 +370,7 @@ export default {
           RolesSeleccionados:[],
       },
 
-      urlPaginacion:'',
+
       //Roles:Array,
       ListaRoles:[],
 
@@ -388,13 +389,13 @@ export default {
         else{
             this.MostrarFiltro=true
         }
-
     },
 
     SeleccionarCampo(campo,campoVer){
         this.campoBusqueda=campo
         this.campoBusquedaVer=campoVer
         this.MostrarFiltro=false
+        this.HacerBusqueda();
     },
 
 

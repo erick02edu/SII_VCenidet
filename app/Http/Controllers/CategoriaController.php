@@ -10,6 +10,18 @@ use Illuminate\Support\Facades\Redirect;
 
 class CategoriaController extends Controller
 {
+
+
+    public function __construct()
+    {
+        $this->middleware(['permission:Ver categorias de plaza|Agregar categorias de plaza|Editar informacion de categorias plaza|Eliminar categorias plaza'])->only('index');
+        $this->middleware('can:Agregar categorias de plaza')->only('store');
+        $this->middleware('can:Editar informacion de categorias plaza')->only('edit','update');
+        $this->middleware('can:Eliminar categorias plaza')->only('destroy');
+    }
+
+
+
     public function index(){
 
 

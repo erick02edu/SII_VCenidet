@@ -31,8 +31,8 @@
                 />
             </div>
 
-            <div v-if="$page.props.user.permissions.includes('Agregar Plazas')" class="w-full">
-                <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
+            <div v-if="$page.props.user.permissions.includes('Agregar Plazas')" class="w-full ">
+                <button :type="type" @click="showElement" class="ml-20 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  "
                 >
                     Nuevo
                 </button>
@@ -303,7 +303,53 @@
     </div>
 
 
+            <nav aria-label="Page navigation example mt-4">
+                <ul class="inline-flex -space-x-px text-sm">
+
+
+                    <li v-if="this.Paginator.prev_page_url!=null" >
+                    <a :href="this.Paginator.prev_page_url" class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >Previous</a>
+                    </li>
+
+                    <li v-if="Paginator.current_page-2 >0">
+                        <a :href="`${urlPaginacion}${Paginator.current_page-2}`"  aria-current="page" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            {{ Paginator.current_page-2 }}</a>
+                    </li>
+
+                    <li v-if="Paginator.current_page-1 >0">
+
+
+                        <a :href="`${urlPaginacion}${Paginator.current_page-1}`" aria-current="page" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            {{ Paginator.current_page-1 }} </a>
+                    </li>
+
+                    <li>
+                        <a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">
+                            {{ Paginator.current_page }}</a>
+                    </li>
+
+                    <li v-if="Paginator.current_page+1<=cantidadPaginas">
+                        <a :href="`${urlPaginacion}${Paginator.current_page+1}`" aria-current="page" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >{{ Paginator.current_page+1 }}</a>
+                    </li>
+
+                    <li v-if="Paginator.current_page+2<=cantidadPaginas">
+                        <a :href="`${urlPaginacion}${Paginator.current_page+2}`" aria-current="page" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            {{ Paginator.current_page+2 }}</a>
+                    </li>
+
+                    <li v-if="this.Paginator.next_page_url!=null">
+                    <a :href="this.Paginator.next_page_url" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >Next</a>
+                    </li>
+
+                </ul>
+            </nav>
+
+
     </AuthenticatedLayout>
+
 
 
 
@@ -318,64 +364,33 @@
 
     export default {
 
-
-
-        directives:{
-
-            'canPermiso':{
-                async mounted(el, binding) {
-                    //Obtemos la instancia del elemento
-                    const vm = binding.instance;
-                    // binding.value contiene el valor que pasaste a la directiva
-                    console.log(binding.value);
-                    //Obtenemos el permiso enviado a traves de la directiva
-                    vm.Permiso=binding.value;
-
-                    console.log("Id a enviar:",vm.$data.userID);
-                    console.log("Permiso a revisar:",vm.Permiso);
-
-                    //Datos a enviar a la ruta
-                    const userID=vm.$data.userID;
-                    const Permiso=vm.Permiso;
-
-                    const response=await axios.post('/Permisos/can',{userID,Permiso})
-                    .catch(error => {
-                        console.error('Error al obtener datos:', error);
-                    });
-                    vm.resultado=response.data.decision;
-                    console.log("Tiene permisos de",Permiso,":",vm.decision);
-
-                    if(vm.resultado==true){
-                        console.log("ver")
-                        el.style.display = 'block';  // Mostrar elemento
-                    }
-                    else{
-                        console.log("ocultar")
-                        el.style.display = 'none';  // Ocultar elemento
-                    }
-
-                }
-            }
-        },
-
-
-        components:{
+       components:{
             Link
         },
 
         mounted() {
+
             this.hideDelete()
+            if(this.Paginator.next_page_url!=null){
+                this.urlPaginacion = this.Paginator.next_page_url.slice(0, -1);
+            }
+            else if(this.Paginator.prev_page_url!=null){
+                this.urlPaginacion = this.Paginator.prev_page_url.slice(0, -1);
+            }
+            this.cantidadPaginas=this.Paginator.last_page
+
         },
 
         props:{
             plazas:Array,
             categorias:Array,
+            Paginator:Array
         },
 
         data() {
         return {
 
-
+            urlPaginacion:'',
             links:[
                 { label: "1", url: "/page/1", active: true },
                 { label: "2", url: "/page/2", active: false },
@@ -445,17 +460,17 @@
             });
         },
 
-        async canPermiso(Permiso){
-            const userID=this.userID
-            const response=await axios.post('/Permisos/can',{userID,Permiso})
-            .catch(error => {
-                console.error('Error al obtener datos:', error);
-                return false;
-            });
-            this.decision=response.data.decision;
-            console.log("Tiene permisos de",Permiso,":",this.decision);
-            return this.decision
-        },
+        // async canPermiso(Permiso){
+        //     const userID=this.userID
+        //     const response=await axios.post('/Permisos/can',{userID,Permiso})
+        //     .catch(error => {
+        //         console.error('Error al obtener datos:', error);
+        //         return false;
+        //     });
+        //     this.decision=response.data.decision;
+        //     console.log("Tiene permisos de",Permiso,":",this.decision);
+        //     return this.decision
+        // },
 
         async crearPlaza(){
 

@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
+use Spatie\Permission\Contracts\Permission;
 
 class RoleController extends Controller
 {
@@ -15,8 +16,8 @@ class RoleController extends Controller
     public function __construct()
     {
 
-        $this->middleware(['role_or_permission:Administrador|Ver Roles|Crear roles|Editar información de los roles|Eliminar roles']);
-        $this->middleware('can:Asignar roles a los usuarios')->only('AsignarRol');
+        $this->middleware(['role_or_permission:Administrador|Ver Roles|Crear roles|Editar información de los roles|Eliminar roles'])->only('index');
+        $this->middleware('can:Asignar roles a los usuarios')->only('AsignarRol','EditRole');
 
         $this->middleware('can:Crear roles')->only('store');
         $this->middleware('can:Editar información de los roles')->only('edit','update');
@@ -24,8 +25,18 @@ class RoleController extends Controller
     }
 
     public function index(){
-        $Roles=Role::all();
-        return Inertia::render('Modulos/Administrador/RolesPermisos/Roles',['roles'=>$Roles]);
+
+        //$Roles=Role::all();
+        $Pagination=Role::paginate(10);
+
+        $Roles=$Pagination->items();
+        $Permisos=app(PermissionController::class)->ObtenerPermisos();
+
+        return Inertia::render('Modulos/Administrador/RolesPermisos/Roles',[
+            'roles'=>$Roles,
+            'Permisos'=>$Permisos,
+            'Paginator'=>$Pagination
+        ]);
     }
 
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AlumnosController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -72,6 +73,7 @@ Route::middleware([
     //Rutas para crud Profesores
     Route::resource('Profesores',ProfesoresController::class);
 
+
     //Rutas para crud horarios docentes
     Route::resource('HorariosDocentes',horariosDocentesController::class);
     Route::get('HorariosDocentes/{idHorario}/ver',[horariosDocentesController::class,'Ver'])->name('HorariosDocentes.ver');
@@ -79,7 +81,8 @@ Route::middleware([
     Route::get('HorariosDocentesPDF/{idHorario}',[horariosDocentesController::class,'GenerarPDF'])->name('HorariosDocentes.PDF')->middleware('auth:sanctum','verified');
     Route::get('HorariosDocentesExcel/{idHorario}',[horariosDocentesController::class,'GenerarExcel'])->name('HorariosDocentes.Excel')->middleware('auth:sanctum','verified');
 
-
+    //Rutas para crud Alumnos
+    Route::resource('Alumnos',AlumnosController::class);
 
     //Rutas para crud clases
     Route::resource('Clases',ClasesController::class)->only(['store','destroy']);
@@ -132,6 +135,12 @@ Route::get('Plazas.buscar',[PlazaController::class,'buscarPlaza'])
 Route::resource('Personal',PersonalController::class)
 ->middleware('auth:sanctum','verified');
 
+Route::get('Personal.Activos',[PersonalController::class,'indexActivos'])
+->middleware('auth:sanctum','verified')->name('Personal.Activos');
+
+Route::get('Personal.Bajas',[PersonalController::class,'indexBajas'])
+->middleware('auth:sanctum','verified')->name('Personal.Bajas');;
+
 Route::get('Personal.buscar',[PersonalController::class,'buscarPersonal'])
 ->middleware('auth:sanctum','verified');
 
@@ -140,6 +149,10 @@ Route::post('Personal.asignarPlaza',[PersonalController::class,'asignarPlaza'])-
 
 Route::post('Personal.asignarCuenta',[PersonalController::class,'asignarCuenta'])->name('Personal.asignarCuenta')
 ->middleware('auth:sanctum','verified');
+
+Route::get('Personal.Filtro',[PersonalController::class,'Filtro'])
+->middleware('auth:sanctum','verified');
+
 
  //Rutas para crud departamentos
  Route::resource('Departamentos',DepartamentoController::class)
@@ -197,7 +210,7 @@ Route::get('Aplicaciones.buscar',[AplicacionPeriodoController::class,'buscarApli
 
 
 
- Route::get('Preuba.index',[BackupController::class,'Prueba'])->name('Prueba.index')->middleware('auth:sanctum','verified');
+ Route::get('Prueba.index',[BackupController::class,'Prueba'])->name('Prueba.index')->middleware('auth:sanctum','verified');
 
 
 

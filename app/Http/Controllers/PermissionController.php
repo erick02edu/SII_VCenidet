@@ -27,6 +27,11 @@ class PermissionController extends Controller
         return response()->json(['ListaPermisos'=>$Permisos]);
     }
 
+    public function ObtenerPermisos(){
+        $Permisos=Permission::all();
+        return $Permisos;
+    }
+
     //Asignar permisos a un determinado Rol por su Id
     public function asignarPermisos(Request $request){
         $id=$request->input('id');

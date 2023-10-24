@@ -22,8 +22,13 @@ class AulaController extends Controller
     //Funcion para obtener los datos de todas las aulas
     public function index()
     {
-        $Aulas=Aula::all();
-        return Inertia::render('Aulas',['aulas'=>$Aulas]); //Regresar a la vista mostrar
+        $Pagination=Aula::paginate(10);
+        $Aulas=$Pagination->items();
+
+        return Inertia::render('Aulas',[
+            'aulas'=>$Aulas,
+            'Paginator'=>$Pagination
+        ]);
     }
 
     //Funcion para registrar una nueva Aula

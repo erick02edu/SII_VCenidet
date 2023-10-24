@@ -23,13 +23,17 @@ class PlazaController extends Controller
 
     public function index()
     {
-        $Plazas=Plaza::all();//Este bombre aulas debe coincidir con el props en el scrip de vue
+
+        $Pagination=Plaza::paginate(10);
+
+        $Plazas=$Pagination->items();
 
         $Categorias=app(CategoriaController::class)->ObtenerCategorias();
 
         return Inertia::render('Modulos/RH/Plazas/Plazas',[
             'plazas'=>$Plazas,
-            'categorias'=>$Categorias
+            'categorias'=>$Categorias,
+            'Paginator'=>$Pagination
         ]);
     }
 

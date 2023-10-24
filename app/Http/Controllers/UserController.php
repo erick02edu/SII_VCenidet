@@ -30,8 +30,7 @@ class UserController extends Controller
     //Funcion para mostrar todos los usuarios retorna a la vista de Usuarios
     public function index()
     {
-        $Pagination=User::paginate(10);//Este bombre aulas debe coincidir con el props en el scrip de vue
-
+        $Pagination=User::paginate(10);
         $Usuarios=$Pagination->items();
 
         $roles=Role::all();
@@ -105,6 +104,12 @@ class UserController extends Controller
     public function ObtenerUsuarios(){
         $Users=User::all();
         return $Users;
+    }
+
+    public function ObtenerUsuariosDisponibles()
+    {
+        $usuariosDisponibles=User::where('estatus','0')->get();
+        return $usuariosDisponibles;
     }
 
 }

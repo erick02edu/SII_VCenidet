@@ -65,10 +65,10 @@
                     Asignar Plaza
                 </button>
 
-                <Link :href="route('Personal.create')"  class=" ml-3 mr-2 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
+                <button :type="type" @click="showElement" class=" ml-3 mr-2 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
                 v-if="$page.props.user.permissions.includes('Agregar Personal')">
                     Nuevo
-                </Link>
+                </button>
             </div>
 
         </div>
@@ -91,7 +91,7 @@
                 <!-- Modal header -->
                 <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Agregar Personal
+                        Agregar alumnos
                     </h3>
                     <button type="button" @click="hideElement" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -209,30 +209,27 @@
             <table class="w-full whitespace-no-wrap">
                 <thead>
                     <tr class="border-2 dark:border-slate-700 border-gray-300 bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
 
-                        </th>
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
-                            RFC
+                            No.Control
                         </th>
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Nombre
                         </th>
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
-                            CURP
+                            Fecha Nacimiento
                         </th>
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
-                            Cuenta asignada
+                            Curp
                         </th>
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
-                            Plaza asignada
+                            Direccion
                         </th>
-                        <!-- <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
-                            Telefono
-                        </th> -->
+
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
-                            Estatus
+                            Genero
                         </th>
+
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200"
                         v-if="$page.props.user.permissions.includes('Editar información del personal') || $page.props.user.permissions.includes('Eliminar al personal')">
                             Opciones
@@ -242,76 +239,28 @@
                 <tbody>
 
 
-                    <tr v-for="(persona,index) in personal" v-bind:id="`fila${persona.id}`"  class="text-gray-700"
+                    <tr v-for="(alumno,index) in alumnos" v-bind:id="`fila${persona.id}`"  class="text-gray-700"
                     >
-
-
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-3 py-5 text-xs ">
-                            <input v-if="persona.Estatus=='A'" type="radio" name="Persona" :value="persona" v-model="personalSeleccionado" >
-                        </td>
-
-                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-3 py-5 text-xs ">
-                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ persona.RFC }}</p>
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ alumno.noControl }}</p>
                         </td>
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-3 py-5 text-xs">
-                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ persona.Nombre }} {{ persona.ApellidoP }} {{ persona.ApellidoM }}</p>
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ alumno.Nombre }} {{ alumno.ApellidoP }} {{ alumno.ApellidoM }}</p>
                         </td>
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-3 py-5 text-xs">
-                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ persona.CURP }}</p>
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ alumno.FechaNac }}</p>
                         </td>
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-3 py-5 text-xs">
-
-                            <p v-if="persona.idUsuario==null" class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">SIN CUENTA ASIGNADA</p>
-
-                            <span v-for="usuario in usuarios">
-                                <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap"
-                                v-if="usuario.id==persona.idUsuario">
-                                {{ usuario.email }}
-                                </p>
-                            </span>
-
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ alumno.curp }}</p>
                         </td>
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-3 py-5 text-xs">
-
-                            <p v-if="persona.idPlaza==null" class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">SIN PLAZA ASIGNADA</p>
-
-                            <span v-for="plaza in plazas">
-                                <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap"
-                                v-if="plaza.id==persona.idPlaza">
-
-                                <span v-for="categoria in categorias">
-
-                                    <p v-if="categoria.id==plaza.idCategoria" class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">
-                                        {{ categoria.Descripcion }}
-                                    </p>
-                                </span>
-
-                                </p>
-                            </span>
-
-
-
-
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ alumno.Direccion }}</p>
                         </td>
 
-
-                        <!-- <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-3 py-5 text-xs">
-                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ persona.Telefono }}</p>
-                        </td> -->
-
-
-
-
-                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-xs">
-                            <strong class="text-[#dc2626] whitespace-no-wrap" v-if="persona.Estatus=='B'">
-                                BAJA
-                            </strong>
-
-                            <strong class="text-[#2f9e56] whitespace-no-wrap" v-if="persona.Estatus=='A'">
-                                ALTA
-                            </strong>
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-3 py-5 text-xs">
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ alumno.Genero }}</p>
                         </td>
 
 
@@ -380,177 +329,6 @@
             </table>
 
         </div>
-
-
-            <!-- Capa oscura -->
-    <div :class="{ hidden: !isvisibleAsignacion }" class="fixed inset-0 bg-black opacity-50">
-    </div>
-
-    <div id="modalContainer">
-
-        <!-- Main modal -->
-        <div :class="{ hidden: !isvisibleAsignacion }">
-            <div id="defaultModal" tabindex="-1" aria-hidden="true"  class="fixed inset-0 flex items-center justify-center z-50">
-                <div class="relative w-full max-w-2xl max-h-full">
-
-                <!-- Modal content -->
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
-                <!-- Modal header -->
-                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white" v-if="contenidoModal=='Plaza'">
-                        Agregar Plaza a personal
-                    </h3>
-                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white" v-if="contenidoModal=='Usuario'">
-                        Agregar cuenta a personal
-                    </h3>
-                    <button type="button" @click="hideAsignacion" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                    </svg>
-                    <span class="sr-only">Close modal</span>
-                </button>
-        </div>
-        <!-- Modal body -->
-        <div class="p-6 space-y-6">
-
-            <form @submit.prevent="AsignarPersonal(contenidoModal)"  class="w-full " >
-                    <div class="flex-wrap -mx-3 mb-6 overflow-auto">
-
-                        <label class="md:w-5/6 block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2 pl-4 " for="grid-last-name">
-                                <p class="mb-2">Nombre del personal</p>
-                                <input id="Capacidad" :value="`${personalSeleccionado.Nombre} ${personalSeleccionado.ApellidoP} ${personalSeleccionado.ApellidoM}`" readonly  class=" appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="0">
-                                <input id="Capacidad" v-model="InfoAsignacion.idPersonal" readonly  class=" hidden appearance-none w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="0">
-                        </label>
-
-                        <label v-if="contenidoModal=='Plaza'" class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2 pl-4" for="grid-last-name">
-                                Plazas disponibles
-                        </label>
-
-                        <label v-if="contenidoModal=='Usuario'" class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2 pl-4" for="grid-last-name">
-                                Cuentas disponibles
-                        </label>
-
-                        <select v-if="contenidoModal=='Plaza'" class=" ml-4 md:w-5/6 appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" name="categorias" v-model="InfoAsignacion.idPlaza" required>
-
-                        <option :value='0'> Seleccione una plaza </option>
-
-                        <option
-                            v-for="(plaza,index) in plazasDisponibles"
-                            :key="plaza.id"
-                            :value="plaza.id"
-                        >
-                            <span v-for="categoria in categorias">
-                                <p v-if="categoria.id==plaza.idCategoria">{{ categoria.Clave }}-{{ categoria.Descripcion }}</p>
-                            </span>
-                            <!-- {{ plaza.idCategoria}} -->
-                        </option>
-                        </select>
-
-
-
-                        <select v-if="contenidoModal=='Usuario'" class=" ml-4 md:w-5/6 appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" name="categorias" v-model="InfoAsignacion.idCuenta" required>
-
-                        <option :value='0'> Seleccione una cuenta </option>
-
-                        <option
-                            v-for="(usuario,index) in usuariosDisponibles"
-                            :key="usuario.id"
-                            :value="usuario.id"
-                        >
-
-                                <p>{{ usuario.email }}</p>
-
-                            <!-- {{ plaza.idCategoria}} -->
-                        </option>
-            </select>
-
-
-
-
-
-                    </div>
-
-                    <!-- Modal footer -->
-                    <div class="flex items-center px-6 py-2 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-
-                        <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Asignar</button>
-                        <button @click="hideAsignacion" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar</button>
-
-                    </div>
-
-                </form>
-
-        </div>
-
-            </div>
-        </div>
-        </div>
-        </div>
-
-
-                    <!-- Capa oscura -->
-        <div :class="{ hidden: !isvisiblePregunta }" class="fixed inset-0 bg-black opacity-50">
-        </div>
-
-        <div :class="{ hidden: !isvisiblePregunta}"  tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">
-            <div class="relative w-full max-w-md max-h-full">
-                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                    <button @click="hidePregunta" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
-                    <div class="p-6 text-center">
-                        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                        </svg>
-                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400" v-if="contenidoModal=='Plaza'">
-                            El personal {{ personalSeleccionado.Nombre }} {{ personalSeleccionado.ApellidoP }} {{ personalSeleccionado.ApellidoM}} ya tiene asignada la plaza:
-
-                            <span v-for="plaza in plazas">
-                                <span v-if="plaza.id==personalSeleccionado.idPlaza">
-
-                                    <span v-for="categoria in categorias">
-                                        <span v-if="plaza.idCategoria==categoria.id">
-                                            {{ categoria.Clave }}-{{ categoria.Descripcion }}
-                                        </span>
-                                    </span>
-
-                                </span>
-                            </span>
-
-                            <p>¿Que desea realizar?</p>
-                        </h3>
-
-                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400" v-if="contenidoModal=='Usuario'">
-                            El personal {{ personalSeleccionado.Nombre }} {{ personalSeleccionado.ApellidoP }} {{ personalSeleccionado.ApellidoM}} ya tiene asignada una cuenta:
-
-                            <span v-for="usuario in usuarios">
-                                <span v-if="usuario.id==personalSeleccionado.idUsuario">
-                                    {{ usuario.email }}
-                                </span>
-                            </span>
-
-                            <p>¿Que desea realizar?</p>
-                        </h3>
-
-                        <div v-if="contenidoModal=='Usuario'" @click="showAsignacion" type="button" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:bg-[#0284c7] dark:focus:bg-[#0284c7] font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
-                            Asignar una nueva cuenta
-                        </div>
-
-                        <div v-if="contenidoModal=='Plaza'" @click="showAsignacion" type="button" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:bg-[#0284c7] dark:focus:bg-[#0284c7] font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
-                            Asignar una nueva plaza
-                        </div>
-
-                        <button @click="hidePregunta" data-modal-hide="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar accion</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-    </div>
 
 
     <nav aria-label="Page navigation example mt-4">
@@ -631,19 +409,8 @@ export default {
 
     mounted() {
 
-        // const urlParams = new URLSearchParams(window.location.search);
-        // const filtroBusqueda = urlParams.get('FiltroBusqueda');
-        // console.log('Filtro recuperado',filtroBusqueda)
-        // this.FiltroBusqueda = filtroBusqueda;
-
         this.hideDelete()
-        this.hideAsignacion()
-        this.seleccionado=false
-        this.Activar=this.$page.props.filas
-        this.Activar.push('false')
-
         this.FiltroBusqueda=this.$page.props.Filtro;
-
 
         if(this.Paginator.next_page_url!=null){
             this.urlPaginacion = this.Paginator.next_page_url.slice(0, -1);
@@ -667,40 +434,23 @@ export default {
     },
 
     props:{
-         personal:Array,
-         plazas:Array,
-         plazasDisponibles:Array,
-         usuarios:Array,
-         usuariosDisponibles:Array,
-         categorias:Array,
-         filas:Array,
+         alumnos:Array,
          Paginator:Array,
-         Filtro:''
     },
 
     data() {
     return {
 
-        urlPaginacion:'',
-
-       infoEditar: {
-          NombreAula:'',
-          Capacidad:0,
-          Ubicacion:''
-      },
-
+      urlPaginacion:'',
 
       isVisible: false,
       isvisibleDelete:false,
-      isvisibleAsignacion:true,
-      isvisiblePregunta:false,
-
       idBorrarSeleccionado:0,
 
       PersonalBuscar:'',
       campoBusqueda:'CURP',
-      campoBusquedaVer:'Curp',
-      FiltroBusqueda:'',
+      campoBusquedaVer:'CURP',
+
 
       NuevoPersonal:{
           RFC:'',
@@ -721,12 +471,6 @@ export default {
           idUsuario:0,
       },
 
-      InfoAsignacion:{
-        idPersonal:'',
-        idPlaza:'0',
-        idCuenta:'0'
-      },
-
       contenidoModal:'',
 
       Activar:[],
@@ -740,63 +484,15 @@ export default {
       MostrarmensajeCurp:false,
       MostrarmensajeRFC:false,
 
-      personalSeleccionado:0,
-      seleccionado:false,
-
-      MostrarFiltro:false,
-      EstatusActivo:'',
-
     }
   },
 
-  //Escuchar cambios
-    watch: {
-        FiltroBusqueda: function() {
 
-            this.filtroEstatus();
-        },
-
-        PersonalBuscar: function() {
-            this.HacerBusqueda();
-        }
-
-    },
 
   methods: {
 
-    //METODO PARA HACER FILTRO SEGUN ESTATUS
-    filtroEstatus(){
-
-        if(this.FiltroBusqueda=='Todos' && this.$page.props.Filtro!='Todos'){
-            this.$inertia.get(route('Personal.index'))
-        }
-
-        if(this.FiltroBusqueda=='Activos' && this.$page.props.Filtro!='Activos' ){
-            this.$inertia.get(route('Personal.Activos'))
-        }
-
-        if(this.FiltroBusqueda=='Bajas' && this.$page.props.Filtro!='Bajas'){
-            this.$inertia.get(route('Personal.Bajas'))
-        }
-
-        // axios.get('Personal.Filtro',{   params:{ Filtro:this.FiltroBusqueda}   })
-        // .then(response => {
-
-        //     this.resultadosBusqueda=response.data;
-        //     //console.log('RESULTADOS:');
-        //     //console.log(response.data);
-        //     this.$page.props.personal=this.resultadosBusqueda;
-        // })
-        // .catch(error => {
-        //     console.error('Error al hacer la busqueda:', error);
-        // });
-
-        // this.personalSeleccionado=0;
-    },
-
     //METODO PARA REALIZAR SOLICITUD A API CURP
     validarCURP(){
-
 
         this.MostrarmensajeRFC=true
         this.MostrarmensajeCurp=true
@@ -819,17 +515,13 @@ export default {
         .then(response => response.json()) // Parsear la respuesta JSON
         .then(response => {
             console.log('DATOS PERSONALES:',response); // Hacer algo con la respuesta JSON
-
-
             console.log('mensaje CURP:',response.message)
-
             if(response.message=='Exitoso'){
                 this.exitoCURP=true
             }
             else{
                 this.mensajeCurp=response.message
             }
-
             this.NuevoPersonal.Nombre=response.data.nombres
             this.NuevoPersonal.ApellidoP=response.data.apellidoPaterno
             this.NuevoPersonal.ApellidoM=response.data.apellidoMaterno
@@ -839,12 +531,8 @@ export default {
             const dia = FechaPorPartes[0];
             const mes = FechaPorPartes[1];
             const año = FechaPorPartes[2];
-
-
             const fechaYYMMDD = `${año}-${mes}-${dia}`;
-
             this.NuevoPersonal.FechaNacimiento=fechaYYMMDD;
-
 
         })
         .catch(error => {
@@ -852,9 +540,6 @@ export default {
         });
 
         // Realizar la solicitud para RFC
-
-
-
         fetch(urlRFC, requestOptions)
         .then(response => response.json()) // Parsear la respuesta JSON
         .then(response => {
@@ -874,12 +559,7 @@ export default {
 
     },
 
-    AltaPersonal(){
-        this.$inertia.post(route('Personal.create'));
-    },
-
     MostrarOpcionesFiltro(){
-
         if(this.MostrarFiltro==true){
             this.MostrarFiltro=false
         }
@@ -896,7 +576,7 @@ export default {
     },
 
     async crearPersonal(){
-        await this.$inertia.get(route('Personal.store'),this.NuevoPersonal)
+        await this.$inertia.post(route('Personal.store'),this.NuevoPersonal)
         this.hideElement()
     },
 
@@ -905,7 +585,7 @@ export default {
 
         console.log(this.PersonalBuscar);
 
-        axios.get('Personal.buscar',{   params:{ personal:this.PersonalBuscar,campo:this.campoBusqueda,Filtro:this.FiltroBusqueda}   })
+        axios.get('Personal.buscar',{   params:{ personal:this.PersonalBuscar,campo:this.campoBusqueda}   })
         .then(response => {
 
             this.resultadosBusqueda=response.data;
@@ -934,16 +614,6 @@ export default {
       this.MostrarmensajeRFC=false;
     },
 
-    showAsignacion() {
-        this.isvisiblePregunta=false;
-        console.log('Abrir asignacion');
-        this.isvisibleAsignacion = true;
-    },
-
-    hideAsignacion() {
-        console.log('cerrar asignacion');
-        this.isvisibleAsignacion = false;
-    },
 
     showDelete(id,estatus){
         this.idBorrarSeleccionado=id;
@@ -953,103 +623,10 @@ export default {
 
 
     hideDelete(){
-
         this.isvisibleDelete = false;
         this.personalSeleccionado=0;
     },
 
-    showPregunta(){
-        this.isvisiblePregunta=true;
-    },
-
-    hidePregunta(){
-        this.isvisiblePregunta=false;
-    },
-
-    asignarPlaza(persona,index){
-
-
-        console.log('Estatus de esta persona',persona.Estatus);
-        var cont=0;
-
-        if(persona.Estatus=='A'){
-            if(this.personalSeleccionado.id==persona.id ){
-                //si selecciona el mismo
-                this.Activar.forEach(function(fila, indice, arreglo) {
-                    arreglo[indice] = false;
-                });
-
-                this.personalSeleccionado=[]
-                this.seleccionado=false;
-            }
-            else{
-                //Si no selecciono el mismo
-                this.Activar.forEach(function(fila, indice, arreglo) {
-
-                    if(cont==index){
-                        arreglo[indice] = true; //
-                    }
-                    else{
-                        arreglo[indice] = false;
-                    }
-                    cont=cont+1
-
-                });
-
-                this.personalSeleccionado=persona
-                this.seleccionado=true;
-            }
-        }
-    },
-
-    VerificarPlaza(){
-
-        this.contenidoModal='Plaza';
-        console.log('contenido',this.contenidoModal)
-
-        if(this.personalSeleccionado.idPlaza!=null){
-            console.log('Plaza ya asignada')
-            this.InfoAsignacion.idPersonal=this.personalSeleccionado.id
-            this.showPregunta()
-        }
-        else{
-            console.log('Plaza aun sin asignar')
-
-
-            this.InfoAsignacion.idPersonal=this.personalSeleccionado.id
-            this.showAsignacion()
-        }
-    },
-
-
-    VerificarUsuario(){
-        this.contenidoModal='Usuario';
-        if(this.personalSeleccionado.idUsuario!=null){
-            console.log('Este personal ya tiene un cuenta')
-            this.InfoAsignacion.idPersonal=this.personalSeleccionado.id
-            this.showPregunta()
-        }
-        else{
-            console.log('Personal aun sin asignar cuenta')
-
-            this.InfoAsignacion.idPersonal=this.personalSeleccionado.id
-            this.showAsignacion()
-        }
-    },
-
-
-
-    async AsignarPersonal(contenido){
-
-        if(contenido=='Plaza'){
-            await this.$inertia.post(route('Personal.asignarPlaza'),this.InfoAsignacion)
-        }
-        if(contenido=='Usuario'){
-            await this.$inertia.post(route('Personal.asignarCuenta'),this.InfoAsignacion)
-        }
-        this.hideAsignacion()
-
-    }
   }
 };
 </script>

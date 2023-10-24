@@ -13,7 +13,7 @@
 
         <div class="inline-flex w-full" >
 
-            <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200 pb-3">
+            <div class="relative text-gray-700 dark:text-white focus-within:text-gray-700  dark:focus-within:text-slate-200 pb-3">
                 <input
                 class=" border-gray-100  dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
                     type="text"
@@ -102,9 +102,17 @@
                         </div>
 
 
-                        <br>
-                        <strong class="pl-4 pt-2 dark:text-gray-200">Marque los permisos que tendra este rol</strong>
-                        <br>
+
+                        <div class="inline-flex ">
+                            <span>
+                            <strong class="pl-4 pt-2 dark:text-gray-200">Marque los permisos que tendra este rol</strong>
+
+                            <span class="dark:text-gray-200 text-xs ml-4">Seleccionar todos</span>
+                                    <input type="checkbox" v-model="isCheckad" @change="MarcarTotalPermisos" class="ml-1"/>
+                            </span>
+                        </div>
+
+
                         <div class="pl-4 dark:text-gray-200">
                             <label v-for="(permiso, index) in Permisos" :key="index">
                                 <input type="checkbox" v-model="NuevoRol.PermisosSeleccionados" :value="permiso.id" />
@@ -113,7 +121,6 @@
                                 <br>
                             </label>
                         </div>
-
                         <!-- Modal footer -->
                         <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
                             <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Crear Rol</button>
@@ -225,6 +232,50 @@
 
         </div>
 
+        <nav aria-label="Page navigation example mt-4">
+                <ul class="inline-flex -space-x-px text-sm">
+
+
+                    <li v-if="this.Paginator.prev_page_url!=null" >
+                    <a :href="this.Paginator.prev_page_url" class="flex items-center justify-center px-3 h-8 ml-0 leading-tight text-gray-500 bg-white border border-gray-300 rounded-l-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >Previous</a>
+                    </li>
+
+                    <li v-if="Paginator.current_page-2 >0">
+                        <a :href="`${urlPaginacion}${Paginator.current_page-2}`"  aria-current="page" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            {{ Paginator.current_page-2 }}</a>
+                    </li>
+
+                    <li v-if="Paginator.current_page-1 >0">
+
+
+                        <a :href="`${urlPaginacion}${Paginator.current_page-1}`" aria-current="page" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            {{ Paginator.current_page-1 }} </a>
+                    </li>
+
+                    <li>
+                        <a href="#" aria-current="page" class="flex items-center justify-center px-3 h-8 text-blue-600 border border-gray-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white">
+                            {{ Paginator.current_page }}</a>
+                    </li>
+
+                    <li v-if="Paginator.current_page+1<=cantidadPaginas">
+                        <a :href="`${urlPaginacion}${Paginator.current_page+1}`" aria-current="page" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                        >{{ Paginator.current_page+1 }}</a>
+                    </li>
+
+                    <li v-if="Paginator.current_page+2<=cantidadPaginas">
+                        <a :href="`${urlPaginacion}${Paginator.current_page+2}`" aria-current="page" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                            {{ Paginator.current_page+2 }}</a>
+                    </li>
+
+                    <li v-if="this.Paginator.next_page_url!=null">
+                    <a :href="this.Paginator.next_page_url" class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-r-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                    >Next</a>
+                    </li>
+
+                </ul>
+            </nav>
+
 
     </AuthenticatedLayout>
 
@@ -250,17 +301,30 @@ export default {
     },
 
     mounted() {
-        this.ObtenerListaPermisos()
+        //this.ObtenerListaPermisos()
         this.hideDelete()
+
+        if(this.Paginator.next_page_url!=null){
+            this.urlPaginacion = this.Paginator.next_page_url.slice(0, -1);
+        }
+        else if(this.Paginator.prev_page_url!=null){
+            this.urlPaginacion = this.Paginator.prev_page_url.slice(0, -1);
+        }
+
+        this.cantidadPaginas=this.Paginator.last_page
 
     },
 
     props:{
-         roles:Array
+         roles:Array,
+         Permisos:Array,
+         Paginator:Array
     },
 
     data() {
     return {
+
+        urlPaginacion:'',
 
        infoEditar: {
           name:'',
@@ -281,16 +345,35 @@ export default {
           PermisosSeleccionados:[],
       },
 
-      Permisos:Array,
+      //Permisos:Array,
       ListaPermisos:[],
 
       campoBusquedaVer:'Nombre',
       MostrarFiltro:false,
 
+      isCheckad:false,
+
     }
   },
 
   methods: {
+
+    MarcarTotalPermisos(){
+        console.log('Marcar todos')
+
+        if (this.isCheckad==true) {
+
+            console.log('Marcado')
+            this.NuevoRol.PermisosSeleccionados=[];
+
+            for (var permiso of this.Permisos ) {
+                this.NuevoRol.PermisosSeleccionados.push(permiso.id);
+            }
+        }
+        else{
+            this.NuevoRol.PermisosSeleccionados=[];
+        }
+    },
 
     MostrarOpcionesFiltro(){
 

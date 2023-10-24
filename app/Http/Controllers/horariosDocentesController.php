@@ -27,7 +27,13 @@ class horariosDocentesController extends Controller
 
     public function index(){
 
-        $ListaHorarios=horariosDocentes::all();
+        //$ListaHorarios=horariosDocentes::all();
+
+        $Pagination=horariosDocentes::paginate(5);
+
+        $ListaHorarios=$Pagination->items();
+
+
         $ListaProfesores=app(ProfesoresController::class)->ObtenerProfesores();
 
         $ListaPeriodos=app(PeriodoController::class)->ObtenerPeriodos();
@@ -44,7 +50,8 @@ class horariosDocentesController extends Controller
             'horarios'=>$ListaHorarios,
             'profesores'=>$ListaProfesores,
             'periodos'=>$ListaPeriodos,
-            'ListaUrl'=>$ListaUrl
+            'ListaUrl'=>$ListaUrl,
+            'Paginator'=>$Pagination
         ]);
     }
 

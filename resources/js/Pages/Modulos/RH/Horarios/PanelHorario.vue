@@ -11,17 +11,36 @@
 
     <!-- <Header v-if="Edicion" /> -->
 
-    <header class="flex items-center justify-between border-b-2 border-[#014E82] dark:border-slate-500    bg-white  dark:bg-slate-800 px-6 py-4" v-if="Edicion">
+    <header class="flex items-center justify-between border-b-2 border-[#014E82] dark:border-slate-500 w-screen    bg-white  dark:bg-slate-800 px-6 py-4" v-if="Edicion">
         <div class="flex items-center">
+
             <button @click="$page.props.showingMobileMenu = !$page.props.showingMobileMenu" class="text-gray-500 dark:text-white focus:outline-none lg:hidden">
                 <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M4 6H20M4 12H20M4 18H11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
             </button>
+
+
+            <div class="dark:text-gray-200 justify-start pl-2">
+
+                <span><button @click="GuardarCambios" class="px-4 py-2 rounded-md dark:text-gray-200 ml-2 mr-5 ">Volver</button></span>
+
+            </div>
+
         </div>
 
         <div class="flex items-center">
 
+            <div class="dark:text-gray-200 pr-2">
+                <span> <i class="fa-solid fa-users pr-1"></i>
+                    Rol: </span>
+                    <span v-for="(rol,index) in Roles">
+                        {{rol}}
+                        <span v-if="Roles.length-1!=index">,</span>
+                    </span>
+
+                <span v-if="Roles.length==0">Sin rol</span>
+            </div>
 
             <button class="relative inline overflow-hidden dark:text-slate-100 pr-2 pl-3"
             v-tippy="{
@@ -57,7 +76,7 @@
 
 
 
-            <button @click="GuardarCambios" class="px-4 py-2 bg-[#014E82] rounded-md text-gray-200 ml-5 ">Guardar cambios</button>
+            <button @click="GuardarCambios" class="px-4 py-2 bg-[#014E82] rounded-md text-gray-200 ml- relative inline-flex ">Guardar cambios</button>
 
 
         </div>
@@ -66,7 +85,7 @@
 
 
 <div class="bg-gray-200 w-screen min-h-screen dark:bg-gray-800 overflow-x-auto overflow-y-auto">
-    <main class="inset-0 h-auto w-screen bg-gray-200 dark:bg-gray-800 overflow-x-auto overflow-y-auto pb-10" >
+    <main class="inset-0 h-auto w-screen bg-gray-200 dark:bg-gray-800 overflow-x-auto overflow-y-auto pb-10 " >
 
         <!-- {{ NuevasClasesLunes }} -->
 
@@ -437,6 +456,8 @@ export default {
     data(){
         return{
 
+            Roles:this.$page.props.user.roles,
+
             icono:'',
 
             ListaMartes:[1,2,4],
@@ -518,7 +539,7 @@ export default {
                 HInicio: '11:00',
                 HFin: '12:00',
                 dia: dia,
-                color: '#ffff00',
+                color: '#AE1f20',
                 idMateria: 0,
                 idAula: 0,
                 idGrupo:0,

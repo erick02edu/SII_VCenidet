@@ -70,7 +70,7 @@
 
 
 
-            <nav-link :href="route('Users.index')" :active="route().current('Users.index')"
+            <nav-link :href="route('Users.index')" :active="route().current('Users.index') || route().current('Users.edit') || route().current('Users.editRole') "
             v-if="$page.props.user.permissions.includes('Agregar Usuarios') || $page.props.user.permissions.includes('Editar Usuarios') ||
             $page.props.user.permissions.includes('Eliminar Usuarios') || $page.props.user.permissions.includes('Ver usuarios') ||
              $page.props.user.permissions.includes('Asignar roles a los usuarios')"
@@ -85,7 +85,7 @@
 
 
 
-            <nav-link :href="route('Roles.index')" :active="route().current('Roles.index')"
+            <nav-link :href="route('Roles.index')" :active="route().current('Roles.index')|| route().current('Roles.edit') || route().current('Roles.editPermisos')"
             v-if="$page.props.user.roles.includes('Administrador')|| $page.props.user.permissions.includes('Ver Roles') ||
             $page.props.user.permissions.includes('Crear roles') ||  $page.props.user.permissions.includes('Editar información de los roles')
             ||  $page.props.user.permissions.includes('Eliminar roles') "  >
@@ -98,7 +98,8 @@
             </nav-link>
 
 
-            <nav-link :href="route('Personal.index')" :active="route().current('Personal.index')"
+            <nav-link :href="route('Personal.index')" :active="route().current('Personal.index') || route().current('Personal.Activos') || route().current('Personal.Bajas') ||
+            route().current('Personal.create')"
             v-if="$page.props.user.permissions.includes('Ver informacion del personal')|| $page.props.user.permissions.includes('Agregar Personal') ||
             $page.props.user.permissions.includes('Asignar cuentas de usuarios al personal') ||  $page.props.user.permissions.includes('Asignar Plazas al personal')
             ||  $page.props.user.permissions.includes('Editar información del personal')  ||  $page.props.user.permissions.includes('Eliminar al personal') " >
@@ -109,7 +110,7 @@
             </nav-link>
 
 
-            <nav-link :href="route('Plazas.index')" :active="route().current('Plazas.index')"
+            <nav-link :href="route('Plazas.index')" :active="route().current('Plazas.index') || route().current('Plazas.edit')"
             v-if="$page.props.user.permissions.includes('Editar Plazas') || $page.props.user.permissions.includes('Eliminar Plazas') ||
             $page.props.user.permissions.includes('Agregar Plazas') || $page.props.user.permissions.includes('Ver Plazas')"
             >
@@ -120,7 +121,9 @@
             </nav-link>
 
 
-            <nav-link :href="route('categorias.index')" :active="route().current('categorias.index')"
+            <nav-link :href="route('categorias.index')" :active="route().current('categorias.index') || route().current('categorias.edit')"
+            v-if="$page.props.user.permissions.includes('liminar categorias plaza') || $page.props.user.permissions.includes('Editar informacion de categorias plaza') ||
+            $page.props.user.permissions.includes('Agregar categorias de plaza') || $page.props.user.permissions.includes('Ver categorias de plaza')"
             >
                 <template #icon>
                     <i class="fa-solid fa-briefcase"></i>
@@ -128,7 +131,7 @@
                 Categorias Plazas
             </nav-link>
 
-            <nav-link :href="route('Profesores.index')" :active="route().current('Profesores.index')"
+            <nav-link :href="route('Profesores.index')" :active="route().current('Profesores.index') || route().current('Profesores.edit')"
             v-if="$page.props.user.permissions.includes('Eliminar Profesores') || $page.props.user.permissions.includes('Editar Información de los profesores') ||
             $page.props.user.permissions.includes('Agregar profesores') || $page.props.user.permissions.includes('Ver profesores')">
                 <template #icon>
@@ -136,6 +139,18 @@
                 </template>
                 Profesores
             </nav-link>
+
+
+            <!-- <nav-link :href="route('Alumnos.index')" :active="route().current('Alumnos.index') || route().current('Alumnos.edit')"
+            >
+                <template #icon>
+                    <i class="fa-solid fa-user"></i>
+                </template>
+                Alumnos
+            </nav-link> -->
+
+
+
 
             <!-- <nav-link :href="route('Promedio.index')" :active="route().current('Promedio.index')" >
                 <template #icon>
@@ -145,7 +160,7 @@
             </nav-link> -->
 
 
-            <nav-link :href="route('Materias.index')" :active="route().current('Materias.index')"
+            <nav-link :href="route('Materias.index')" :active="route().current('Materias.index') || route().current('Materias.edit')"
             v-if="$page.props.user.permissions.includes('Eliminar Materias') || $page.props.user.permissions.includes('Editar Materias') ||
             $page.props.user.permissions.includes('Agregar Materias') || $page.props.user.permissions.includes('Ver materias')">
                 <template #icon>
@@ -164,7 +179,7 @@
                 Horarios
             </nav-link>
 
-            <nav-link :href="route('Departamentos.index')" :active="route().current('Departamentos.index')"
+            <nav-link :href="route('Departamentos.index')" :active="route().current('Departamentos.index')|| route().current('Departamentos.edit')"
             v-if="$page.props.user.permissions.includes('Ver departamentos') || $page.props.user.permissions.includes('Agregar Departamentos') ||
             $page.props.user.permissions.includes('Editar información de los departamentos') || $page.props.user.permissions.includes('Eliminar departamentos')">
                 <template #icon>

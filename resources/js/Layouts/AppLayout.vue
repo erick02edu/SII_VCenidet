@@ -8,15 +8,15 @@
 
         <div class="bg-white dark:bg-slate-700 overflow-hidden shadow-sm sm:rounded-lg ">
             <div class="p-6 border-b border-gray-200  dark:border-gray-700 dark:text-gray-200">
-                Bienvenido {{ $page.props.auth.user.name }}
+                Bienvenido al SII CENIDET {{ $page.props.auth.user.name }}
 
-                <br><br><br>
-                {{ $page.props.user.permissions }}
+                <!-- {{ $page.props.user.permissions }} -->
             </div>
 
 
 
         </div>
+
 
 
         <Bar :data="InfoData" class=" w-80 max-h-80 pt-8" />
@@ -58,6 +58,8 @@
             //this.ObtenerRoleUsuario()
             console.log('controlador:',this.$page.props.rolesName)
             this.ListaRoles=this.$page.props.rolesName
+
+            console.log('iNFO GRAFICA',this.$page.props.InfoGrafica);
         },
 
         beforeCreate(){

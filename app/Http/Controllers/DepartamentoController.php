@@ -21,10 +21,18 @@ class DepartamentoController extends Controller
 
     public function index()
     {
-        $departamentos=Departamentos::all();
+        //$departamentos=Departamentos::all();
+
+        $Pagination=Departamentos::paginate(10);
+        
+        $departamentos=$Pagination->items();
 
         $personal=app(PersonalController::class)->ObtenerPersonal();
-        return Inertia::render('Departamentos',['departamentos'=>$departamentos,'personal'=>$personal]);
+        return Inertia::render('Departamentos',[
+            'departamentos'=>$departamentos,
+            'personal'=>$personal,
+            'Paginator'=>$Pagination
+        ]);
     }
 
     //Crear nuevo departamento

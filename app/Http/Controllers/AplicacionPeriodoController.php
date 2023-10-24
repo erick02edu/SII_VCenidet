@@ -22,7 +22,12 @@ class AplicacionPeriodoController extends Controller
 
     public function index(){
 
-        $AplicacionPeriodo=AplicacionPeriodos::all();
+        //$AplicacionPeriodo=AplicacionPeriodos::all();
+
+        $Pagination=AplicacionPeriodos::paginate(10);
+
+        $AplicacionPeriodo=$Pagination->items();
+
         $periodos=Periodos::all();
 
         $ListaIdPeriodos=AplicacionPeriodos::all()->pluck('idPeriodo')->toArray();
@@ -32,19 +37,9 @@ class AplicacionPeriodoController extends Controller
             'aplicaciones'=>$AplicacionPeriodo,
             'periodos'=>$periodos,
             'ListaIDAplicaciones'=>$ListaIdAplicaciones,
-            'ListaIDPeriodos'=>$ListaIdPeriodos
-        ]); //Regresar a la vista mostrar
-
-
-        // $AplicacionPeriodo = AplicacionPeriodos::with('periodos')->get()->map(function ($Aplicacion) {
-        //     return [
-        //         'id' => $Aplicacion->id,
-        //         'descripcion' => $Aplicacion->descripcion,
-        //         'periodo' => $Aplicacion->periodos->AñoInicio,
-
-        //     ];
-        // });
-        // return Inertia::render('PeriodoAplicacion2',['aplicaciones'=>$AplicacionPeriodo]);
+            'ListaIDPeriodos'=>$ListaIdPeriodos,
+            'Paginator'=>$Pagination
+        ]);
     }
 
 

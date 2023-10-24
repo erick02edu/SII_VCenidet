@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\Redirect;
 class ProfesoresController extends Controller
 {
 
-
     public function __construct()
     {
         $this->middleware(['permission:Ver profesores|Agregar profesores|Editar Información de los profesores|Eliminar Profesores'])->only('index');
@@ -19,10 +18,17 @@ class ProfesoresController extends Controller
         $this->middleware('can:Eliminar Profesores')->only('destroy');
     }
 
-
     public function index(){
-        $profesores=Profesores::all();
-        return inertia::render('Modulos/RH/Profesores/Profesores',['profesores'=>$profesores]);
+        //$profesores=Profesores::all();
+
+        $Pagination=Profesores::paginate(3);
+
+        $profesores=$Pagination->items();
+
+        return inertia::render('Modulos/RH/Profesores/Profesores',[
+            'profesores'=>$profesores,
+            'Paginator'=>$Pagination
+        ]);
     }
 
     public function store(Request $request){

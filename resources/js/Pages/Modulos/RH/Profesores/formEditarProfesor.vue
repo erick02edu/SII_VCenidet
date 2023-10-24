@@ -59,9 +59,9 @@
                                             <option :value="'Femenino'">
                                             Femenino
                                             </option>
-                                            <option :value="'NoBinario'">
+                                            <!-- <option :value="'NoBinario'">
                                             No binario
-                                            </option>
+                                            </option> -->
                                     </select>
                                 </div>
 

@@ -22,9 +22,14 @@ class MateriasController extends Controller
 
 
     public function index(){
-        $Materias=Materias::all();
+
+        $Pagination=Materias::paginate(10);
+
+        $Materias=$Pagination->items();
+
         return inertia::render('Modulos/RH/Materias/Materias',[
-            'materias'=>$Materias
+            'materias'=>$Materias,
+            'Paginator'=>$Pagination
         ]);
     }
 

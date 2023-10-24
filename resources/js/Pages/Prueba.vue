@@ -1,79 +1,20 @@
-  <!-- <template>
-    <Bar :data="InfoData"  idth="100" height="90"/>
-  </template>
-
-  <script>
-
-  import { Bar } from 'vue-chartjs'
-  import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
-
-  ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
-
-  export default {
-
-    name: 'BarChart',
-    components: { Bar },
-
-    data() {
-      return {
-
-
-        InfoData: {
-          labels: [ 'January', 'February', 'March'],
-          datasets: [
-            {
-              label: 'Data One',
-              backgroundColor: '#f87979',
-              data: [40, 20, 12]
-            }
-          ]
-        }
-
-
-      }
-    }
-  }
-  </script> -->
-
-
+<!--
 
   <template>
 
     <Head title="Horarios" />
 
-    <div v-show="none">
-
-    <!-- <div> -->
-
     <div id = "pdfContent">
 
-        <div  v-for="usuario in usuarios" class = "html2pdf__page-break" >
 
-            <span class="flex justify-between">
-
-            <div class="ml-2">
-                <img src="/img/LogoSep.jpg" alt="Descripción de la imagen" class="w-40 h-30">
+            <div class="border-[#014E82] border-4  bg-[#014E82] flex justify-end">
+                <p class="text-white mr-8 text-sm pb-1">
+                Centro Nacional de Investigacion y desarrollo tecnologico</p>
             </div>
 
-            <div  class="mr-10">
-                <img src="/img/LogoTecReportes.png" alt="Descripción de la imagen" class="w-30 h-20">
-            </div>
-
-            </span>
-            <div class="border-[#014E82] border-4  bg-[#014E82] flex justify-end"> <p class="text-white mr-8 text-sm pb-1">Centro Nacional de Investigacion y desarrollo tecnologico</p> </div>
-
-            <strong> Informacion del usuario </strong>
-            <br>
-
-            <strong>Nombre de usuario:</strong><span>{{usuario.name}}</span><br>
-            <strong>Email:</strong><span>{{usuario.email}}</span>
-
-
-        </div>
+        <Bar :data="InfoData" class=" w-80 max-h-80 pt-8" />
 
     </div>
-
-</div>
 
 
   </template>
@@ -86,13 +27,35 @@ import { Head } from '@inertiajs/vue3';
 import axios from 'axios';
 
 
+import { Bar } from 'vue-chartjs'
+import { Chart as ChartJS, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js'
+
+ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
 export default {
-
+    name: 'BarChart',
+    components: { Bar },
 
     data() {
+
+
+
+
+
         return {
-            numPaginas:[1,2,3,4,5]
+            numPaginas:[1,2,3,4,5],
+
+
+            InfoData: {
+                    labels: [ 'Admin', 'Usuarios de Rh', 'Profesores'],
+                    datasets: [
+                        {
+                        label: 'Numero de usuarios con este rol',
+                        backgroundColor: '#014E82',
+                        data: {'Admin':12,'Usuarios de Rh':13,'Profesores':14}
+                        }
+                    ]
+            }
         }
     },
 
@@ -126,4 +89,98 @@ export default {
 
   },
 };
-</script>
+</script> -->
+
+
+<template>
+
+    <button @click="generarPDF">Generar PDF</button>
+
+    <div>
+      <div id="pdfContent">
+        <div class="border-[#014E82] border-4 bg-[#014E82] flex justify-end">
+          <p class="text-white mr-8 text-sm pb-1">
+            Centro Nacional de Investigación y Desarrollo Tecnológico
+          </p>
+        </div>
+
+        <!-- Renderiza la gráfica en un elemento HTML -->
+        <canvas id="myChart" class="w-80 max-h-80 pt-8"></canvas>
+      </div>
+    </div>
+  </template>
+
+  <script>
+  import html2pdf from "html2pdf.js";
+  import { Head } from "@inertiajs/vue3";
+  import axios from "axios";
+  //ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
+
+  import { Chart, Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale } from 'chart.js/auto';
+
+  Chart.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale);
+
+  export default {
+    name: "BarChart",
+    data() {
+      return {
+        numPaginas: [1, 2, 3, 4, 5],
+      };
+    },
+    props: {
+      usuarios: Array,
+    },
+    mounted() {
+      // Renderiza la gráfica después de que el componente se monte
+      this.renderChart();
+
+    },
+
+
+
+
+    methods: {
+      renderChart() {
+        const ctx = document.getElementById("myChart").getContext("2d");
+
+        // Configura tus datos de gráfica aquí
+        const data = {
+          labels: ["Admin", "Usuarios de Rh", "Profesores"],
+          datasets: [
+            {
+              label: "Numero de usuarios con este rol",
+              backgroundColor: "#014E82",
+              data: [12, 13, 14],
+            },
+          ],
+        };
+
+        // const options = {
+        //   responsive: true,
+        //   maintainAspectRatio: false,
+        // };
+
+        new Chart(ctx, {
+          type: "bar",
+          data: data,
+        });
+      },
+
+
+      generarPDF() {
+        const element = document.getElementById("pdfContent");
+        const pdfOptions = {
+          margin: 10,
+          filename: "Graficas.pdf",
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2 },
+          jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+        };
+
+        const pdf = new html2pdf().from(element).set(pdfOptions);
+        pdf.save();
+        //window.history.back();
+      },
+    },
+  };
+  </script>
