@@ -10,4 +10,5 @@ class horariosDocentes extends Model
     use HasFactory;
     public $timestamps = false;
     protected $fillable=["idProfesor","idPeriodo"];
+    
 }

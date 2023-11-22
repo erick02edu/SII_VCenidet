@@ -12,7 +12,7 @@
 
                         <form @submit.prevent="EditarPlaza" class="mb-6">
 
-                           
+
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
 
@@ -89,7 +89,27 @@
                             />
                             </div>
 
+                            <div class="w-full md:w-1/2 px-3">
+                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2"  for="grid-last-name">
+                                    Tipo de Movimiento
+                                </label>
+                                <select class="md:w-3/4 appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" name="aplicaciones"
+                                v-model="InfoEditar.TipoMovimiento" required>
+                                    <option :value='10'>
+                                       10
+                                    </option>
+                                    <option :value='20'>
+                                       20
+                                    </option>
+                                    <option :value='95'>
+                                       95
+                                    </option>
+                                    <option :value='97'>
+                                       97
+                                    </option>
+                                </select>
 
+                            </div>
 
 
                             </div>
@@ -145,6 +165,7 @@
             idCategoria:props.plaza.idCategoria,
             diagonal:props.plaza.diagonal,
             horas:props.plaza.horas,
+            TipoMovimiento:props.plaza.TipoMovimiento,
             estatus:props.plaza.estatus,
             categoriaEditar:props.categoriaEditar,
             ListaCategorias:props.ListaCategorias
@@ -172,6 +193,7 @@
                         diagonal:this.$props.plaza.diagonal,
                         horas:this.$props.plaza.horas,
                         estatus:this.$props.plaza.estatus,
+                        TipoMovimiento:this.$props.plaza.TipoMovimiento
                     },
 
 

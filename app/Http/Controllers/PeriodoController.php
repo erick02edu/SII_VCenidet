@@ -18,6 +18,11 @@ class PeriodoController extends Controller
         return $Periodos;
     }
 
+    public function ObtenerPeriodoPorID(String $id){
+        $Periodo=Periodos::find($id);
+        return $Periodo;
+    }
+
     public function buscarPeriodoCompleto(Request $request){
         $PeriodoBuscar=$request->input('periodoBuscar');
 

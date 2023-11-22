@@ -7,23 +7,15 @@
     </template>
 
 
-    <!-- <h3 class="text-m text-gray-900 dark:text-white py-1 ml-1">
-        Buscar por:
-
-        <input type="radio" value="name" name="Campos" v-model="campoBusqueda" required > Nombre
-        <input type="radio" value="email" name="Campos" v-model="campoBusqueda" required> Email
-
-    </h3> -->
-
     <div class="inline-flex w-full" >
 
-        <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200 pb-3">
+        <div class="relative dark:text-white text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200 pb-3">
             <input
                 class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 dark:text-gray-200 rounded-lg text-sm focus:outline-none"
                 type="text"
-                placeholder="Buscar..."
+                :placeholder="'Buscar por ' + campoBusquedaVer"
                 v-model="UsuarioBuscar"
-                @input="HacerBusqueda()"
+                @keyup="contarTiempo"
             />
         </div>
 
@@ -53,7 +45,7 @@
 
 
 
-        <button :type="type" v-if="$page.props.user.permissions.includes('Agregar Usuarios')" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  ">
+        <button :type="type" v-if="$page.props.user.roles.includes('Administrador')" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  ">
             Nuevo
         </button>
 
@@ -115,13 +107,26 @@
 
 
                         <br>
-                        <strong class="pl-8 dark:text-gray-200">Marque los roles que tendra este usuario</strong>
-                        <div class="pl-8 dark:text-gray-200">
-                            <label v-for="(Rol, index) in roles" :key="index">
-                                <input type="checkbox" v-model="NuevoUsuario.RolesSeleccionados" :value="Rol.id" />
-                                <span class="pl-2 pt-6">{{Rol.name}}</span>
-                            </label>
+                        <strong class="pl-3 dark:text-gray-200">Marque los roles que tendra este usuario</strong>
+
+
+                        <div class="pl-3 dark:text-gray-200">
+                            <select class="appearance-none block  bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" name="categorias"
+                            v-model="NuevoUsuario.RolesSeleccionados" required>
+
+                                <option :value="0"> Seleccione categoria </option>
+
+                                <option
+                                    v-for="(rol,index) in roles"
+                                    :key="rol.id"
+                                    :value="rol.id"
+                                >
+
+                                    {{ rol.name }}
+                                </option>
+                            </select>
                         </div>
+
 
                         <!-- Modal footer -->
                         <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-200">
@@ -139,6 +144,12 @@
 </div>
 
 
+    <div v-if="mensaje"
+    :class="{ 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-3 mb-3': tipoMensaje == 'Exitoso', 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3 mb-3': tipoMensaje == 'Error' }">
+        <strong class="font-bold" v-if="tipoMensaje=='Exitoso'">Éxito:</strong>
+        <strong class="font-bold" v-if="tipoMensaje=='Error'">Érror:</strong>
+        <span class="block sm:inline">{{ mensaje}}</span>
+    </div>
 
     <!--TABLA DE PLAZAS-->
     <div class="inline-block min-w-full overflow-hidden rounded-lg shadow mb-4">
@@ -160,8 +171,7 @@
                             Estatus de la cuenta
                         </th>
 
-                        <th v-if="$page.props.user.permissions.includes('Editar Usuarios')
-                        || $page.props.user.permissions.includes('Eliminar Usuarios') || $page.props.user.permissions.includes('Asignar roles a los usuarios')"
+                        <th v-if="$page.props.user.roles.includes('Administrador')"
                         class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Opciones
                         </th>
@@ -193,20 +203,19 @@
                             </p>
                         </td>
 
-                        <td v-if="$page.props.user.permissions.includes('Editar Usuarios') ||
-                        $page.props.user.permissions.includes('Eliminar Usuarios') || $page.props.user.permissions.includes('Asignar roles a los usuarios')"
+                        <td  v-if="$page.props.user.roles.includes('Administrador')"
                         class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
 
-                            <Link v-if="$page.props.user.permissions.includes('Editar Usuarios')" :href="route('Users.edit',usuario.id)" class="p-3 rounded-md bg-[#014E82] mx-2 inline-flex mb-1" >
+                            <Link  v-if="$page.props.user.roles.includes('Administrador')" :href="route('Users.edit',usuario.id)" class="p-3 rounded-md bg-[#014E82] mx-2 inline-flex mb-1" >
                                 <i class="fa-solid fa-pen text-white"></i>
                             </Link>
 
 
-                            <a v-if="$page.props.user.permissions.includes('Eliminar Usuarios')" type="button" @click="showDelete(usuario.id,usuario.name)" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1">
+                            <a  v-if="$page.props.user.roles.includes('Administrador')" type="button" @click="showDelete(usuario.id,usuario.name)" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1">
                                         <i class="fa-solid fa-trash text-white"></i>
                             </a>
 
-                            <Link  v-if="$page.props.user.permissions.includes('Asignar roles a los usuarios')" :href="route('Users.editRole',usuario.id)" class="p-3 rounded-md bg-[#FFD200]  mx-2 inline-flex mb-1 ">
+                            <Link  v-if="$page.props.user.roles.includes('Administrador')" :href="route('Users.editRole',usuario.id)" class="p-3 rounded-md bg-[#FFD200]  mx-2 inline-flex mb-1 ">
                                 <strong>Ver Rol <span>  <i class="fa-solid fa-user-plus pl-1"></i> </span> </strong>
                             </Link>
 
@@ -336,7 +345,9 @@ export default {
     props:{
          usuarios:Array,
          roles:Array,
-         Paginator:Array
+         Paginator:Array,
+         mensaje: String,
+         tipoMensaje:String,
     },
 
     data() {
@@ -359,6 +370,7 @@ export default {
       campoBusquedaVer:'Nombre',
 
       UsuarioBuscar:'',
+      setTimeoutBuscador:'',
 
       idBorrarSeleccionado:0,
       nameBorrarSeleccionado:"",
@@ -369,13 +381,8 @@ export default {
           password:'',
           RolesSeleccionados:[],
       },
-
-
       //Roles:Array,
       ListaRoles:[],
-
-
-
     }
   },
 
@@ -398,6 +405,11 @@ export default {
         this.HacerBusqueda();
     },
 
+    contarTiempo(){
+        this.$page.props.mensaje=null
+        clearTimeout(this.setTimeoutBuscador);
+        this.setTimeoutBuscador=setTimeout(this.HacerBusqueda,360)
+    },
 
     HacerBusqueda(){
 
@@ -421,15 +433,6 @@ export default {
             const response=await this.$inertia.post(route('Users.store'),this.NuevoUsuario)
             this.hideElement()
 
-            Swal.fire({
-                title: '¡Exito!',
-                text: 'Usuario registrado correctamente',
-                icon: 'success',
-                confirmButtonText: 'Aceptar',
-                confirmButtonColor:'#014E82',
-            })
-
-
         }catch (error) {
 
             console.error(error); // Puedes imprimir el error en la consola para depuración.
@@ -440,13 +443,16 @@ export default {
 
 
     showElement() {
-      this.isVisible = true;
+        this.$page.props.mensaje=null
+        this.isVisible = true;
     },
+
     hideElement() {
       this.isVisible = false;
     },
 
     showDelete(id,name){
+        this.$page.props.mensaje=null
         this.idBorrarSeleccionado=id;
         this.nameBorrarSeleccionado=name;
         this.isvisibleDelete = true;

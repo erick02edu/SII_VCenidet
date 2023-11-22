@@ -7,12 +7,6 @@
     </template>
 
 
-    <h3 class="text-m text-gray-900 dark:text-white py-1 ml-1">
-        Buscar por:
-        <input type="radio" value="Descripcion" name="Campos" v-model="campoBusqueda" required > Descripcion
-        <input type="radio" value="Clave" name="Campos" v-model="campoBusqueda" required> Clave
-    </h3>
-
     <div class="inline-flex w-full" >
 
         <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200 pb-3">
@@ -21,11 +15,41 @@
                 type="text"
                 placeholder="Buscar..."
                 v-model="CategoriaBuscar"
-                @input="HacerBusqueda()"
+                @keyup="contarTiempo"
             />
         </div>
 
-        <button :type="type" v-if="$page.props.user.permissions.includes('Agregar categorias de plaza')" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  ">
+        <div class="relative inline-block text-left pl-3 align-top ">
+
+            <div>
+                <button type="button"  @click="MostrarOpcionesFiltro" class="inline-flex justify-center w-full rounded-md border border-gray-300 dark:border-slate-500 shadow-sm px-4 py-2 bg-white dark:bg-slate-700  text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 focus:outline-none focus:ring focus:[#014E82] active:bg-gray-200" id="dropdown-menu-button" aria-haspopup="true" aria-expanded="true">
+                <span class="pr-2"> <i class="fa-solid fa-filter"></i>  </span>{{ campoBusquedaVer }}
+                <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M9.293 5.293a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L10 7.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 010 0z" clip-rule="evenodd" />
+                </svg>
+                </button>
+            </div>
+
+            <div v-if="MostrarFiltro" class="origin-top-right absolute right-0 mt-2 w-32 mb-6 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-menu-button" tabindex="-1">
+
+                <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-1" href="#">
+                <span @click="SeleccionarCampo('Descripcion','Descripcion')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Descripcion</span>
+                </div>
+
+                <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-2" href="#">
+                <span @click="SeleccionarCampo('Clave','Clave')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Clave</span>
+                </div>
+
+
+                <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-2" href="#">
+                <span @click="SeleccionarCampo('Horas','Horas')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Horas</span>
+                </div>
+
+            </div>
+        </div>
+
+
+        <button :type="type"  v-if="$page.props.user.roles.includes('Recursos Humanos')" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  ">
             Nuevo
         </button>
 
@@ -64,30 +88,30 @@
             <form @submit.prevent="crearUsuario"  class="w-full max-w-lg">
                     <div class="flex flex-wrap -mx-3 mb-6">
 
-                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                        <div class="w-full md:w-full px-3 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
                                 Descripcion
                             </label>
                             <input id="Nombre" v-model="NuevoCategoria.Descripcion"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="Descripcion" required>
                         </div>
 
-                        <div class="w-full md:w-1/2 px-3">
+                        <div class="w-full md:w-1/4 px-3">
                             <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
                                 Clave
                             </label>
                             <input id="Clave" max-lenght="8" v-model="NuevoCategoria.Clave" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"   type="text" placeholder="Clave" required>
                         </div>
 
-                        <div class="w-full md:w-1/2 px-3">
+                        <div class="w-full md:w-3/4 px-3">
                             <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
                                 Horas
                             </label>
                             <input id="Clave"  v-model="NuevoCategoria.Horas" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"   type="number" placeholder="0" required>
                         </div>
 
-
+                        <br>
                         <!-- Modal footer -->
-                        <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-200">
+                        <div class="flex items-center p-4 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-500 w-5/6 ml-4 mt-1">
                             <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar</button>
                             <button @click="hideElement" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar</button>
                         </div>
@@ -101,7 +125,12 @@
     </div>
 </div>
 
-
+    <div v-if="mensaje"
+    :class="{ 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-3 mb-3': tipoMensaje == 'Exitoso', 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3 mb-3': tipoMensaje == 'Error' }">
+        <strong class="font-bold" v-if="tipoMensaje=='Exitoso'">Éxito:</strong>
+        <strong class="font-bold" v-if="tipoMensaje=='Error'">Érror:</strong>
+        <span class="block sm:inline">{{ mensaje}}</span>
+    </div>
 
     <!--TABLA DE PLAZAS-->
     <div class="inline-block min-w-full overflow-hidden rounded-lg shadow mb-4">
@@ -123,8 +152,7 @@
                             Horas
                         </th>
 
-                        <th v-if="$page.props.user.permissions.includes('Editar informacion de categorias plaza')
-                        || $page.props.user.permissions.includes('Eliminar categorias plaza') "
+                        <th v-if="$page.props.user.roles.includes('Recursos Humanos')"
                         class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Opciones
                         </th>
@@ -150,16 +178,17 @@
                             <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ categoria.Horas }}</p>
                         </td>
 
-                        <td v-if="$page.props.user.permissions.includes('Editar informacion de categorias plaza')
-                        || $page.props.user.permissions.includes('Eliminar categorias plaza') "
+                        <td  v-if="$page.props.user.roles.includes('Recursos Humanos')"
                         class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
 
-                            <Link v-if="$page.props.user.permissions.includes('Editar informacion de categorias plaza')" :href="route('categorias.edit',categoria.id)" class="p-3 rounded-md bg-[#014E82] mx-2 inline-flex mb-1" >
+                            <Link  v-if="$page.props.user.roles.includes('Recursos Humanos')" :href="route('categorias.edit',categoria.id)" class="p-3 rounded-md bg-[#014E82] mx-2 inline-flex mb-1" >
                                 <i class="fa-solid fa-pen text-white"></i>
                             </Link>
 
 
-                            <a v-if="$page.props.user.permissions.includes('Eliminar categorias plaza')" type="button" @click="showDelete(categoria.id,categoria.Descripcion)" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1">
+                            <a  v-if="$page.props.user.roles.includes('Recursos Humanos')"
+                            type="button" @click="showDelete(categoria.id,categoria.Descripcion)"
+                            class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1">
                                         <i class="fa-solid fa-trash text-white"></i>
                             </a>
 
@@ -244,21 +273,6 @@
                     </li>
 
                 </ul>
-<!--
-                <span class="text-sm inline-flex dark:text-gray-200 w-1/2">
-                    <span class="pt-2">Numero de elementos por pagina:</span>
-                    <select
-                    class="w-2/12 h-8 ml-3  text-xs text-black dark:text-white bg-white dark:bg-slate-600 mt-1 rounded-sm border-gray-200 dark:border-slate-600"
-                    v-model="NumElementosPagina" @change="cambiarPaginacion()">
-                        <option value="3"  >3</option>
-                        <option value="5"  >5</option>
-                        <option value="10" >10</option>
-                        <option value="15" >15</option>
-                        <option value="20" >20</option>
-                        <option value="25" >25</option>
-
-                    </select>
-                </span> -->
             </nav>
 
     </AuthenticatedLayout>
@@ -291,7 +305,6 @@ export default {
         //this.ObtenerListaRoles()
         this.hideDelete()
 
-
         if(this.Paginator.next_page_url!=null){
             this.urlPaginacion = this.Paginator.next_page_url.slice(0, -1);
         }
@@ -302,66 +315,62 @@ export default {
     },
 
     props:{
-         categorias:Array,
-         Paginator:Array
+        categorias:Array,
+        Paginator:Array,
+        mensaje: String,
+        tipoMensaje:String,
     },
 
     data() {
     return {
 
+        CategoriaBuscar:'',
+        campoBusqueda:'Descripcion',
+        campoBusquedaVer:'Descripcion',
+        FiltroBusqueda:'',
+        MostrarFiltro:false,
+        setTimeoutBuscador:'',
 
+        cantidadPaginas:'',
 
-      cantidadPaginas:'',
+        isVisible: false,
+        isvisibleDelete:false,
 
-      isVisible: false,
-      isvisibleDelete:false,
+        idBorrarSeleccionado:0,
+        nameBorrarSeleccionado:"",
 
-      campoBusqueda:'Descripcion',
-      CategoriaBuscar:'',
-
-      idBorrarSeleccionado:0,
-      nameBorrarSeleccionado:"",
-
-      NuevoCategoria:{
-          Descripcion:'',
-          Clave:'',
-          Horas:'',
-      },
-
-      urlPaginacion:'',
+        NuevoCategoria:{
+            Descripcion:'',
+            Clave:'',
+            Horas:'',
+        },
+        urlPaginacion:'',
     }
   },
 
   methods: {
 
-    // cambiarPaginacion(){
-    //     console.log(this.NumElementosPagina);
-    //     axios.get('categorias.paginacion',{   params:{ NumElementos:this.NumElementosPagina}   })
-    //     .then(response => {
+    MostrarOpcionesFiltro(){
+        if(this.MostrarFiltro==true){
+            this.MostrarFiltro=false
+        }
+        else{
+            this.MostrarFiltro=true
+        }
+    },
 
-    //         console.log(response.data.Paginator);
-    //         this.$page.props.Paginator=response.data.Paginator;
+    SeleccionarCampo(campo,campoVer){
+        this.campoBusqueda=campo
+        this.campoBusquedaVer=campoVer
+        this.MostrarFiltro=false
+        this.HacerBusqueda();
+    },
 
-
-    //         console.log("Cantidad pagin:",response.data.Paginator.last_page);
-    //         this.cantidadPaginas=response.data.Paginator.last_page
-
-
-    //         if(response.data.Paginator.next_page_url!=null){
-
-    //             this.urlPaginacion = response.data.Paginator.next_page_url.slice(0, -1);
-    //         }
-    //         else if(response.data.Paginator.prev_page_url!=null){
-    //             this.urlPaginacion = response.data.Paginator.prev_page_url.slice(0, -1);
-    //         }
-
-
-
-    //     })
-    //     .catch(error => {
-    //         console.error('Error al cambiar paginacion:', error);
-    //     });
-    // },
+    contarTiempo(){
+        this.$page.props.mensaje=null
+        clearTimeout(this.setTimeoutBuscador);
+        this.setTimeoutBuscador=setTimeout(this.HacerBusqueda,360)
+    },
 
     HacerBusqueda(){
 
@@ -381,19 +390,8 @@ export default {
     async crearUsuario(){
 
         try{
-
             const response=await this.$inertia.post(route('categorias.store'),this.NuevoCategoria)
             this.hideElement()
-
-            Swal.fire({
-                title: '¡Exito!',
-                text: 'Categoria registrada correctamente',
-                icon: 'success',
-                confirmButtonText: 'Aceptar',
-                confirmButtonColor:'#014E82',
-            })
-
-
         }catch (error) {
 
             console.error(error); // Puedes imprimir el error en la consola para depuración.
@@ -405,7 +403,8 @@ export default {
 
 
     showElement() {
-      this.isVisible = true;
+        this.$page.props.mensaje=null
+        this.isVisible = true;
     },
     hideElement() {
       this.isVisible = false;

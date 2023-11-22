@@ -8,6 +8,9 @@ use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
+use Illuminate\Support\Facades\Session;
+
+
 
 class PermissionController extends Controller
 {
@@ -38,6 +41,9 @@ class PermissionController extends Controller
         $Role = Role::find($id);
 
         $Role->syncPermissions([$request->input('PermisosSeleccionados')]);
+
+        Session::flash('mensaje', 'Se ha creado correctamente el nuevo rol');
+        Session::flash('TipoMensaje', 'Exitoso');
 
         return back()->with([$id]);
     }

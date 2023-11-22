@@ -20,6 +20,10 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            fontSize: {
+                'xxs': '8px', // Tamaño de fuente personalizado
+                // Otras definiciones de tamaños de fuente
+              },
         },
     },
 

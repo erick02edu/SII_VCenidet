@@ -64,8 +64,6 @@ return [
 
             'dump' => [
                 'dump_binary_path' => 'C:\laragon\bin\mysql\mysql-8.0.30-winx64\bin', // Agrega aquí la ruta a mysqldump
-
-                
             ],
 
         ],

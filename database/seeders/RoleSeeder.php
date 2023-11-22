@@ -19,9 +19,24 @@ class RoleSeeder extends Seeder
 
         //EJECUTAR php artisan migrate:fresh --seed para ejecutar todos los seeder
 
-        $roleAdmin=Role::create(['name'=>'Administrador']);
-        $roleRH=Role::create(['name'=>'Usuario RH']);
-        $roleProfesor=Role::create(['name'=>'Profesor']);
+
+        Role::create(['name'=>'Comite de Calidad']);
+        Role::create(['name'=>'Academicos']);
+        Role::create(['name'=>'Departamento de desarrollo academico']);
+        Role::create(['name'=>'Division de estudios Profesionales']);
+        Role::create(['name'=>'Direccion']);
+        Role::create(['name'=>'Docentes']);
+        Role::create(['name'=>'Recursos Humanos']);
+        Role::create(['name'=>'Escolares']);
+        Role::create(['name'=>'Gestion tecnologica y vinculacion']);
+        Role::create(['name'=>'Departamento de planeacion']);
+        Role::create(['name'=>'Administrador']);
+        Role::create(['name'=>'Secretarias CENIDET']);
+
+
+        // $roleAdmin=Role::create(['name'=>'Administrador']);
+        // $roleRH=Role::create(['name'=>'Usuario RH']);
+        // $roleProfesor=Role::create(['name'=>'Profesor']);
 
 
         //PERIODOS DE APLICACION

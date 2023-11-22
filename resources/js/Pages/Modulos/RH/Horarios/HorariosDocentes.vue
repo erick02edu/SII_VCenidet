@@ -6,51 +6,208 @@
             Lista de Horarios
     </template>
 
-    <div class="inline-flex w-full" >
+        <div class="flex justify-between">
 
-        <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200 mb-4">
-            <input
-                class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
-                type="text"
-
-                placeholder="Buscar.... "
-                v-model="UsuarioBuscar"
-                @input="HacerBusqueda()"
-            />
-        </div>
-
-
-        <div class="relative inline-block text-left pl-3">
-        <div>
-            <button type="button"  @click="MostrarOpcionesFiltro" class="inline-flex justify-center w-full rounded-md border border-gray-300 dark:border-slate-500 shadow-sm px-4 py-2 bg-white dark:bg-slate-700  text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 focus:outline-none focus:ring focus:[#014E82] active:bg-gray-200" id="dropdown-menu-button" aria-haspopup="true" aria-expanded="true">
-             <span class="pr-2"> <i class="fa-solid fa-filter"></i>  </span>{{ campoBusqueda }}
-            <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                <path fill-rule="evenodd" d="M9.293 5.293a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L10 7.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 010 0z" clip-rule="evenodd" />
-            </svg>
+            <button :type="type" @click="showElementBuscar" class=" inline-flex rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  "
+            v-if="$page.props.user.roles.includes('Recursos Humanos')">
+            <i class="fa-solid fa-magnifying-glass mr-2"></i>Buscar horario
             </button>
+
+            <!-- Espacio entre los botones -->
+            <div class="w-1/3 mr-14"></div>
+
+
+            <button :type="type" @click="showElementHorConcentrado" class="inline-flex items-center  rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  "
+            v-if="$page.props.user.roles.includes('Recursos Humanos')">
+                Generar horario concentrado
+            </button>
+
+            <button :type="type" @click="showElement" class=" inline-flex items-center  ml-4 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  "
+            v-if="$page.props.user.roles.includes('Recursos Humanos')">
+                Crear Horario
+            </button>
+
         </div>
 
-        <div v-if="MostrarFiltro" class="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-menu-button" tabindex="-1">
-
-            <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-1" href="#">
-            <span @click="SeleccionarCampo('Profesor')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Profesor</span>
-            </div>
-
-            <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-2" href="#">
-            <span @click="SeleccionarCampo('Periodo')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Periodo</span>
-            </div>
-
-        </div>
-        </div>
-
-
-
-        <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  "
-        v-if="$page.props.user.permissions.includes('Crear y Editar Horarios')">
-            Crear Horario
-        </button>
+    <!-- Capa oscura -->
+    <div :class="{ hidden: !isVisibleBuscar }" class="fixed inset-0 bg-black opacity-50">
     </div>
 
+   <!--MODAL PARA ELEGIR UN PERIODO-->
+    <div id="modalContainer" >
+        <!-- Main modal -->
+        <div :class="{ hidden: !isVisibleBuscar } " >
+
+            <div id="defaultModal" tabindex="-1" aria-hidden="true"  class="fixed inset-0 flex items-center justify-center z-50">
+                <div class="relative w-full max-w-2xl max-h-full">
+
+                    <!-- Modal content -->
+                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
+
+                        <!-- Modal header -->
+                        <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white uppercase">
+                                Buscar Horario
+                            </h3>
+                            <button type="button" @click="hideElementBuscar" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="p-6 space-y-6">
+                            <form @submit.prevent="HacerBusqueda"  class="w-full max-w-lg">
+
+
+                            <div class="flex flex-wrap -mx-3 mb-6">
+
+                                    <div class="w-full md:w-full px-3 mb-2 md:mb-0">
+
+                                        <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
+                                                Departamento
+                                        </label>
+
+                                        <select class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                                        v-model="departamentoBuscar" @change="ObtenerPersonalPorDepartamento">
+
+                                            <option value="0">Selecciona un departamento</option>
+                                            <option
+                                                v-for="departamento in departamentos"
+                                                :key="departamento.id"
+                                                :value="departamento.id"
+                                            >
+                                                {{ departamento.Nombre }}
+
+                                            </option>
+                                        </select>
+
+                                        <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name "
+                                        >
+                                            Personal
+                                        </label>
+
+
+                                        <div>
+                                        <select  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-1 leading-tight focus:outline-none focus:bg-white"
+                                        v-model="PersonalBuscar">
+                                            <option value="0">Selecciona un docente</option>
+                                            <option
+                                                v-for="personal in PersonalPorDepartamento"
+                                                :key="personal.id"
+                                                :value="personal.id"
+                                            >
+                                            {{ personal.RFC }}-{{ personal.Nombre }} {{ personal.ApellidoP }} {{ personal.ApellidoM }}
+
+                                            </option>
+                                        </select>
+                                        <p class=" text-xs text-red-600 mb-2" v-if="PersonalBuscar==-1">No se encontro personal para este departamento</p>
+                                        </div>
+
+                                        <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
+                                                Periodo
+                                        </label>
+
+                                        <select class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                                        v-model="periodoBuscar">
+                                            <option value="0">Selecciona un periodo</option>
+                                            <option
+                                                v-for="periodo in periodos"
+                                                :key="periodo.id"
+                                                :value="periodo.id"
+                                            >
+                                                {{ periodo.mesInicio }} {{ periodo.AñoInicio }}-{{ periodo.mesTermino }} {{ periodo.AñoTermino }}
+
+                                            </option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <!-- Modal footer -->
+                                <div class="flex items-center pt-5 pr-5 pb-5 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-500 br-4">
+                                    <button type="submit" target="_blank" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        Buscar
+                                    </button>
+                                    <button @click="hideElementHorConcentrado" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Capa oscura -->
+    <div :class="{ hidden: !isVisibleHConcentrado }" class="fixed inset-0 bg-black opacity-50">
+    </div>
+
+   <!--MODAL PARA ELEGIR UN PERIODO-->
+    <div id="modalContainer" >
+        <!-- Main modal -->
+        <div :class="{ hidden: !isVisibleHConcentrado } " >
+
+            <div id="defaultModal" tabindex="-1" aria-hidden="true"  class="fixed inset-0 flex items-center justify-center z-50">
+                <div class="relative w-full max-w-2xl max-h-full">
+
+                    <!-- Modal content -->
+                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
+
+                        <!-- Modal header -->
+                        <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white uppercase">
+                                Horario concentrado
+                            </h3>
+                            <button type="button" @click="hideElementHorConcentrado" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
+                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                </svg>
+                                <span class="sr-only">Close modal</span>
+                            </button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="p-6 space-y-6">
+                            <form  class="w-full max-w-lg">
+                                <div class="flex flex-wrap -mx-3 mb-6">
+
+                                    <div class="w-full md:w-full px-3 mb-2 md:mb-0">
+                                        <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-4" for="grid-first-name">
+                                                Elige un periodo para generar el reporte concentrado
+                                        </label>
+
+                                        <select class="dark:bg-slate-700 dark:text-slate-200 rounded-sm " v-model="periodoSeleccionado">
+                                            <option
+                                                v-for="periodo in periodos"
+                                                :key="periodo.id"
+                                                :value="periodo.id"
+                                            >
+                                                {{ periodo.mesInicio }} {{ periodo.AñoInicio }}-{{ periodo.mesTermino }} {{ periodo.AñoTermino }}
+
+                                            </option>
+                                        </select>
+
+                                    </div>
+                                </div>
+                                <!-- Modal footer -->
+                                <div class="flex items-center pt-5 pr-5 pb-5 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-500 br-4">
+                                    <a :href="route('HorConcentrado',periodoSeleccionado)" target="_blank" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        Generar
+                                    </a>
+                                    <button @click="hideElementHorConcentrado" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar</button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -93,7 +250,7 @@
 
                             <select class="dark:bg-slate-700 dark:text-slate-200 rounded-sm mb-2 " name="periodos" v-model="NuevoHorario.idProfesor" required>
 
-                                <option :value="0"> Seleccione un profesor </option>
+                                <option :value="0"> Seleccione un docente </option>
 
                                 <option
                                     v-for="(profesor,index) in profesores"
@@ -140,6 +297,12 @@
         </div>
     </div>
 
+    <div v-if="mensaje"
+    :class="{ 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-3 mb-3': tipoMensaje == 'Exitoso', 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3 mb-3': tipoMensaje == 'Error' }">
+        <strong class="font-bold" v-if="tipoMensaje=='Exitoso'">Éxito:</strong>
+        <strong class="font-bold" v-if="tipoMensaje=='Error'">Érror:</strong>
+        <span class="block sm:inline">{{ mensaje}}</span>
+    </div>
 
     <!--TABLA DE PLAZAS-->
     <div class="inline-block min-w-full overflow-hidden shadow">
@@ -160,12 +323,11 @@
                 <tbody>
                     <tr v-for="(horario,index) in horarios" class="text-gray-700">
 
-                        <td class="border-b border-t-8 border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-2 py-2 text-sm h-64 w-3/5">
+                        <td class="border-b border-t-8 border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-2 py-2 text-sm h-64 w-2/3">
 
 
                             <iframe
 
-                                width="300"
                                 :src="Urls[index]"
                                 frameborder="0"
                                 style="border:0"
@@ -179,10 +341,27 @@
                         <td class="border-b border-t-8 border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
 
                             <div class="dark:text-gray-200 p-3">
-                                Informacion del horario:
+                                <p class="uppercase">Informacion del horario:</p>
+
+
                                 <div v-for="(profesor,index) in profesores">
                                     <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap" v-if="profesor.id==horario.idProfesor">
-                                        Profesor:{{ profesor.Nombre }} {{ profesor.ApellidoP }} {{ profesor.ApellidoM }}
+
+
+                                       <p v-for="departamento in departamentos">
+                                            <p v-if="profesor.idDepAdscripcion==departamento.id">
+                                               <strong>Departamentos</strong><br>{{departamento.Nombre}}
+                                            </p>
+                                        </p>
+
+                                    </p>
+                                </div>
+
+
+
+                                <div v-for="(profesor,index) in profesores">
+                                    <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap" v-if="profesor.id==horario.idProfesor">
+                                       <strong> Profesor:</strong>{{ profesor.Nombre }} {{ profesor.ApellidoP }} {{ profesor.ApellidoM }}
                                     </p>
                                 </div>
 
@@ -190,7 +369,7 @@
                                     <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap"
                                     v-if="horario.idPeriodo==periodo.id"
                                     >
-                                    Periodo:{{ periodo.mesInicio }} {{ periodo.AñoInicio }}-{{ periodo.mesTermino }} {{ periodo.AñoTermino }}
+                                    <strong>Periodo:</strong>{{ periodo.mesInicio }}/{{ periodo.AñoInicio }}-{{ periodo.mesTermino }}/{{ periodo.AñoTermino }}
                                     </p>
                                 </div>
                             </div>
@@ -199,21 +378,26 @@
 
                                 <p class="mb-2 pl-3">Acciones:</p>
 
-                                <Link :href="route('HorariosDocentes.edit',horario.id)"  class="p-3 rounded-md bg-[#014E82] mx-2 inline-flex mb-1"
-                                v-if="$page.props.user.permissions.includes('Crear y Editar Horarios')">
+                                <Link :href="route('HorariosDocentes.edit',horario.id)"  class="p-3 rounded-md bg-[#014E82] mx-2 inline-flex mb-1 text-white"
+                                v-if="$page.props.user.roles.includes('Recursos Humanos')">
+                                    <i class="fa-solid fa-pen text-white"></i> Docentes
+                                </Link>
+
+                                <Link :href="route('HorariosDocentes.editAdmin',horario.id)"  class="p-3 rounded-md bg-[#014E82] mx-2 inline-flex mb-1 text-white"
+                                v-if="$page.props.user.roles.includes('Recursos Humanos')">
                                     <i class="fa-solid fa-pen text-white"></i>
                                 </Link>
 
 
 
-                                <a type="button" @click="showDelete(horario.id)" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1"
-                                v-if="$page.props.user.permissions.includes('Eliminar Horarios')">
+                                <a type="button"  @click="showDelete(horario.id)" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1"
+                                v-if="$page.props.user.roles.includes('Recursos Humanos')">
                                         <i class="fa-solid fa-trash text-white"></i>
                                 </a>
 
 
-                                <Link :href="route('HorariosDocentes.ver',horario.id)"  class="p-3 rounded-md bg-[#fff16f] mx-2 inline-flex mb-1"
-                                v-if="$page.props.user.permissions.includes('Ver horarios')"
+                                <a :href="route('HorariosDocentes.ver',horario.id)"  target="_blank" class="p-3 rounded-md bg-[#fff16f] mx-2 inline-flex mb-1"
+                                v-if="$page.props.user.roles.includes('Recursos Humanos')"
                                 v-tippy="{
                                     content:'Ver Horario',
                                     placement: 'top' ,
@@ -222,19 +406,20 @@
                                 }"
                                 >
                                     <i class="fa-solid fa-eye text-white"></i>
-                                </Link>
-
-
-                                <a :href="route('HorariosDocentes.PDF',horario.id)" target="_blank" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1"
-                                >
-                                    <i class="fa-solid fa-file-pdf text-white"></i>
                                 </a>
 
 
-                                <a :href="route('HorariosDocentes.Excel',horario.id)" target="_blank" class="p-3 rounded-md bg-[#38b640] mx-2 inline-flex mb-1"
+                                <!--DESCARGAR PDF-->
+                                <a v-if="$page.props.user.roles.includes('Recursos Humanos')"  :href="route('HorarioPDF',horario.id)" target="_blank" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1"  >
+                                    <i class="fa-regular fa-file-pdf text-white"></i>
+
+                                </a>
+
+
+                                <!-- <a :href="route('HorariosDocentes.Excel',horario.id)" target="_blank" class="p-3 rounded-md bg-[#38b640] mx-2 inline-flex mb-1"
                                 >
                                     <i class="fa-regular fa-file-excel text-white"></i>
-                                </a>
+                                </a> -->
 
 
 
@@ -256,7 +441,7 @@
                                                 <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
                                                 </svg>
-                                                <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Esta seguro de eliminar el horario:{{ idBorrarSeleccionado }} </h3>
+                                                <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Esta seguro de eliminar este horario </h3>
                                                 <Link @click="hideDelete" method="delete" :href="route('HorariosDocentes.destroy', idBorrarSeleccionado)" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
                                                     Si, estoy seguro
                                                 </Link>
@@ -266,13 +451,6 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
-
-
-
-
 
                             </div>
 
@@ -285,8 +463,11 @@
             </table>
     </div>
 
+        <div v-if="horarios==''" class=" text-xl w-full mt-14 text-center"> <i class="fa-solid fa-magnifying-glass dark:text-white "></i>
+            <p class="pl-5 dark:text-white">Sin resultados para la busqueda</p>
+        </div>
 
-        <nav aria-label="Page navigation example mt-4">
+        <nav aria-label="Page navigation example mt-4" v-if="horarios!=''">
                 <ul class="inline-flex -space-x-px text-sm">
 
 
@@ -354,6 +535,7 @@
 
 <script>
 import axios from 'axios';
+import NavLink from '@/Components/NavLink.vue';
 
 export default {
 
@@ -363,13 +545,16 @@ export default {
     },
 
     components:{
-        Link
+        Link,
+        NavLink,
     },
 
     mounted() {
         this.Urls=this.$page.props.ListaUrl
         this.isVisible=false
-        this.isvisibleDelete=false
+        this.isvisibleConcentrado=false
+
+
 
         if(this.Paginator.next_page_url!=null){
             this.urlPaginacion = this.Paginator.next_page_url.slice(0, -1);
@@ -383,11 +568,14 @@ export default {
     },
 
     props:{
-         profesores:Array,
-         horarios:Array,
-         periodos:Array,
-         ListaUrl:Array,
-         Paginator:Array
+        profesores:Array,
+        horarios:Array,
+        periodos:Array,
+        ListaUrl:Array,
+        Paginator:Array,
+        departamentos:Array,
+        mensaje: String,
+        tipoMensaje:String,
     },
 
     data() {
@@ -404,6 +592,8 @@ export default {
 
         isVisible:'',
         isvisibleDelete:'',
+        isVisibleHConcentrado:'',
+        isVisibleBuscar:'',
 
         campoBusqueda:'Profesor',
         UsuarioBuscar:'',
@@ -412,7 +602,14 @@ export default {
         mensajeProfesor:null,
         idBorrarSeleccionado:0,
 
-        MostrarFiltro:false
+        MostrarFiltro:false,
+        periodoSeleccionado:0,
+
+
+        departamentoBuscar:0,
+        PersonalBuscar:0,
+        periodoBuscar:0,
+        PersonalPorDepartamento:[],
     }
   },
 
@@ -426,7 +623,6 @@ export default {
         else{
             this.MostrarFiltro=true
         }
-
     },
 
     SeleccionarCampo(campo){
@@ -434,31 +630,39 @@ export default {
         this.MostrarFiltro=false
     },
 
-    HacerBusqueda(){
-
-        console.log(this.UsuarioBuscar);
-
-        axios.get('Users.buscar',{   params:{ usuario:this.UsuarioBuscar,campo:this.campoBusqueda}   })
+    async HacerBusqueda(){
+        await axios.get('HorariosDocentes.buscar',{
+            params:{
+                PersonalBuscar:this.PersonalBuscar,
+                periodoBuscar:this.periodoBuscar,
+                departamentoBuscar:this.departamentoBuscar,
+            }
+        })
         .then(response => {
 
             this.resultadosBusqueda=response.data;
             // console.log('RESULTADOS:');
             // console.log(this.$page.props.plazas);
-            this.$page.props.usuarios=this.resultadosBusqueda;
+            this.$page.props.horarios=this.resultadosBusqueda;
+
         })
         .catch(error => {
             console.error('Error al hacer la busqueda:', error);
         });
+
+        this.hideElementBuscar();
     },
 
     showElement() {
-      this.isVisible = true;
+        this.$page.props.mensaje=null
+        this.isVisible = true;
     },
     hideElement() {
       this.isVisible = false;
     },
 
     showDelete(id){
+        this.$page.props.mensaje=null
         this.idBorrarSeleccionado=id;
         this.isvisibleDelete = true;
     },
@@ -467,10 +671,72 @@ export default {
         this.isvisibleDelete = false;
     },
 
+    showElementBuscar() {
+        this.$page.props.mensaje=null
+        this.isVisibleBuscar = true;
+    },
+    hideElementBuscar() {
+      this.isVisibleBuscar = false;
+    },
+
+    showElementHorConcentrado() {
+        this.$page.props.mensaje=null
+        this.isVisibleHConcentrado = true;
+    },
+    hideElementHorConcentrado() {
+      this.isVisibleHConcentrado = false;
+    },
+
     crearHorario(){
         this.$inertia.post(route('HorariosDocentes.store'),this.NuevoHorario);
         this.hideElement()
     },
+
+
+    ObtenerPersonalPorDepartamento(){
+        console.log('departamento',this.departamentoBuscar)
+
+        this.PersonalPorDepartamento=null
+        this.PersonalBuscar=0;
+
+        axios.get('Personal.Departemento',{  params:{ departamento:this.departamentoBuscar}   })
+        .then(response => {
+            const resultadosBusqueda=response.data.Personal;
+
+            this.PersonalPorDepartamento=resultadosBusqueda;
+
+            if(resultadosBusqueda.length ==0){
+                this.PersonalBuscar=-1;
+            }
+        })
+        .catch(error => {
+            console.error('Error al hacer la busqueda:', error);
+        });
+
+
+    },
+
+    generarPDF() {
+      // Realiza una solicitud al backend para generar el PDF
+      console.log('Entre')
+      axios.get('/PruebaReporte',{Accept: 'application/pdf',})
+        .then(response => {
+
+            if(response.data.status=="success") {
+                        const url = window.URL.createObjectURL(new Blob([response.data.data], {type: 'application/pdf'}));
+                        const link = document.createElement('a');
+                        console.log(link);
+                        link.href = url;
+                        link.setAttribute('download', 'staffs.pdf'); //or any other extension
+                        document.body.appendChild(link);
+                        link.click();
+            } else{
+                alert("Not Authenticated");
+            }
+
+
+        });
+    }
 
 
 

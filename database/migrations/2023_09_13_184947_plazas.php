@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('unidad'); // Agrega la nueva columna
             $table->string('subunidad'); // Agrega la nueva columna
             $table->integer('horas');
+            $table->integer('TipoMovimiento');
             $table->boolean('estatus');
             $table->unsignedBigInteger('idCategoria')->nullable(); // Columna para la llave foránea
             $table->foreign('idCategoria')->references('id')->on('categorias')->onDelete('set null'); // Establecer eliminación en cascada; //Generar llave foranea con tabla users por el campo ID

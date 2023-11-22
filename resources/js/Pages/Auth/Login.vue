@@ -99,7 +99,11 @@ const submit = () => {
 
         <div class="w-1/2 bg-gray-300">
 
-            <img class="h-full" src="https://i0.wp.com/bajopalabra.com.mx/wp-content/uploads/2019/06/Cenidet-2-1.jpeg?resize=1055%2C545&ssl=1" alt="Error al cargar imagen">
+            <!-- <img class="h-full" src="https://i0.wp.com/bajopalabra.com.mx/wp-content/uploads/2019/06/Cenidet-2-1.jpeg?resize=1055%2C545&ssl=1" alt="Error al cargar imagen"> -->
+
+            <!-- <img class="h-full" src="/img/CenidetLogin.jpg" alt="Error al cargar imagen"> -->
+            <img class="h-full" src="/img/LoginCenidet4.jpg" alt="Error al cargar imagen">
+
 
         </div>
 

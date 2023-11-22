@@ -74,7 +74,7 @@ class UsuarioRegistrado extends Mailable
             'password' => $this->user->password,
             'Imagen'=>asset('img/IconoTec.png')
         ])
-        ->subject('Bienvenido a nuestra aplicación');
+        ->subject('Bienvenido al SII CENIDET');
     }
 
 }

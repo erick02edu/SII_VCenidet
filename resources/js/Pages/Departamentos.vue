@@ -11,25 +11,25 @@
         Buscar por:
 
         <input type="radio" value="Nombre" name="Campos" v-model="campoBusqueda" required > Nombre
-        <input type="radio" value="Descripcion" name="Campos" v-model="campoBusqueda" required> Descripcion
-        <input type="radio" value="idEncargado" name="Campos" v-model="campoBusqueda" required> Encargado
+        <!-- <input type="radio" value="Descripcion" name="Campos" v-model="campoBusqueda" required> Descripcion
+        <input type="radio" value="idEncargado" name="Campos" v-model="campoBusqueda" required> Encargado -->
     </h3>
 
 
     <div class="inline-flex w-full" >
 
-        <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200 mb">
+        <div class="relative text-gray-700 dark:text-gray-200 focus-within:text-gray-700  dark:focus-within:text-slate-200 mb">
             <input
                 class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
                 type="text"
                 placeholder="Buscar..."
                 v-model="DepartamentoBuscar"
-                @input="HacerBusqueda()"
+                @keyup="contarTiempo"
             />
         </div>
 
         <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
-        v-if="$page.props.user.permissions.includes('Agregar Departamentos')">
+        v-if="$page.props.user.roles.includes('Recursos Humanos')" >
             Nuevo
         </button>
 
@@ -70,43 +70,66 @@
 
                         <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
                             <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" f for="grid-first-name">
-                                Nombre
+                                Nombre del departamento
                             </label>
                             <input id="Nombre" v-model="NuevoDepartamento.Nombre"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="nombre" required>
                         </div>
 
+
                         <div class="w-full md:w-1/2 px-3">
-                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
-                                Descripcion
-                            </label>
-                            <input id="Descripcion" v-model="NuevoDepartamento.Descripcion" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="Ingresa una descripcion para este apartamento" required>
+
+                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
+                                    Jefe de departamento
+                                </label>
+
+                                <select name="departamentos" v-model="NuevoDepartamento.idEncargado" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white">
+
+                                    <option
+                                        v-for="persona in personal"
+                                        :key="persona.id"
+                                        :value="persona.id"
+                                    >
+                                        {{ persona.Nombre }} {{ persona.ApellidoP }} {{ persona.ApellidoM }}
+
+
+                                    </option>
+                                </select>
                         </div>
 
+
+                        <div class="w-full md:w-full px-3">
+                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
+                                    Descripcion
+                                </label>
+                                <input id="Descripcion" v-model="NuevoDepartamento.Descripcion" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="Ingresa una descripcion para este apartamento" required>
+                            </div>
+
+
                         <div class="w-full md:w-1/2 px-3">
 
-                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
-                                Encargado del area
-                            </label>
+                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
+                                    Subdireccion
+                                </label>
 
-                            <select name="departamentos" v-model="NuevoDepartamento.idEncargado" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white">
+                                <select name="departamentos" v-model="NuevoDepartamento.idSubdireccion" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white">
+                                    <option
+                                        v-for="subdireccion in subdirecciones"
+                                        :key="subdireccion.id"
+                                        :value="subdireccion.id"
+                                    >
+                                        {{ subdireccion.Nombre }}
+                                    </option>
+                                </select>
+                        </div>
 
-                                <option
-                                    v-for="persona in personal"
-                                    :key="persona.id"
-                                    :value="persona.id"
-                                >
-                                    {{ persona.Nombre }} {{ persona.ApellidoP }} {{ persona.ApellidoM }}
 
 
-                                </option>
-                            </select>
-
-                                                    <!-- Modal footer -->
+                        <!-- Modal footer -->
 
                         <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
                             <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Agregar</button>
                             <button @click="hideElement" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar</button>
-                        </div>
+
                         </div>
 
                 </div>
@@ -120,28 +143,39 @@
 </div>
 
 
+    <div v-if="mensaje"
+    :class="{ 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-3 mb-3': tipoMensaje == 'Exitoso', 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3 mb-3': tipoMensaje == 'Error' }">
+        <strong class="font-bold" v-if="tipoMensaje=='Exitoso'">Éxito:</strong>
+        <strong class="font-bold" v-if="tipoMensaje=='Error'">Érror:</strong>
+        <span class="block sm:inline">{{ mensaje}}</span>
+    </div>
 
-    <!--TABLA DE PLAZAS-->
+
+    <!--TABLA DE DEPARTAMENTOS-->
     <div class="inline-block min-w-full overflow-hidden rounded-lg shadow">
             <table class="w-full whitespace-no-wrap">
                 <!--Encabezados-->
                 <thead>
                     <tr class="border-b bg-gray-50 text-left text-xs font-semibold uppercase tracking-wide text-gray-500">
-                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                        <!-- <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             ID
-                        </th>
+                        </th> -->
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
-                            Nombre
+                            Departamento
                         </th>
-                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                        <!-- <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Descripcion
-                        </th>
+                        </th> -->
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Jefe de departamento
                         </th>
+
+
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                            Subdireccion
+                        </th>
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200"
-                        v-if="$page.props.user.permissions.includes('Editar información de los departamentos')
-                        || $page.props.user.permissions.includes('Eliminar departamentos')">
+                        v-if="$page.props.user.roles.includes('Recursos Humanos')" >
                             Opciones
                         </th>
                     </tr>
@@ -150,19 +184,21 @@
                 <tbody>
                     <tr v-for="(departamento,index) in departamentos"  class="text-gray-700">
 
-                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                        <!-- <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
                             <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ departamento.id }}</p>
-                        </td>
+                        </td> -->
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
                             <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ departamento.Nombre }}</p>
                         </td>
 
-                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                        <!-- <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
                             <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ departamento.Descripcion }}</p>
-                        </td>
+                        </td> -->
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+
+                            <p v-if="departamento.idEncargado==null" class="dark:text-gray-200 uppercase">Sin Jefe asignado</p>
                             <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap" v-for="persona in personal" >
                                 <p v-if="persona.id==departamento.idEncargado">
                                     {{ persona.Nombre }} {{ persona.ApellidoP }} {{ persona.ApellidoM }}
@@ -170,25 +206,39 @@
                             </p>
                         </td>
 
-                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm"
-                        v-if="$page.props.user.permissions.includes('Editar información de los departamentos')
-                        || $page.props.user.permissions.includes('Eliminar departamentos')">
 
-                            <Link :href="route('Departamentos.edit',departamento.id)" class="p-3 rounded-md bg-[#014E82] mx-2 "
-                            v-if="$page.props.user.permissions.includes('Editar información de los departamentos')">
-                                <i class="fa-solid fa-pen text-white"></i>
+
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+
+                            <p v-if="departamento.idSubdireccion==null" class="dark:text-gray-200 uppercase">Sin subdireccion</p>
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap" v-for="subdireccion in subdirecciones" >
+                                <p v-if="subdireccion.id==departamento.idSubdireccion">
+                                    {{ subdireccion.Nombre }}
+                                </p>
+                            </p>
+                        </td>
+
+
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm"
+                        v-if="$page.props.user.roles.includes('Recursos Humanos')" >
+
+                            <Link :href="route('Departamentos.edit',departamento.id)" class="p-3 rounded-md bg-[#014E82] mx-2 text-white inline-flex mb-2"
+                            v-if="$page.props.user.roles.includes('Recursos Humanos')" >
+                                <!-- <i class="fa-solid fa-pen text-white"></i> -->
+                                <strong>Cambiar Jefe<span>  <i class="fa-solid fa-user-plus pl-1"></i> </span> </strong>
                             </Link>
 
 
-                            <a type="button" @click="showDelete(departamento.id,departamento.Nombre)" class="p-3 rounded-md bg-[#dc2626] mx-2"
-                            v-if="$page.props.user.permissions.includes('Eliminar departamentos')">
-                                        <i class="fa-solid fa-trash text-white"></i>
+                            <a type="button" @click="showDelete(departamento.id,departamento.Nombre)" class="p-3 rounded-md text-white bg-[#dc2626] mx-2 inline-flex mb-2"
+                            v-if="$page.props.user.roles.includes('Recursos Humanos')" >
+                                <strong>Eliminar<span>  <i class="fa-solid fa-trash text-white pl-3"></i> </span> </strong>
+                                <!-- <i class="fa-solid fa-trash text-white"></i> -->
                             </a>
 
-
+<!--
                             <Link  :href="route('Users.editRole',departamento.id)" class="p-3 rounded-md bg-[#FFD200]  mx-2 inline-flex mb-1 ">
                                 <strong>Asignar Jefe<span>  <i class="fa-solid fa-user-plus pl-1"></i> </span> </strong>
-                            </Link>
+                            </Link> -->
 
 
                             <!-- Capa oscura -->
@@ -311,9 +361,12 @@ export default {
     },
 
     props:{
-         departamentos:Array,
-         personal:Array,
-         Paginator:Array
+        departamentos:Array,
+        personal:Array,
+        Paginator:Array,
+        subdirecciones:Array,
+        mensaje: String,
+        tipoMensaje:String,
     },
 
     data() {
@@ -324,6 +377,7 @@ export default {
 
       campoBusqueda:'Nombre',
       DepartamentoBuscar:'',
+      setTimeoutBuscador:'',
 
       idBorrarSeleccionado:0,
       nameBorrarSeleccionado:"",
@@ -332,29 +386,26 @@ export default {
           Nombre:'',
           Descripcion:'',
           idEncargado:'',
+          idSubdireccion:''
       },
-
       ListaRoles:[],
-
     }
   },
 
   methods: {
 
+    contarTiempo(){
+        this.$page.props.mensaje=null
+        clearTimeout(this.setTimeoutBuscador);
+        this.setTimeoutBuscador=setTimeout(this.HacerBusqueda,360)
+    },
 
     HacerBusqueda(){
-        console.log(this.UsuarioBuscar);
-
         axios.get('Departamentos.buscar',{   params:{ departamento:this.DepartamentoBuscar,campo:this.campoBusqueda}   })
         .then(response => {
 
             this.resultadosBusqueda=response.data;
-             //console.log('RESULTADOS:',response.data);
-
-             //console.log(this.$page.props.plazas);
-
-
-             this.$page.props.departamentos=this.resultadosBusqueda;
+            this.$page.props.departamentos=this.resultadosBusqueda;
         })
         .catch(error => {
             console.error('Error al hacer la busqueda:', error);
@@ -366,23 +417,9 @@ export default {
         this.hideElement()
     },
 
-    async ObtenerListaRoles(){
-
-        await axios.get('/GetRoles') // Ruta de la API en Laravel
-        .then(response => {
-            this.ListaRoles = response.data.ListaRoles;
-            console.log("Lista Roles:",response.data.ListaRoles[0].name);
-
-            this.Roles=this.ListaRoles;
-
-        })
-        .catch(error => {
-            console.error('Error al obtener datos:', error);
-        });
-    },
-
     showElement() {
-      this.isVisible = true;
+        this.$page.props.mensaje=null
+        this.isVisible = true;
     },
     hideElement() {
       this.isVisible = false;

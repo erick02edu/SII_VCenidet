@@ -9,5 +9,5 @@ class Grupos extends Model
 {
     use HasFactory;
     public $timestamps = false;
-    protected $fillable=['Semestres','Especialidad','Letra'];
+    protected $fillable=['Semestre','Especialidad','Letra'];
 }

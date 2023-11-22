@@ -38,15 +38,36 @@
 
                             <div class="grid grid-cols-1">
 
-                                <label class="uppercase md:text-sm text-xs text-gray-500 dark:text-gray-200 text-light font-semibold">Encargado</label>
+                                <label class="uppercase md:text-sm text-xs text-gray-500 dark:text-gray-200 text-light font-semibold">Elige el nuevo jefe de departamento</label>
                                 <select name="departamentos" v-model="InfoEditar.idEncargado" class="py-2 px-3 rounded-lg border-2 border-[#0285c7c6] dark:text-gray-200 dark:bg-slate-700 mt-1 focus:outline-none focus:ring-2 focus:[#014E82] focus:border-transparent">
+                                <!-- <option :value="JefeActual.id">
+                                    {{ JefeActual.Nombre }} {{ JefeActual.ApellidoP }} {{ JefeActual.ApellidoM }}
+                                </option> -->
 
                                 <option
                                     v-for="persona in personal"
                                     :key="persona.id"
                                     :value="persona.id"
                                 >
-                                    {{ persona.name }}
+                                    {{ persona.Nombre }} {{ persona.ApellidoP }} {{ persona.ApellidoM }}
+
+                                </option>
+                                </select>
+                            </div>
+
+
+
+                            <div class="grid grid-cols-1">
+
+                                <label class="uppercase md:text-sm text-xs text-gray-500 dark:text-gray-200 text-light font-semibold">Elige una nueva subdireccion</label>
+                                <select name="departamentos" v-model="InfoEditar.idSubdireccion" class="py-2 px-3 rounded-lg border-2 border-[#0285c7c6] dark:text-gray-200 dark:bg-slate-700 mt-1 focus:outline-none focus:ring-2 focus:[#014E82] focus:border-transparent">
+
+                                <option
+                                    v-for="subdireccion in subdirecciones"
+                                    :key="subdireccion.id"
+                                    :value="subdireccion.id"
+                                >
+                                    {{ subdireccion.Nombre }}
 
                                 </option>
                                 </select>
@@ -94,7 +115,9 @@
                 type:Array,
                 required:true,
             },
-            personal:Array
+            personal:Array,
+            JefeActual:Array,
+            subdirecciones:Array
 
         })
 
@@ -102,7 +125,8 @@
             id:props.departamento.id,
             unidad:props.departamento.Nombre,
             subunidad:props.departamento.Descripcion,
-            idCategoria:props.departamento.idEncargado,
+            idEncargado:props.JefeActual.id,
+            idSubdireccion:props.departamento.idSubdireccion
         })
 
 
@@ -122,7 +146,8 @@
                         idDepartamento:this.$props.departamento.id,
                         Nombre:this.$props.departamento.Nombre,
                         Descripcion:this.$props.departamento.Descripcion,
-                        idEncargado:this.$props.departamento.idEncargado,
+                        idEncargado:this.$props.JefeActual.id,
+                        idSubdireccion:this.$props.departamento.idSubdireccion
                     },
                 }
             },

@@ -13,6 +13,7 @@ class ClasesController extends Controller
         $idHorario = $request->input('idHorario');
         $ClasesEliminar = Clases::where('idHorario', $idHorario)->get();
 
+        //Eliminar clases
         if(count($ClasesEliminar)!=0){
             foreach($ClasesEliminar as $clase){
                 $clase->delete();

@@ -15,10 +15,8 @@ return new class extends Migration
             $table->id('id');
             $table->string('descripcion');
             $table->unsignedBigInteger('idPeriodo')->nullable(); // Columna para la llave foránea
-            $table->unsignedBigInteger('idUser')->nullable(); // Columna para la llave foránea
             $table->foreign('idPeriodo')->references('id')->on('Periodos')->onDelete('set null'); // Establecer eliminación en cascada; //Generar llave foranea con tabla users por el campo ID
-            $table->foreign('idUser')->references('id')->on('users')->onDelete('set null'); // Establecer eliminación en cascada; //Generar llave foranea con tabla users por el campo ID
-        });
+      });
     }
 
     /**

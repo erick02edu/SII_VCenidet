@@ -8,34 +8,66 @@
                 Lista de Materias
         </template>
 
-        <h3 class="text-m text-gray-900 dark:text-white py-1 ml-1">
+        <!-- <h3 class="text-m text-gray-900 dark:text-white py-1 ml-1">
                 Buscar por:
 
                 <input type="radio" value="Nombre" name="Campos" v-model="campoBusqueda" required > Nombre
                 <input type="radio" value="Descripcion" name="Campos" v-model="campoBusqueda" required> Descripcion
                 <input type="radio" value="Codigo" name="Campos" v-model="campoBusqueda" required> Codigo
 
-        </h3>
+        </h3> -->
 
-        <div class="inline-flex w-full pb-3" >
-
-            <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200">
+        <div class="inline-flex w-full pb-1" >
+            <div class="relative dark:text-white text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200">
                 <input
                 class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
                     type="text"
-                    placeholder="Buscar..."
+                    :placeholder="'Buscar por ' + campoBusquedaVer"
                     v-model="MateriaBuscar"
-                    @input="HacerBusqueda()"
+                    @keyup="contarTiempo"
                 />
             </div>
 
+
+            <div class="relative inline-block text-left pl-3">
+            <div>
+                <button type="button"  @click="MostrarOpcionesFiltro" class="inline-flex justify-center w-full rounded-md border border-gray-300 dark:border-slate-500 shadow-sm px-4 py-2 bg-white dark:bg-slate-700  text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 focus:outline-none focus:ring focus:[#014E82] active:bg-gray-200" id="dropdown-menu-button" aria-haspopup="true" aria-expanded="true">
+                <span class="pr-2"> <i class="fa-solid fa-filter"></i>  </span>{{ campoBusquedaVer }}
+                <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M9.293 5.293a1 1 0 011.414 0l5 5a1 1 0 01-1.414 1.414L10 7.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 010 0z" clip-rule="evenodd" />
+                </svg>
+                </button>
+            </div>
+
+            <div v-if="MostrarFiltro" class="origin-top-right absolute right-0 mt-2 w-32 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5" role="menu" aria-orientation="vertical" aria-labelledby="dropdown-menu-button" tabindex="-1">
+
+                <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-1" href="#">
+                <span @click="SeleccionarCampo('Nombre','Nombre')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Nombre</span>
+                </div>
+
+                <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-2" href="#">
+                <span @click="SeleccionarCampo('Codigo','Codigo')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Codigo</span>
+                </div>
+
+                <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-2" href="#">
+                <span @click="SeleccionarCampo('Descripcion','Descripcion')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Descripcion</span>
+                </div>
+            </div>
+            </div>
+
+
             <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
-            v-if="$page.props.user.permissions.includes('Agregar Materias')" >
+            v-if="$page.props.user.roles.includes('Administrador')" >
                 Nuevo
             </button>
 
 
+
         </div>
+
+
+
+
 
 
             <!-- Capa oscura -->
@@ -43,12 +75,6 @@
     </div>
 
     <div id="modalContainer">
-
-
-        <div v-if="mensajeMateriaNueva!=null" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-3 mb-3" role="alert">
-            <strong class="font-bold">Éxito:</strong>
-            <span class="block sm:inline">{{ mensajeMateriaNueva }}</span>
-        </div>
 
         <!-- Main modal -->
         <div :class="{ hidden: !isVisible }">
@@ -114,7 +140,14 @@
         </div>
 </div>
 
-    <!--TABLA DE PLAZAS-->
+    <div v-if="mensaje"
+    :class="{ 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative  mb-3': tipoMensaje == 'Exitoso', 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3 mb-3': tipoMensaje == 'Error' }">
+        <strong class="font-bold" v-if="tipoMensaje=='Exitoso'">Éxito:</strong>
+        <strong class="font-bold" v-if="tipoMensaje=='Error'">Érror:</strong>
+        <span class="block sm:inline">{{ mensaje}}</span>
+    </div>
+
+    <!--TABLA DE MATERIAS-->
     <div class="inline-block min-w-full overflow-hidden rounded-lg shadow">
             <table class="w-full whitespace-no-wrap">
                 <!--Encabezados-->
@@ -134,7 +167,7 @@
                         </th>
 
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200"
-                        v-if="$page.props.user.permissions.includes('Editar Materias') || $page.props.user.permissions.includes('Eliminar Materias')">
+                        v-if="$page.props.user.roles.includes('Administrador')">
                             Opciones
                         </th>
                     </tr>
@@ -162,17 +195,17 @@
 
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm"
-                        v-if="$page.props.user.permissions.includes('Editar Materias') || $page.props.user.permissions.includes('Eliminar Materias')">
+                        v-if="$page.props.user.roles.includes('Administrador')">
 
 
                             <Link :href="route('Materias.edit',materia.id)"  class="p-3 rounded-md bg-[#014E82] mx-2 "
-                            v-if="$page.props.user.permissions.includes('Editar Materias')">
+                            v-if="$page.props.user.roles.includes('Administrador')">
                                 <i class="fa-solid fa-pen text-white"></i>
                             </Link>
 
 
                             <a type="button" @click="showDelete(materia.id)" class="p-3 rounded-md bg-[#dc2626] mx-2"
-                            v-if="$page.props.user.permissions.includes('Eliminar Materias')">
+                            v-if="$page.props.user.roles.includes('Administrador')">
                                         <i class="fa-solid fa-trash text-white"></i>
                             </a>
 
@@ -298,14 +331,22 @@
 
         props:{
             materias:Array,
-            Paginator:Array
+            Paginator:Array,
+            mensaje: String,
+            tipoMensaje:String,
         },
 
         data() {
         return {
 
             urlPaginacion:'',
-            campoBusqueda:'estatus',
+
+            MostrarFiltro:false,
+
+            campoBusqueda:'Nombre',
+            campoBusquedaVer:'Nombre',
+            setTimeoutBuscador:'',
+
 
             isVisible: false,
             isvisibleDelete:false,
@@ -328,10 +369,34 @@
 
     methods: {
 
+
+        MostrarOpcionesFiltro(){
+            this.$page.props.mensaje=null
+            if(this.MostrarFiltro==true){
+                this.MostrarFiltro=false
+            }
+            else{
+                this.MostrarFiltro=true
+            }
+        },
+
+        SeleccionarCampo(campo,campoVer){
+
+            this.campoBusqueda=campo
+            this.campoBusquedaVer=campoVer
+            this.MostrarFiltro=false
+            this.HacerBusqueda();
+        },
+
+        contarTiempo(){
+            this.$page.props.mensaje=null
+            clearTimeout(this.setTimeoutBuscador);
+            this.setTimeoutBuscador=setTimeout(this.HacerBusqueda,360)
+        },
+
         HacerBusqueda(){
 
-            this.mensajeMateriaNueva=null;
-
+            this.$page.props.mensaje=null
             console.log(this.MateriaBuscar);
 
             axios.get('Materias.buscar',{   params:{ materia:this.MateriaBuscar,campo:this.campoBusqueda}   })

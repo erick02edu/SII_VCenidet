@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('Categorias', function (Blueprint $table) {
             $table->id('id');
             $table->string('Descripcion'); // Agrega la nueva columna
-            $table->string('Clave'); // Agrega la nueva columna
+            $table->string('Clave')->unique(); // Agrega la nueva columna
             $table->integer('Horas'); // Agrega la nueva columna
         });
     }

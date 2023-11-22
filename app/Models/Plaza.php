@@ -9,5 +9,5 @@ use Illuminate\Database\Eloquent\Model;
 class Plaza extends Model //MODELO PARA PLAZAS
 {
     use HasFactory;
-    protected $fillable=["idCategoria","horas","estatus","unidad","subunidad","diagonal"];
+    protected $fillable=["idCategoria","horas","estatus","unidad","subunidad","diagonal","TipoMovimiento"];
 }

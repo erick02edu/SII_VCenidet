@@ -137,8 +137,6 @@ export default {
     },
 
 
-
-
     methods: {
       renderChart() {
         const ctx = document.getElementById("myChart").getContext("2d");

@@ -18,15 +18,13 @@ class DatabaseSeeder extends Seeder
 
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
-
-
+        $this->call(EstatusEmpleadoSeeder::class);
+        $this->call(DepartamentosSeeder::class);
+        $this->call(CategoriasSeeder::class);
+        $this->call(SubdireccionSeeder::class);
+        $this->call(PeriodosSeeder::class);
         // \App\Models\User::factory(10)->create();
 
-        User::factory()->create([
-             'name' => 'Jorge',
-            'email' => 'Jorge@gmail.com',
-            'password' => Hash::make('password'),
-            'estatus' => 1, // O el valor apropiado para el campo 'estatus'
-        ])->assignRole('Administrador');;
+
     }
 }

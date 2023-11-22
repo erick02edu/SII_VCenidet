@@ -12,19 +12,29 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 use App\Mail\UsuarioRegistrado;
+use Exception;
 use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Support\Facades\Session;
 use Spatie\Permission\Models\Role;
+
 
 class UserController extends Controller
 {
 
+    // public function __construct()
+    // {
+    //     $this->middleware(['permission:Agregar Usuarios|Editar Usuarios|Ver usuarios|Eliminar Usuarios|Asignar roles a los usuarios'])->only('index');
+    //     $this->middleware('can:Agregar Usuarios')->only('store');
+    //     $this->middleware('can:Editar Usuarios')->only('edit','update');
+    //     $this->middleware('can:Eliminar Usuarios')->only('destroy');
+    // }
+
     public function __construct()
     {
-        $this->middleware(['permission:Agregar Usuarios|Editar Usuarios|Ver usuarios|Eliminar Usuarios|Asignar roles a los usuarios'])->only('index');
-        $this->middleware('can:Agregar Usuarios')->only('store');
-        $this->middleware('can:Editar Usuarios')->only('edit','update');
-        $this->middleware('can:Eliminar Usuarios')->only('destroy');
+        $this->middleware(['role:Administrador'])->only('index');
+        $this->middleware(['role:Administrador'])->only('store');
+        $this->middleware(['role:Administrador'])->only('edit','update');
+        $this->middleware(['role:Administrador'])->only('destroy');
     }
 
     //Funcion para mostrar todos los usuarios retorna a la vista de Usuarios
@@ -35,33 +45,48 @@ class UserController extends Controller
 
         $roles=Role::all();
 
+        // Obtener datos flash de la sesión
+        $mensaje = Session::get('mensaje');
+        $TipoMensaje = Session::get('TipoMensaje');
+
         return Inertia::render('Modulos/Administrador/Usuarios/Usuarios',[
             'usuarios'=>$Usuarios,
             'roles'=>$roles,
-            'Paginator'=>$Pagination
+            'Paginator'=>$Pagination,
+            'mensaje' => $mensaje,
+            'tipoMensaje' => $TipoMensaje,
+
         ]);
     }
 
     //Funcion para crear un usuario
     public function store(Request $request){
+
+
         $user=new User();
+            try{
+            $user->name=$request->name;
+            $user->email=$request->email;
+            $user->password = Hash::make($request->input('password'));
+            $user->Estatus='0';
+            $user->save();
 
-        $user->name=$request->name;
-        $user->email=$request->email;
-        $user->password = Hash::make($request->input('password'));
-        $user->Estatus='0';
-        $user->save();
+            $newUserId = $user->id;
 
-        $newUserId = $user->id;
+            return redirect()->route('Roles.asignar', [
+                'id' => $newUserId,
+                'RolesSeleccionados'=>$request->input('RolesSeleccionados'),
+            ]);
+        }
+        catch(Exception $e){
+            Session::flash('mensaje', 'Ha ocurrido un error al registrar el usuario');
+            Session::flash('TipoMensaje', 'Error');
+            return Redirect::route('Users.index');
+        }
 
-        // Envía el correo electrónico
-        //$email = new UsuarioRegistrado($User);
-
-        Mail::to($user->email)->send(new UsuarioRegistrado($user));
 
 
-        return redirect()->route('Roles.asignar', ['id' => $newUserId, 'RolesSeleccionados'=>$request->input('RolesSeleccionados')]);
-
+        //Mail::to($user->email)->send(new UsuarioRegistrado($user));
     }
 
 
@@ -77,17 +102,38 @@ class UserController extends Controller
     //Funcion para actualizar un usuario
     public function update(String $id,Request $request)
     {
+        try{
         $User=User::find($id);
         $User->update($request->all());
+
+        Session::flash('mensaje', 'Se ha guardado los cambios');
+        Session::flash('TipoMensaje', 'Exitoso');
         return redirect::route('Users.index');
+        }
+        catch(Exception $e){
+            Session::flash('mensaje', 'Ha ocurrido un error al intentar actualizar los datos del usuario');
+            Session::flash('TipoMensaje', 'Error');
+            return redirect::route('Users.index');
+        }
     }
 
     //Funcion para eliminar un usuario
     public function destroy(String $id)
     {
-        $User = User::find($id);
-        $User->delete();
-        return Redirect::route('Users.index');
+
+        try{
+            $User = User::find($id);
+            $User->delete();
+
+            Session::flash('mensaje', 'Se ha eliminado correctamente al usuario '.$User->name);
+            Session::flash('TipoMensaje', 'Exitoso');
+
+            return Redirect::route('Users.index');
+        }catch(Exception $e){
+            Session::flash('mensaje', 'Ha ocurrido un error al eliminar al usuario '.$User->name);
+            Session::flash('TipoMensaje', 'Error');
+            return Redirect::route('Users.index');
+        }
     }
 
     //Funcion para eliminar un usuario
@@ -104,6 +150,11 @@ class UserController extends Controller
     public function ObtenerUsuarios(){
         $Users=User::all();
         return $Users;
+    }
+
+    public function ObtenerUsuarioPorID(String $id){
+        $user=User::find($id);
+        return $user;
     }
 
     public function ObtenerUsuariosDisponibles()

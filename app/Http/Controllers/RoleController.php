@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
+use Exception;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Session;
 use Spatie\Permission\Contracts\Permission;
 
 class RoleController extends Controller
@@ -16,12 +18,12 @@ class RoleController extends Controller
     public function __construct()
     {
 
-        $this->middleware(['role_or_permission:Administrador|Ver Roles|Crear roles|Editar información de los roles|Eliminar roles'])->only('index');
-        $this->middleware('can:Asignar roles a los usuarios')->only('AsignarRol','EditRole');
+        $this->middleware(['role:Administrador'])->only('index');
+        $this->middleware(['role:Administrador'])->only('AsignarRol','EditRole');
 
-        $this->middleware('can:Crear roles')->only('store');
-        $this->middleware('can:Editar información de los roles')->only('edit','update');
-        $this->middleware('can:Eliminar roles')->only('destroy');
+        $this->middleware(['role:Administrador'])->only('store');
+        $this->middleware(['role:Administrador'])->only('edit','update');
+        $this->middleware(['role:Administrador'])->only('destroy');
     }
 
     public function index(){
@@ -31,11 +33,16 @@ class RoleController extends Controller
 
         $Roles=$Pagination->items();
         $Permisos=app(PermissionController::class)->ObtenerPermisos();
+        // Obtener datos flash de la sesión
+        $mensaje = Session::get('mensaje');
+        $TipoMensaje = Session::get('TipoMensaje');
 
         return Inertia::render('Modulos/Administrador/RolesPermisos/Roles',[
             'roles'=>$Roles,
             'Permisos'=>$Permisos,
-            'Paginator'=>$Pagination
+            'Paginator'=>$Pagination,
+            'mensaje' => $mensaje,
+            'tipoMensaje' => $TipoMensaje,
         ]);
     }
 
@@ -94,6 +101,9 @@ class RoleController extends Controller
         $Role->guard_name='web';
         $Role->save();
         $newRoleId = $Role->id;
+
+
+
         return redirect()->route('Permisos.asignar', ['id' => $newRoleId, 'PermisosSeleccionados'=>$request->input('PermisosSeleccionados')]);
     }
 
@@ -109,17 +119,38 @@ class RoleController extends Controller
     //Funcion para actualizar un usuario
     public function update(String $id,Request $request)
     {
-        $Role=Role::find($id);
-        $Role->update($request->all());
-        return redirect::route('Roles.index');
+        try{
+            $Role=Role::find($id);
+            $Role->update($request->all());
+            Session::flash('mensaje', 'Cambio realizado exitosamente');
+            Session::flash('TipoMensaje', 'Exitoso');
+            return redirect::route('Roles.index');
+        }
+        catch(Exception $e){
+            Session::flash('mensaje', 'No se pudo realizar el cambio');
+            Session::flash('TipoMensaje', 'Error');
+            return redirect::route('Roles.index');
+        }
+
     }
 
 
     public function destroy(String $id)
     {
-        $Role = Role::find($id);
-        $Role->delete();
-        return Redirect::route('Roles.index');
+        try{
+            $Role = Role::find($id);
+            $Role->delete();
+            Session::flash('mensaje', 'Se ha eliminado correctamente el rol');
+            Session::flash('TipoMensaje', 'Exitoso');
+            return Redirect::route('Roles.index');
+        }
+        catch(Exception $e){
+            Session::flash('mensaje', 'No se pudo eliminar el rol');
+            Session::flash('TipoMensaje', 'Error');
+            return Redirect::route('Roles.index');
+        }
+
+
     }
 
 
@@ -172,7 +203,8 @@ class RoleController extends Controller
         $User->roles()->sync($request->input('RolesSeleccionados'));
 
         //return redirect()->route('Users.editRole',$id)->with('Info','Se asigno los roles correctamente');
-
+        Session::flash('mensaje', 'Usuario registrado correctamente');
+        Session::flash('TipoMensaje', 'Exitoso');
         return back()->with([$id]);
 
 

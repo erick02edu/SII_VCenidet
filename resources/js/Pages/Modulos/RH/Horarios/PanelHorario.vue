@@ -91,7 +91,7 @@
 
         <!-- <button @click="GuardarCambios" class="px-4 py-2 bg-[#014E82] rounded-md dark:text-gray-200 ml-5 mt-4">Guardar cambios</button> -->
 
-        <p class="flex font-roboto dark:text-gray-200 justify-center w-full items-center pt-5 ">Editar Horario</p>
+        <p class="flex font-roboto dark:text-gray-200 justify-center w-full items-center pt-5 ">Editar Horario Docente</p>
 
         <div class="container mx-auto px-6 py-4 w-auto "  >
 

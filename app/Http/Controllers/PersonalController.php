@@ -6,24 +6,43 @@ use App\Models\personal;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UsuarioRegistrado;
+use App\Models\Departamentos;
+use App\Models\EstatusEmpleado;
+use Exception;
+use Illuminate\Support\Facades\Session;
+
+
 
 class PersonalController extends Controller
 {
 
+    // public function __construct()
+    // {
+    //     $this->middleware(['permission:Ver informacion del personal|Agregar Personal|Asignar cuentas de usuarios al personal|Asignar Plazas al personal|Editar información del personal|Eliminar al personal'])->only('index','indexActivos','indexBajas');
+    //     $this->middleware('can:Agregar Personal')->only('store');
+    //     $this->middleware('can:Editar información del personal')->only('edit','update');
+    //     $this->middleware('can:Eliminar al personal')->only('destroy');
+
+    //     $this->middleware('can:Asignar cuentas de usuarios al personal')->only('asignarCuenta');
+    //     $this->middleware('can:Asignar Plazas al personal')->only('asignarPlaza');
+    // }
+
     public function __construct()
     {
-        $this->middleware(['permission:Ver informacion del personal|Agregar Personal|Asignar cuentas de usuarios al personal|Asignar Plazas al personal|Editar información del personal|Eliminar al personal'])->only('index','indexActivos','indexBajas');
-        $this->middleware('can:Agregar Personal')->only('store');
-        $this->middleware('can:Editar información del personal')->only('edit','update');
-        $this->middleware('can:Eliminar al personal')->only('destroy');
+        $this->middleware(['role:Recursos Humanos'])->only('index','indexActivos','indexBajas');
+        $this->middleware(['role:Recursos Humanos'])->only('store','create');
+        $this->middleware(['role:Recursos Humanos'])->only('edit','update');
+        $this->middleware(['role:Recursos Humanos'])->only('destroy');
 
-        $this->middleware('can:Asignar cuentas de usuarios al personal')->only('asignarCuenta');
-        $this->middleware('can:Asignar Plazas al personal')->only('asignarPlaza');
+        $this->middleware(['role:Recursos Humanos'])->only('asignarCuenta');
+        $this->middleware(['role:Recursos Humanos'])->only('asignarPlaza');
     }
+
 
     public function index()
     {
-
         $Pagination=personal::paginate(10);
         $personal=$Pagination->items();
 
@@ -38,11 +57,17 @@ class PersonalController extends Controller
         $numeroRegistros = personal::all()->count();
 
         $ArregloFilas=[];
-
+        $EstatusEmpleados=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleados();
+        $Departamentos=app(DepartamentoController::class)->ObtenerDepartamentos();
+        $Periodos=app(PeriodoController::class)->ObtenerPeriodos();
 
         for( $i=0 ; $i<$numeroRegistros ;  $i++){
             array_push($ArregloFilas,false);
         }
+
+        // Obtener datos flash de la sesión
+        $mensaje = Session::get('mensaje');
+        $TipoMensaje = Session::get('TipoMensaje');
 
         return Inertia::render('Modulos/RH/Personal/Personal',[
             'personal'=>$personal,
@@ -53,13 +78,26 @@ class PersonalController extends Controller
             'categorias'=>$categorias,
             'filas'=> $ArregloFilas,
             'Paginator'=>$Pagination,
-            'Filtro'=>'Todos'
+            'Filtro'=>'Todos',
+            'EstatusEmpleado'=>$EstatusEmpleados,
+            'departamentos'=>$Departamentos,
+            'periodos'=>$Periodos,
+            'mensaje' => $mensaje,
+            'tipoMensaje' => $TipoMensaje,
         ]); //Regresar a la vista personal
     }
 
 
     public function create(){
-        return Inertia::render('Modulos/RH/Personal/AltaPersonal');
+        $Departamentos=app(DepartamentoController::class)->ObtenerDepartamentos();
+        $EstatusEmpleados=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleados();
+        // $usuarios=app(UserController::class)->ObtenerUsuarios();
+        $usuarios=app(UserController::class)->ObtenerUsuariosDisponibles();
+        return Inertia::render('Modulos/RH/Personal/AltaPersonal',[
+            'departamentos'=>$Departamentos,
+            'estatus'=>$EstatusEmpleados,
+            'usuarios'=>$usuarios
+        ]);
     }
 
     public function indexActivos(){
@@ -79,6 +117,9 @@ class PersonalController extends Controller
 
         $ArregloFilas=[];
 
+        $EstatusEmpleados=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleados();
+        $Departamentos=app(DepartamentoController::class)->ObtenerDepartamentos();
+        $Periodos=app(PeriodoController::class)->ObtenerPeriodos();
 
         for( $i=0 ; $i<$numeroRegistros ;  $i++){
             array_push($ArregloFilas,false);
@@ -93,7 +134,10 @@ class PersonalController extends Controller
             'categorias'=>$categorias,
             'filas'=> $ArregloFilas,
             'Paginator'=>$Pagination,
-            'Filtro'=>'Activos'
+            'Filtro'=>'Activos',
+            'EstatusEmpleado'=>$EstatusEmpleados,
+            'departamentos'=>$Departamentos,
+            'periodos'=>$Periodos
         ]);
     }
 
@@ -115,6 +159,9 @@ class PersonalController extends Controller
 
         $ArregloFilas=[];
 
+        $EstatusEmpleados=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleados();
+        $Departamentos=app(DepartamentoController::class)->ObtenerDepartamentos();
+        $Periodos=app(PeriodoController::class)->ObtenerPeriodos();
 
         for( $i=0 ; $i<$numeroRegistros ;  $i++){
             array_push($ArregloFilas,false);
@@ -129,7 +176,10 @@ class PersonalController extends Controller
             'categorias'=>$categorias,
             'filas'=> $ArregloFilas,
             'Paginator'=>$Pagination,
-            'Filtro'=>'Bajas'
+            'Filtro'=>'Bajas',
+            'EstatusEmpleado'=>$EstatusEmpleados,
+            'departamentos'=>$Departamentos,
+            'periodos'=>$Periodos
         ]);
     }
 
@@ -138,31 +188,152 @@ class PersonalController extends Controller
 
         $Personal=new personal();
 
-        $Personal->RFC=$request->RFC;
-        $Personal->Nombre=$request->Nombre;
+        try{
+
         $Personal->ApellidoP=$request->ApellidoP;
         $Personal->ApellidoM=$request->ApellidoM;
-        $Personal->CURP=$request->CURP;
-        $Personal->Telefono=$request->Telefono;
-        $Personal->Direccion=$request->Direccion;
-        $Personal->CorreoPers=$request->CorreoPers;
+        $Personal->Nombre=$request->Nombre;
+        $Personal->RFC=$request->RFC;
+        $Personal->LugarNacimiento=$request->LugarNacimiento;
         $Personal->FechaNacimiento=$request->FechaNacimiento;
-        $Personal->numTarjeta=$request->numTarjeta;
-        $Personal->Estatus='A';
+        $Personal->Sexo=$request->Sexo;
+        $Personal->EstadoCivil=$request->EstadoCivil;
+        $Personal->Direccion=$request->Direccion;
+        $Personal->Colonia=$request->Colonia;
+        $Personal->CodigoPostal=$request->CodigoPostal;
+        $Personal->Ciudad=$request->Ciudad;
+        $Personal->EntFederativa=$request->EntFederativa;
+        $Personal->Telefono=$request->Telefono;
+        $Personal->CURP=$request->CURP;
+        $Personal->CorreoPers=$request->CorreoPers;
+
+        $Personal->NivEst1=$request->NivEst1;
+        $Personal->GradoMax1=$request->GradoMax1;
+        $Personal->Estudio1=$request->Estudio1;
+
+        $Personal->NivEst2=$request->NivEst2;
+        $Personal->GradoMax2=$request->GradoMax2;
+        $Personal->Estudio2=$request->Estudio2;
+
+        $Personal->NivEst3=$request->NivEst3;
+        $Personal->GradoMax3=$request->GradoMax3;
+        $Personal->Estudio3=$request->Estudio3;
+
+        $Personal->Titulo=$request->Titulo;
+
+        $Personal->Nombramiento=$request->Nombramiento;
+        $Personal->numEmpleado=$request->numEmpleado;
+        $Personal->EstatusEmpleado=$request->EstatusEmpleado;
+
+        $Personal->IngAñoSNEST=$request->IngAñoSNEST;
+        $Personal->IngQuinSNEST=$request->IngQuinSNEST;
+
+        $Personal->IngAñoGob=$request->IngAñoGob;
+        $Personal->IngQuinGob=$request->IngQuinGob;
+
+        $Personal->IngAñoSEP=$request->IngAñoSEP;
+        $Personal->IngQuinSEP=$request->IngQuinSEP;
+
+        $Personal->IngAñoPlan=$request->IngAñoPlan;
+        $Personal->IngQuinPlan=$request->IngQuinPlan;
+
+        $Personal->TipoAct=$request->TipoAct;
+
+        $Personal->idUsuario=$request->idUsuario;
+        $Personal->	idDepAdscripcion=$request->idDepAdscripcion;
+        $Personal->	idDepAcademico=$request->idDepAcademico;
+
+        $Personal->idUsuario=$request->idUsuario;
+
+        $DescripcionEstatus=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleadosPorID($request->EstatusEmpleado);
+
+
+        if($DescripcionEstatus->Descripcion!='Activo'){
+            $Personal->Estatus='B';
+        }
+        else{
+            $Personal->Estatus='A';
+        }
 
         $Personal->save();
 
+        $user=app(UserController::class)->ObtenerUsuarioPorID($request->idUsuario);
+
+        Session::flash('mensaje', 'Se ha registrado el personal correctamente');
+        Session::flash('TipoMensaje', 'Exitoso');
+
+        Mail::to($user->email)->send(new UsuarioRegistrado($user));
+
         return Redirect::route('Personal.index');
+
+        } catch (\Exception $e) {
+
+            Session::flash('mensaje', 'Se ha registrado el personal correctamente');
+            Session::flash('TipoMensaje', 'Exitoso');
+            return Redirect::route('Personal.index');
+        }
 
     }
 
     public function edit(string $id)
     {
 
+        $Departamentos=app(DepartamentoController::class)->ObtenerDepartamentos();
+        $EstatusEmpleados=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleados();
+        //$usuarios=app(UserController::class)->ObtenerUsuarios();
+        $usuarios=app(UserController::class)->ObtenerUsuariosDisponibles();
+
+        $Personal = personal::find($id);
+
+        if($Personal->idUsuario!=null){
+            $cuentaAsignada=app(UserController::class)->ObtenerUsuarioPorID($Personal->idUsuario);
+        }
+        else{
+        $cuentaAsignada=0;
+        }
+
+        return Inertia::render ('Modulos/RH/Personal/formEditarPersonal',[
+            'personalEditar'=>$Personal,
+            'departamentos'=>$Departamentos,
+            'estatus'=>$EstatusEmpleados,
+            'usuarios'=>$usuarios,
+            'cuentaAsignada'=>$cuentaAsignada
+
+        ]);
     }
 
     public function update(Request $request, string $id)
     {
+
+        try{
+            $Personal=personal::find($id);
+
+            $DescripcionEstatus=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleadosPorID($request->EstatusEmpleado);
+
+            $request->input('Estatus');
+
+
+            $Personal->update($request->all());
+
+            if($DescripcionEstatus->Descripcion!='Activo'){
+                $Personal->Estatus='B';
+                $Personal->save();
+            }
+            else{
+                $Personal->Estatus='A';
+                $Personal->save();
+            }
+
+            Session::flash('mensaje', 'Cambios guardados correctamente');
+            Session::flash('TipoMensaje', 'Exitoso');
+            return redirect::route('Personal.index');
+        }
+        catch(Exception $e){
+            Session::flash('mensaje', 'Ocurrio un error al actualizar los datos');
+            Session::flash('TipoMensaje', 'Error');
+            return redirect::route('Personal.index');
+        }
+
 
     }
 
@@ -187,22 +358,91 @@ class PersonalController extends Controller
 
     public function buscarPersonal(Request $request){
 
-
         $Personal=$request->input('personal');
         $campo = $request->input('campo');
         $Filtro = $request->input('Filtro');
-
+        $Departamento = $request->input('Departamento');
 
         if($Filtro=='Todos'){
-            $result=personal::where($campo, 'LIKE', '%'.$Personal.'%')->get();
+
+            if($campo=='Nombre'){
+
+                if($Departamento==0){
+                    $result=personal::
+                    whereRaw("CONCAT(Nombre,' ',ApellidoP,' ',ApellidoM) LIKE ?",['%'.$Personal.'%'])->get();
+                }
+                else{
+                    $result=personal::
+                    whereRaw("CONCAT(Nombre,' ',ApellidoP,' ',ApellidoM) LIKE ?",['%'.$Personal.'%'])->
+                    where('idDepAdscripcion','=',$Departamento)->get();
+                }
+            }
+            else{
+                if($Departamento==0){
+                    $result=personal::where($campo, 'LIKE', '%'.$Personal.'%')->get();
+                }
+                else{
+                    $result=personal::where($campo, 'LIKE', '%'.$Personal.'%')->
+                    where('idDepAdscripcion','=',$Departamento)->get();
+                }
+            }
+
         }
         else if($Filtro=='Activos'){
-            $result=personal::where($campo, 'LIKE', '%'.$Personal.'%')->
-            where('Estatus','=','A')->get();
+            if($campo=='Nombre'){
+
+                if($Departamento==0){
+                    $result=personal::
+                    whereRaw("CONCAT(Nombre,' ',ApellidoP,' ',ApellidoM) LIKE ?",['%'.$Personal.'%'])->
+                    where('Estatus','=','A')->get();
+                }
+                else{
+                    $result=personal::
+                    whereRaw("CONCAT(Nombre,' ',ApellidoP,' ',ApellidoM) LIKE ?",['%'.$Personal.'%'])->
+                    where('Estatus','=','A')->
+                    where('idDepAdscripcion','=',$Departamento)->get();
+                }
+
+            }
+            else{
+                if($Departamento==0){
+                    $result=personal::where($campo, 'LIKE', '%'.$Personal.'%')->
+                    where('Estatus','=','A')->get();
+                }
+                else{
+                    $result=personal::where($campo, 'LIKE', '%'.$Personal.'%')->
+                    where('Estatus','=','A')->
+                    where('idDepAdscripcion','=',$Departamento)->get();
+                }
+            }
         }
         else if($Filtro=='Bajas'){
-            $result=personal::where($campo, 'LIKE', '%'.$Personal.'%')->
-            where('Estatus','=','B')->get();
+
+            if($campo=='Nombre'){
+                if($Departamento==0){
+                    $result=personal::
+                    whereRaw("CONCAT(Nombre,' ',ApellidoP,' ',ApellidoM) LIKE ?",['%'.$Personal.'%'])->
+                    where('Estatus','=','B')->get();
+                }
+                else{
+                    $result=personal::
+                    whereRaw("CONCAT(Nombre,' ',ApellidoP,' ',ApellidoM) LIKE ?",['%'.$Personal.'%'])->
+                    where('Estatus','=','B')->
+                    where('idDepAdscripcion','=',$Departamento)->get();
+                }
+            }
+            else{
+                if($Departamento==0){
+                    $result=personal::where($campo, 'LIKE', '%'.$Personal.'%')->
+                    where('Estatus','=','B')->get();
+                }
+                else{
+                    $result=personal::where($campo, 'LIKE', '%'.$Personal.'%')->
+                    where('Estatus','=','B')->
+                    where('idDepAdscripcion','=',$Departamento)->get();
+                }
+
+            }
         }
 
         return $result;
@@ -231,6 +471,47 @@ class PersonalController extends Controller
     public function ObtenerPersonal(){
 
         $Personal=personal::all();
+        return $Personal;
+    }
+
+    public function ObtenerPersonalAlta(){
+
+        $Personal=personal::where('Estatus','=','A')->get();
+        return $Personal;
+    }
+
+
+    public function ObtenerPersonalPorID(String $id){
+
+        $Personal=personal::find($id);
+        return $Personal;
+    }
+
+    public function ObtenerPersonalDepartamento(Request $request){
+        $departamento = $request->input('departamento');
+
+
+
+        $Personal=personal::where('idDepAdscripcion','=',$departamento)->get();
+
+        if($Personal->isEmpty()){
+            $Personal=[];
+        }
+
+        return response()->json(['Personal'=>$Personal]);
+    }
+
+
+    public function PersonalDepartamento(Request $request){
+        $departamento = $request->input('departamento');
+
+
+        $Personal=personal::where('idDepAdscripcion','=',$departamento)->get();
+
+        if($Personal->isEmpty()){
+            $Personal=[];
+        }
+
         return $Personal;
     }
 }

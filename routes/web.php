@@ -5,6 +5,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Controllers\PDFController;
 use App\Http\Controllers\AulaController;
 use App\Http\Controllers\PlazaController;
 use App\Http\Controllers\UserController;
@@ -19,15 +20,19 @@ use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ClasesController;
 use App\Http\Controllers\PersonalController;
 use App\Http\Controllers\DepartamentoController;
+use App\Http\Controllers\DiasHorarioController;
 use App\Http\Controllers\GruposController;
 use App\Http\Controllers\horariosDocentesController;
 use App\Http\Controllers\MateriasController;
-use App\Http\Controllers\ProfesoresController;
+
+use App\Http\Controllers\VigenciaPersonalController;
 use App\Models\categoria;
 use App\Models\Clases;
 use App\Models\Departamentos;
+use App\Models\DiasHorario;
 use App\Models\horariosDocentes;
 use App\Models\User;
+use App\Models\VigenciaPersonal;
 use FontLib\Table\Type\name;
 use Spatie\Permission\Contracts\Permission;
 
@@ -59,9 +64,7 @@ Route::middleware([
      'verified',
  ])->group(function () {
 
-    //  Route::get('/dashboard', function () {
-    //      return Inertia::render('Dashboard');
-    //  })->name('dashboard');
+
 
     //Rutas para crud Plazas
     Route::resource('Plazas',PlazaController::class);
@@ -69,23 +72,43 @@ Route::middleware([
 
     //Rutas para crud Grupos
     Route::resource('Grupos',GruposController::class);
-
-    //Rutas para crud Profesores
-    Route::resource('Profesores',ProfesoresController::class);
-
+    Route::get('Grupos.buscar',[GruposController::class,'Buscar']);
+    Route::get('GruposAlumnos/{id}',[GruposController::class,'EditarAlumnos'])->name('Grupos.Alumnos');
 
     //Rutas para crud horarios docentes
     Route::resource('HorariosDocentes',horariosDocentesController::class);
+    Route::get('HorarioAdministrativo/{idHorario}',[horariosDocentesController::class,'editAdministrativo'])->name('HorariosDocentes.editAdmin');
+
+
     Route::get('HorariosDocentes/{idHorario}/ver',[horariosDocentesController::class,'Ver'])->name('HorariosDocentes.ver');
+
     //reporte PDF
-    Route::get('HorariosDocentesPDF/{idHorario}',[horariosDocentesController::class,'GenerarPDF'])->name('HorariosDocentes.PDF')->middleware('auth:sanctum','verified');
-    Route::get('HorariosDocentesExcel/{idHorario}',[horariosDocentesController::class,'GenerarExcel'])->name('HorariosDocentes.Excel')->middleware('auth:sanctum','verified');
+
+    //Route::get('HorariosDocentesPDF/{idHorario}',[horariosDocentesController::class,'GenerarPDF'])->name('HorariosDocentes.PDF')->middleware('auth:sanctum','verified');
+    Route::get('/formatoPDF/{id}',[horariosDocentesController::class,'FormatoPDF'])->name('HorarioPDF');
+    Route::get('/HorConcentrado/{periodo}',[horariosDocentesController::class,'HorarioConcentrado'])->name('HorConcentrado');
+    Route::get('HorariosDocentesExcel/{idHorario}',[horariosDocentesController::class,'GenerarExcel'])->name('HorariosDocentes.Excel');
+    Route::get('HorariosDocentes.buscar',[horariosDocentesController::class,'buscarHorario']);
+
+
+    //Rutas para crud vigencia Personal
+    Route::resource('VigenciaPersonal',VigenciaPersonalController::class)->only(['store','update']);
+    Route::get('VigenciaPersonal/{idPersonal}/{idPeriodo}',[VigenciaPersonalController::class,'editVigencia'])->name('VigenciaPersonal.edit');
+
 
     //Rutas para crud Alumnos
     Route::resource('Alumnos',AlumnosController::class);
+    Route::get('Alumnos.buscar',[AlumnosController::class,'Buscar']);
+    Route::post('Alumnos.AsignarGrupo',[AlumnosController::class,'AsignarGrupo'])->name('Alumnos.AsignarGrupo');
+    Route::put('Alumnos.QuitarGrupo/{id}',[AlumnosController::class,'QuitarGrupo'])->name('Alumnos.QuitarGrupo');
+
 
     //Rutas para crud clases
     Route::resource('Clases',ClasesController::class)->only(['store','destroy']);
+
+    //Rutas para crud clases
+    Route::resource('Dias',DiasHorarioController::class)->only(['store','destroy']);
+
 
 
     //Rutas para Materias
@@ -109,6 +132,7 @@ Route::middleware([
  Route::resource('Aulas',AulaController::class)
  ->middleware('auth:sanctum','verified');
 
+ Route::get('Aula.buscar',[AulaController::class,'Buscar']);
 
 //  //Rutas para crud Plazas
 //  Route::resource('Plazas',PlazaController::class)
@@ -116,6 +140,13 @@ Route::middleware([
 
 Route::get('Plazas.buscar',[PlazaController::class,'buscarPlaza'])
 ->middleware('auth:sanctum','verified');
+
+Route::get('Plazas.Asignadas',[PlazaController::class,'indexAsignadas'])
+->middleware('auth:sanctum','verified')->name('Plazas.Asignadas');
+
+Route::get('Plazas.SinAsignar',[PlazaController::class,'indexNoAsignadas'])
+->middleware('auth:sanctum','verified')->name('Plazas.SinAsignar');;
+
 
  //Rutas para crud usuarios
  Route::resource('Users',UserController::class)
@@ -151,6 +182,9 @@ Route::post('Personal.asignarCuenta',[PersonalController::class,'asignarCuenta']
 ->middleware('auth:sanctum','verified');
 
 Route::get('Personal.Filtro',[PersonalController::class,'Filtro'])
+->middleware('auth:sanctum','verified');
+
+Route::get('Personal.Departemento',[PersonalController::class,'ObtenerPersonalDepartamento'])
 ->middleware('auth:sanctum','verified');
 
 
@@ -206,8 +240,15 @@ Route::get('Aplicaciones.buscar',[AplicacionPeriodoController::class,'buscarApli
  Route::resource('backup',BackupController::class)
  ->middleware('auth:sanctum','verified')->only(['index']);
 
- Route::get('GenerarBackup',[BackupController::class,'Generar'])->name('GenerarBackup')->middleware('auth:sanctum','verified');
+ use Illuminate\Support\Facades\Artisan;
 
+ //Route::get('GenerarBackup',[BackupController::class,'Generar'])->name('GenerarBackup')->middleware('auth:sanctum','verified');
+ Route::get('GenerarBackup', function() {
+
+    Artisan::call('backup:run');
+    dd(Artisan::output());
+
+  })->name('GenerarBackup');
 
 
  Route::get('Prueba.index',[BackupController::class,'Prueba'])->name('Prueba.index')->middleware('auth:sanctum','verified');
@@ -220,7 +261,18 @@ Route::get('PruebaMail.index',function(){
 })->name('PruebaMail.index');
 
 Route::get('/reporte', function () {
-    return view('Reportes.Horarios');
+    //return view('Reportes.Horarios');
+    return view('Reportes.HorarioPDF');
 });
 
 Route::get('/reporte/{id}',[horariosDocentesController::class,'verExcel'])->name('/reporte{id}');
+
+
+
+
+Route::get('PruebaReporte',[PDFController::class,'generatePDF'])->name('PruebaReporte');
+
+
+
+
+

@@ -5,22 +5,17 @@
             Periodos de aplicacion
     </template>
 
-    <!-- <h3 class="text-m text-gray-900 dark:text-white py-1 ml-1">
-        Buscar periodo por:
-
-        <input type="radio" value="descripcion" name="Campos" v-model="campoBusqueda" required > Descripcion
-    </h3> -->
 
 
     <div class="inline-flex w-full" >
 
-    <div class="relative text-gray-700 focus-within:text-gray-700  dark:focus-within:text-slate-200 pb-3">
+    <div class="relative text-gray-700 dark:text-gray-200 focus-within:text-gray-700  dark:focus-within:text-slate-200 pb-3">
         <input
             class=" border-gray-100 mt-2 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
             type="text"
             placeholder="Buscar..."
             v-model="AplicacionBuscar"
-            @input="HacerBusqueda()"
+            @keyup="contarTiempo"
         />
     </div>
 
@@ -46,19 +41,14 @@
 
 
 
-
-
-
-
-
-    <form @submit.prevent="AplicarCambios()" class="flex justify-end w-full ">
-        <div id="modalContainer" class=" mt-3" v-if="$page.props.user.permissions.includes('Actualizar fechas en los periodos de aplicacion')">
+    <form @submit.prevent="AplicarCambios()" class="flex justify-end w-full " >
+        <div id="modalContainer" class=" mt-3" v-if="$page.props.user.roles.includes('Administrador')">
             <button :type="type" class="rounded-md bg-[#014E82] px-5 py-3 mb-2 text-center text-sm text-white hover:bg-[#0284c7]  ">
                 Aplicar cambios
             </button>
         </div>
     </form>
-    <div id="modalContainer" class=" mt-3" v-if="$page.props.user.permissions.includes('Agregar Periodos de aplicacion')">
+    <div id="modalContainer" class=" mt-3" v-if="$page.props.user.roles.includes('Administrador')">
             <button :type="type" @click="showElement" class="rounded-md bg-[#014E82]  ml-6 px-5 py-3 mb-2 text-center text-sm text-white hover:bg-[#0284c7]  ">
                 Nuevo
             </button>
@@ -109,8 +99,6 @@
                             <input id="Nombre" v-model="NuevaAplicacion.descripcion"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="Descripcion" required>
                         </div>
 
-
-
                         <br>
 
                         <label class="pl-5 block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
@@ -118,7 +106,8 @@
                         </label>
 
                         <div class="pl-5 dark:text-gray-200">
-                            <select name="aplicaciones" v-model="NuevaAplicacion.idPeriodo" class="dark:bg-slate-700 dark:text-slate-200 rounded-sm ">
+                            <select name="aplicaciones" v-model="NuevaAplicacion.idPeriodo" class="dark:bg-slate-700 dark:text-slate-200 rounded-sm "
+                            required>
                                 <option
                                     v-for="periodo in periodos"
                                     :key="periodo.id"
@@ -145,7 +134,7 @@
 </div>
 
 
-    <div v-if="mensajeActualizar!=null" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-3 mb-3" role="alert">
+    <!-- <div v-if="mensajeActualizar!=null" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-3 mb-3" role="alert">
         <strong class="font-bold">Éxito:</strong>
         <span class="block sm:inline">{{ mensajeActualizar }}</span>
     </div>
@@ -158,8 +147,19 @@
     <div v-if="mensajeNuevo!=null" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-3 mb-3" role="alert">
         <strong class="font-bold">Éxito:</strong>
         <span class="block sm:inline">{{ mensajeNuevo }}</span>
+    </div> -->
+
+    <div v-if="mensaje"
+    :class="{ 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-3 mb-3': tipoMensaje == 'Exitoso', 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3 mb-3': tipoMensaje == 'Error' }">
+        <strong class="font-bold" v-if="tipoMensaje=='Exitoso'">Éxito:</strong>
+        <strong class="font-bold" v-if="tipoMensaje=='Error'">Érror:</strong>
+        <span class="block sm:inline">{{ mensaje}}</span>
     </div>
 
+    <!-- <div v-if="mensaje!=null" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-3 mb-3" role="alert">
+        <strong class="font-bold">Éxito:</strong>
+        <span class="block sm:inline">{{ mensaje}}</span>
+    </div> -->
 
 
         <div class="inline-block min-w-full overflow-hidden rounded-lg shadow">
@@ -181,7 +181,7 @@
                             Periodo
                         </th>
 
-                        <th v-if="$page.props.user.permissions.includes('Eliminar Periodos de Aplicacion')" class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                        <th v-if="$page.props.user.roles.includes('Administrador')" class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Opciones
                         </th>
                     </tr>
@@ -218,7 +218,7 @@
                             </select>
                         </td>
 
-                        <td v-if="$page.props.user.permissions.includes('Eliminar Periodos de Aplicacion')" class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                        <td v-if="$page.props.user.roles.includes('Administrador')" class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
                             <a type="button" @click="showDelete(aplicacion.id,index)" class="p-3 rounded-md bg-[#dc2626] mx-2">
                                     <i class="fa-solid fa-trash text-white"></i>
                             </a>
@@ -317,6 +317,7 @@
 <script>
 
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 export default {
 
@@ -329,10 +330,15 @@ export default {
          periodos:Array,
          ListaIDAplicaciones:Array,
          ListaIDPeriodos:Array,
-         Paginator:Array
+         Paginator:Array,
+         mensaje: String,
+         tipoMensaje:String,
         },
 
     mounted(){
+
+        //this.$page.props.tipoMensaje='Exitoso';
+        console.log('Mensaje recibido',this.$page.props.mensaje)
 
         if(this.Paginator.next_page_url!=null){
             this.urlPaginacion = this.Paginator.next_page_url.slice(0, -1);
@@ -361,7 +367,7 @@ export default {
 
       mensajeActualizar:null,
       mensajeEliminar:null,
-      mensajeNuevo:null,
+      //mensajeNuevo:null,
 
       NuevaAplicacion:{
             descripcion:'',
@@ -371,6 +377,7 @@ export default {
 
       campoBusqueda:'descripcion',
       AplicacionBuscar:'',
+      setTimeoutBuscador:'',
 
       ListaCompleta:'',
       campoBusquedaVer:'Descripcion',
@@ -399,6 +406,7 @@ export default {
     },
 
     showDelete(id,index){
+        this.$page.props.mensaje=null
         this.idBorrarSeleccionado=id;
         this.idEliminar=index
         this.isvisibleDelete = true;
@@ -408,7 +416,17 @@ export default {
     },
 
     async crearAplicacion(){
+
         await this.$inertia.post(route('Aplicaciones.store'),this.NuevaAplicacion)
+
+        //axios.post('Aplicaciones',this.NuevaAplicacion)
+        // .then(response => {
+
+
+        // })
+        // .catch(error => {
+        //     console.error(error.response.data.error, error.response.data.message); // Mensaje de error
+        // });
 
         this.$page.props.aplicaciones.forEach((aplicacion, index) => {
             this.ListaIDPeriodos[index]=aplicacion.idPeriodo;
@@ -417,9 +435,26 @@ export default {
 
 
         this.hideElement()
+
+        //const mensaje='Aplicacion registrada correctamente'
+        //const status='success'
+        //this.MensajeRegistro(mensaje,status)
+
         this.mensajeEliminar=null;
         this.mensajeActualizar=null;
-        this.mensajeNuevo="Aplicacion registrada correctamente"
+
+
+        //this.mensajeNuevo="Aplicacion registrada correctamente"
+    },
+
+    MensajeRegistro(mensaje,status){
+        Swal.fire({
+                title: '¡Exito!',
+                text: mensaje,
+                icon: status,
+                confirmButtonText: 'Aceptar',
+                confirmButtonColor:'#014E82',
+        })
     },
 
 
@@ -442,19 +477,31 @@ export default {
 
     AplicarCambios(){
 
-        const ListaIDAplicaciones=this.ListaIDAplicaciones
-        const ListaIDPeriodos=this.ListaIDPeriodos
+        // const ListaIDAplicaciones=this.ListaIDAplicaciones
+        // const ListaIDPeriodos=this.ListaIDPeriodos
 
-        axios.post('AplicacionActualizar', { ListaIDAplicaciones,ListaIDPeriodos })
-        .then(response => {
+        //axios.post('AplicacionActualizar', { ListaIDAplicaciones,ListaIDPeriodos })
+        // this.$inertia.post(route('Aplicaciones.actualizar'),{
+        //     params:{
+        //         ListaIDAplicaciones:this.ListaIDAplicaciones,
+        //         ListaIDPeriodos:this.ListaIDPeriodos
+        //     }
+        // })
 
-          console.log(response.data.respuesta);
-
-
-        })
-        .catch(error => {
-          console.error(error);
+        this.$inertia.post(route('Aplicaciones.actualizar'), {
+            ListaIDAplicaciones: this.ListaIDAplicaciones,
+            ListaIDPeriodos: this.ListaIDPeriodos
         });
+
+        // .then(response => {
+
+        //   console.log(response.data.respuesta);
+
+
+        // })
+        // .catch(error => {
+        //   console.error(error);
+        // });
 
         this,this.mensajeNuevo=null;
         this.mensajeEliminar=null;
@@ -463,12 +510,19 @@ export default {
     },
 
     showElement() {
+      this.$page.props.mensaje=null
       this.isVisible = true;
     },
     hideElement() {
       this.isVisible = false;
     },
 
+
+    contarTiempo(){
+            this.$page.props.mensaje=null
+            clearTimeout(this.setTimeoutBuscador);
+            this.setTimeoutBuscador=setTimeout(this.HacerBusqueda,360)
+    },
 
     HacerBusqueda(){
 

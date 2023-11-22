@@ -3,7 +3,7 @@
     <Head title="Usuarios" />
     <AuthenticatedLayout>
     <template #header>
-            Lista de Roles
+            Tipos de Usuario
     </template>
 
         <!-- <h3 class="text-m text-gray-900 dark:text-white py-1 ml-1">
@@ -19,7 +19,7 @@
                     type="text"
                     placeholder="Buscar..."
                     v-model="RolBuscar"
-                    @input="HacerBusqueda()"
+                    @keyup="contarTiempo"
                 />
             </div>
 
@@ -53,7 +53,7 @@
 
             <button :type="type" @click="showElement"
             class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
-            v-if="$page.props.user.permissions.includes('Crear roles')">
+            v-if="$page.props.user.roles.includes('Administrador')">
                 Nuevo
             </button>
 
@@ -136,6 +136,13 @@
     </div>
 </div>
 
+    <div v-if="mensaje"
+    :class="{ 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-3 mb-3': tipoMensaje == 'Exitoso', 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3 mb-3': tipoMensaje == 'Error' }">
+        <strong class="font-bold" v-if="tipoMensaje=='Exitoso'">Éxito:</strong>
+        <strong class="font-bold" v-if="tipoMensaje=='Error'">Érror:</strong>
+        <span class="block sm:inline">{{ mensaje}}</span>
+    </div>
+
 
 
     <!--TABLA DE PLAZAS-->
@@ -151,8 +158,7 @@
                             Nombre del Rol
                         </th>
                         <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200"
-                        v-if="$page.props.user.permissions.includes('Editar información de los roles')
-                        || $page.props.user.permissions.includes('Eliminar roles') || $page.props.user.roles.includes('Administrador')">
+                        v-if="$page.props.user.roles.includes('Administrador')">
                             Opciones
                         </th>
                     </tr>
@@ -171,17 +177,16 @@
 
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm"
-                        v-if="$page.props.user.permissions.includes('Editar información de los roles')
-                        || $page.props.user.permissions.includes('Eliminar roles') || $page.props.user.roles.includes('Administrador')" >
+                        v-if="$page.props.user.roles.includes('Administrador')" >
 
                             <Link :href="route('Roles.edit',rol.id)" class="p-3 rounded-md bg-[#014E82] mx-2 inline-flex "
-                            v-if="$page.props.user.permissions.includes('Editar información de los roles')">
+                            v-if="$page.props.user.roles.includes('Administrador')">
                                 <i class="fa-solid fa-pen text-white"></i>
                             </Link>
 
 
                             <a type="button" @click="showDelete(rol.id,rol.name)" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex"
-                            v-if="$page.props.user.permissions.includes('Eliminar roles')">
+                            v-if="$page.props.user.roles.includes('Administrador')">
                                         <i class="fa-solid fa-trash text-white"></i>
                             </a>
 
@@ -318,7 +323,9 @@ export default {
     props:{
          roles:Array,
          Permisos:Array,
-         Paginator:Array
+         Paginator:Array,
+         mensaje: String,
+         tipoMensaje:String,
     },
 
     data() {
@@ -331,7 +338,7 @@ export default {
           email:''
       },
 
-      campoBusqueda:'estatus',
+      campoBusqueda:'name',
       RolBuscar:'',
 
       isVisible: false,
@@ -350,6 +357,7 @@ export default {
 
       campoBusquedaVer:'Nombre',
       MostrarFiltro:false,
+      setTimeoutBuscador:'',
 
       isCheckad:false,
 
@@ -392,6 +400,11 @@ export default {
         this.MostrarFiltro=false
     },
 
+    contarTiempo(){
+        this.$page.props.mensaje=null
+        clearTimeout(this.setTimeoutBuscador);
+        this.setTimeoutBuscador=setTimeout(this.HacerBusqueda,360)
+    },
 
     HacerBusqueda(){
         // this.mensajePlazaNueva=null;
@@ -435,6 +448,7 @@ export default {
     },
 
     showElement() {
+        this.$page.props.mensaje=null
       this.isVisible = true;
     },
     hideElement() {
@@ -442,6 +456,7 @@ export default {
     },
 
     showDelete(id,name){
+        this.$page.props.mensaje=null
         this.idBorrarSeleccionado=id;
         this.nameBorrarSeleccionado=name;
         this.isvisibleDelete = true;

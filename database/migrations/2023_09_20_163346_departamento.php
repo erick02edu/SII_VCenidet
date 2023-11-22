@@ -17,7 +17,11 @@ return new class extends Migration
             $table->string('Nombre'); // Agrega la nueva columna
             $table->string('Descripcion'); // Agrega la nueva columna
             $table->unsignedBigInteger('idEncargado')->nullable(); // Columna para la llave foránea
+            $table->unsignedBigInteger('idSubdireccion')->nullable(); // Columna para la llave foránea
+
             $table->foreign('idEncargado')->references('id')->on('personal')->onDelete('set null'); // Establecer eliminación en cascada; //Generar llave foranea con tabla plaza por el campo ID
+            $table->foreign('idSubdireccion')->references('id')->on('subdireccion')->onDelete('set null'); // Establecer eliminación en cascada; //Generar llave foranea con tabla plaza por el campo ID
+
         });
 
     }
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('departamentos');
     }
 };
