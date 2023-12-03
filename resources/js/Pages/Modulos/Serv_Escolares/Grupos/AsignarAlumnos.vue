@@ -11,7 +11,14 @@
         <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">
             <strong>Grupo:</strong>
             {{ grupo.Semestre }}-{{ grupo.Letra }}-{{ grupo.Especialidad }}
+            <br>
+            <strong>Periodo:
+                {{ periodo.mesInicio }} {{ periodo.AñoInicio }}-{{ periodo.mesTermino }} {{ periodo.AñoTermino }}
+
+            </strong>
+
         </p>
+
 
         <button v-if="$page.props.user.roles.includes('Administrador')" @click="showElement"
         class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7]  ">
@@ -173,7 +180,7 @@
                 <tbody>
                     <tr v-for="alumno in alumnos" :key="alumno.id" class="text-gray-700">
 
-   
+
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
                             <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">
@@ -220,12 +227,7 @@
                                             </div>
                                         </div>
                                     </div>
-
-
-
                         </td>
-
-
                     </tr>
                 </tbody>
 
@@ -258,6 +260,7 @@ export default {
 
     props:{
          grupo:Array,
+         periodo:Array,
          alumnos:Array,
          alumnosSinGrupo:Array,
     },

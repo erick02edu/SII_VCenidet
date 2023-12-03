@@ -1,9 +1,105 @@
 <template>
-    <Head title="Personal" />
+    <Head title="Alumnos" />
     <AuthenticatedLayout>
     <template #header>
             Lista del Alumnos
     </template>
+
+
+ <!-- Capa oscura -->
+ <div :class="{ hidden: !isVisibleImportacion }" class="fixed inset-0  bg-black opacity-50">
+    </div>
+
+    <div id="modalContainer">
+        <!-- Main modal -->
+        <div :class="{ hidden: !isVisibleImportacion }">
+
+            <div id="defaultModal" tabindex="-1" aria-hidden="true"  class="fixed inset-0 flex items-center justify-center z-50">
+                <div class="relative w-full max-w-2xl max-h-full">
+
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
+
+                    <!-- Modal header -->
+                    <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                Pasos para realizar la importacion
+                            </h3>
+                        <button type="button" @click="hideImportacion" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
+                            <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                            </svg>
+                            <span class="sr-only">Close modal</span>
+                        </button>
+                    </div>
+                    <!-- Modal body -->
+                    <div class="px-6 py-3 space-y-6 w-full">
+                        <div  class="w-full">
+                            <label class=" w-full block text-gray-700 dark:text-gray-200  mb-2" for="grid-first-name">
+                                    <strong>Paso {{ PasoActual+1 }}</strong> <br>
+                                    <p class="text-sm">
+                                        {{ pasos[PasoActual] }}
+                                    </p>
+
+                            </label>
+
+                            <div class="flex flex-wrap  mb-2 ">
+
+                                <div class="w-full p-3 overflow-y-auto h-64 border rounded-lg border-gray-300 dark:border-gray-500">
+                                    <!--TABLA ASIGNAR ALUMNOS A UN GRUPO-->
+
+                                        <img :src="ImagenesPasos[PasoActual]" class="w-full h-full" v-if="PasoActual!=3">
+
+                                        <video v-if="PasoActual==3" autoplay loop>
+                                            <source :src="ImagenesPasos[PasoActual]" type="video/mp4">
+                                        </video>
+
+                                </div>
+                            </div>
+
+                            <div class="w-full mb-1 dark:text-white">
+                                <!-- <strong>Paso {{ PasoActual+1 }}</strong> <br>
+                                    <p class="text-sm">
+                                        {{ pasos[PasoActual] }}
+                                    </p> -->
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="flex items-center py-5 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-200">
+
+                                <button @click="AnteriorPaso" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                                    Anterior
+                                </button>
+
+                                <button type="submit" @click="siguientePaso" v-if="PasoActual<3" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    Siguiente
+                                </button>
+
+
+                                <!-- <button type="submit" @click="" v-if="PasoActual==2" class="text-white bg-green-600 hover:bg-green-500 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"> -->
+
+                                <div  v-if="PasoActual==3" >
+                                    <input type="file" class="hidden " id="excelFileInput" ref="fileInput"
+                                    accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                                    @change="handleFileChange">
+
+                                    <label for="excelFileInput"
+                                    class="cursor-pointer flex items-center justify-center w-full px-3 py-2 bg-green-600 hover:bg-green-500  text-white rounded-md">
+                                        Elegir Excel<i class="fas fa-file-excel mx-1"></i>
+                                    </label>
+                                </div>
+
+                                <!-- </button> -->
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
         <div class="inline-flex w-full" >
@@ -42,19 +138,57 @@
                     <span @click="SeleccionarCampo('curp','CURP')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Curp</span>
                     </div>
 
-
-
                 </div>
             </div>
 
-            <div class="justyfy-end flex w-full">
-                <button :type="type" @click="showElement" class=" ml-3 mr-2 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
-                v-if="$page.props.user.roles.includes('Administrador')">
-                    Nuevo
-                </button>
-            </div>
+
+
+
+                <div class="justyfy-end flex w-full">
+                    <button :type="type" @click="showElement" class=" ml-3 mr-2 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
+                    v-if="$page.props.user.roles.includes('Administrador')">
+                        Nuevo
+                    </button>
+
+                    <!-- <form @submit.prevent="uploadFile">
+                    <input type="file" ref="fileInput" />
+                    <button type="submit"><i class="fa-solid fa-file-import"></i>Importar</button>
+                    </form> -->
+
+
+                        <div class="relative">
+                            <!-- <input type="file" class="hidden" id="excelFileInput" ref="fileInput"
+                            accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                            @click="showImportacion"> -->
+
+                            <label for="excelFileInput" @click="showImportacion"
+                            class="cursor-pointer flex items-center justify-center w-full px-3 py-2 bg-green-500 text-white rounded-md">
+                                <i class="fas fa-file-excel mx-1"></i> Importar
+                            </label>
+                        </div>
+
+                        <div v-if="NombreArchivo"
+                        class="dark:text-white text-xs text-center flex items-center justify-center pb-4 pl-2">
+                            {{ NombreArchivo }}
+                        </div>
+
+
+                </div>
+
+                <div class="inline w-1/2 pt-1">
+                    <div :type="type"
+                    @click="ImportarDatos"
+                    class="rounded-md bg-red-500 px-3 py-2 ml-24 text-sm text-white hover:bg-red-400 "
+                    v-if="$page.props.user.roles.includes('Administrador') && NombreArchivo">
+
+                        <i class="fa-solid fa-file-arrow-down text-white pr-1"></i> Cargar
+
+                    </div>
+                </div>
 
         </div>
+
+
 
     <!-- Capa oscura -->
     <div :class="{ hidden: !isVisible }" class="fixed inset-0 bg-black opacity-50">
@@ -293,7 +427,7 @@
                         >
                             <div v-if="$page.props.user.roles.includes('Administrador')">
                                     <Link :href="route('Alumnos.edit',alumno.id)"  class="p-3 rounded-md bg-[#014E82] mx-2 inline-flex mb-1" >
-                                        <i class="fa-solid fa-pen text-white"></i>{{ alumno.id }}
+                                        <i class="fa-solid fa-pen text-white"></i>
                                     </Link>
                             </div>
 
@@ -454,10 +588,27 @@ export default {
     data() {
     return {
 
+        pasos:[
+            'El excel debera contar con los siguientes encabezados para ser valido 1. Nombre , 2. Apellido Paterno 3. Apellido Materno 4.Fecha Nacimiento 5.NumControl 6.Curp 7.Direccion 8.Genero 9.Telefono 10.Semestre 11.Grupo 12.Especialidad 13.Periodo Actual',
+            'El campo de fecha debera ser ingresado en un formato AÑO-MES-DIA para ser valido',
+            'El campo "Periodo Actual" debe estar separado por medio de "-" de la forma en la que se muestra en la imagen',
+            'Por ultimo selecciona un archivo excel y carga los datos'
+        ],
+
+        ImagenesPasos:[
+            '/img/Paso1_Importacion.jpg',
+            '/img/Paso2_Importacion.jpg',
+            '/img/Paso3_Importacion.jpg',
+            '/img/PruebaImportacion.mp4'
+        ],
+
+        PasoActual:0,
+
         urlPaginacion:'',
 
         isVisible: false,
         isvisibleDelete:false,
+        isVisibleImportacion:false,
         idBorrarSeleccionado:0,
 
         MostrarFiltro:false,
@@ -492,12 +643,38 @@ export default {
         exitoRFC:false,
 
         MostrarmensajeCurp:false,
+
+        NombreArchivo:null
     }
   },
 
 
 
   methods: {
+    siguientePaso(){
+        this.PasoActual++;
+    },
+
+    AnteriorPaso(){
+        if(this.PasoActual!=0){
+            this.PasoActual--;
+        }
+    },
+
+    async ImportarDatos(){
+        const fileInput = this.$refs.fileInput;
+        const file = fileInput.files[0];
+        const formData = new FormData();
+        formData.append('archivo', file);
+
+        await this.$inertia.post('/Alumnos.importar', formData);
+    },
+
+    handleFileChange(){
+        const fileInput = this.$refs.fileInput;
+        this.NombreArchivo = fileInput.files.length > 0 ? fileInput.files[0].name : null;
+        this.hideImportacion();
+    },
 
     //METODO PARA REALIZAR SOLICITUD A API CURP
     validarCURP(){
@@ -618,6 +795,18 @@ export default {
     hideDelete(){
         this.isvisibleDelete = false;
         this.personalSeleccionado=0;
+    },
+
+    showImportacion(){
+        this.$page.props.mensaje=null
+        this.PasoActual=0
+        this.NombreArchivo=null
+        this.isVisibleImportacion = true;
+    },
+
+
+    hideImportacion(){
+        this.isVisibleImportacion  = false;
     },
 
 

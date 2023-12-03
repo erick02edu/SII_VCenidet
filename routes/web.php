@@ -15,7 +15,11 @@ use App\Http\Controllers\FechaReincripcionController;
 use App\Http\Controllers\PromedioController;
 use App\Http\Controllers\PeriodoController;
 use App\Http\Controllers\AplicacionPeriodoController;
+use App\Http\Controllers\AvisosController;
 use App\Http\Controllers\BackupController;
+use App\Http\Controllers\bajasPersonalController;
+use App\Http\Controllers\CalificacionesController;
+use App\Http\Controllers\CarreraController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ClasesController;
 use App\Http\Controllers\PersonalController;
@@ -24,8 +28,9 @@ use App\Http\Controllers\DiasHorarioController;
 use App\Http\Controllers\GruposController;
 use App\Http\Controllers\horariosDocentesController;
 use App\Http\Controllers\MateriasController;
-
+use App\Http\Controllers\PermisosCarrerasController;
 use App\Http\Controllers\VigenciaPersonalController;
+use App\Models\Calificaciones;
 use App\Models\categoria;
 use App\Models\Clases;
 use App\Models\Departamentos;
@@ -69,6 +74,15 @@ Route::middleware([
     //Rutas para crud Plazas
     Route::resource('Plazas',PlazaController::class);
 
+    Route::resource('Calificaciones',CalificacionesController::class)->only(['index']);
+    Route::post('Calificaciones.subir',[CalificacionesController::class,'SubirCalificaciones'])->name('Calificaciones.subir');
+    Route::post('Calificaciones.Actualizar',[CalificacionesController::class,'ActualizarCalificaciones'])->name('Calificaciones.Actualizar');
+    Route::get('Calificaciones.buscar',[CalificacionesController::class,'Buscar']);
+    Route::get('Calificaciones.Promedios',[CalificacionesController::class,'Promedios'])->name('Calificaciones.Promedios');
+    Route::post('Calificaciones.historial',[CalificacionesController::class,'GenerarHistorial'])->name('Calificaciones.historial');
+
+    //bajas Personalnal
+    Route::resource('bajasPersonal',bajasPersonalController::class)->only('store');
 
     //Rutas para crud Grupos
     Route::resource('Grupos',GruposController::class);
@@ -78,9 +92,14 @@ Route::middleware([
     //Rutas para crud horarios docentes
     Route::resource('HorariosDocentes',horariosDocentesController::class);
     Route::get('HorarioAdministrativo/{idHorario}',[horariosDocentesController::class,'editAdministrativo'])->name('HorariosDocentes.editAdmin');
-
-
     Route::get('HorariosDocentes/{idHorario}/ver',[horariosDocentesController::class,'Ver'])->name('HorariosDocentes.ver');
+
+    //Avisos
+    Route::resource('Avisos',AvisosController::class);
+    Route::get('Avisos.buscar',[AvisosController::class,'Buscar']);
+
+    //Carreras
+    Route::get('/Carreras.buscar',[CarreraController::class,'Buscar'])->name('Carreras.buscar');
 
     //reporte PDF
 
@@ -89,6 +108,7 @@ Route::middleware([
     Route::get('/HorConcentrado/{periodo}',[horariosDocentesController::class,'HorarioConcentrado'])->name('HorConcentrado');
     Route::get('HorariosDocentesExcel/{idHorario}',[horariosDocentesController::class,'GenerarExcel'])->name('HorariosDocentes.Excel');
     Route::get('HorariosDocentes.buscar',[horariosDocentesController::class,'buscarHorario']);
+
 
 
     //Rutas para crud vigencia Personal
@@ -101,7 +121,16 @@ Route::middleware([
     Route::get('Alumnos.buscar',[AlumnosController::class,'Buscar']);
     Route::post('Alumnos.AsignarGrupo',[AlumnosController::class,'AsignarGrupo'])->name('Alumnos.AsignarGrupo');
     Route::put('Alumnos.QuitarGrupo/{id}',[AlumnosController::class,'QuitarGrupo'])->name('Alumnos.QuitarGrupo');
+    Route::post('Alumnos.importar', [AlumnosController::class, 'ImportarDatos']);
+    Route::get('Alumnos.Grupo/{id}',[AlumnosController::class,'AlumnosPorGrupo'])->name('Alumnos.Grupo');
 
+    //PERMISOS CARRERA
+    Route::get('PermisosCarrera.buscar/{id}',[PermisosCarrerasController::class,'ObtenerPermisosCarrera'])->name('PermisosCarrera.buscar');
+    Route::get('/PermisosCarreras.asignar',[PermisosCarrerasController::class,'AsignarPermisos'])->name('PermisosCarreras.asignar');
+
+
+    //Route::get('PermisosCarreras.eliminar',[PermisosCarrerasController::class,'EliminarPermiso'])->name('PermisosCarreras.eliminar');
+    Route::get('/PermisosCarreras.Eliminar',[PermisosCarrerasController::class,'EliminarPermiso']);
 
     //Rutas para crud clases
     Route::resource('Clases',ClasesController::class)->only(['store','destroy']);
@@ -175,6 +204,15 @@ Route::get('Personal.Bajas',[PersonalController::class,'indexBajas'])
 Route::get('Personal.buscar',[PersonalController::class,'buscarPersonal'])
 ->middleware('auth:sanctum','verified');
 
+
+Route::get('Personal.Reportes',[PersonalController::class,'Reportes'])
+->middleware('auth:sanctum','verified')->name('Personal.Reportes');
+
+
+Route::post('Personal.Rotacion',[PersonalController::class,'ReporteRotacion'])
+->middleware('auth:sanctum','verified')->name('Personal.Rotacion');
+
+
 Route::post('Personal.asignarPlaza',[PersonalController::class,'asignarPlaza'])->name('Personal.asignarPlaza')
 ->middleware('auth:sanctum','verified');
 
@@ -213,9 +251,14 @@ Route::get('GetPermisosRol{id}',[PermissionController::class,'ObtenerPermisosRol
  Route::get('GetPermisos',[PermissionController::class,'GetPermisos'])->name('Permisos.getPermisos')->middleware('auth:sanctum','verified');//Ruta que permite obtener todos los Roles
  Route::get('AsignarPermisos',[PermissionController::class,'asignarPermisos'])->name('Permisos.asignar')->middleware('auth:sanctum','verified');//Ruta que permite obtener todos los Roles
  Route::get('Roles/{Role}/editPermisos',[PermissionController::class,'editPermisos'])->name('Roles.editPermisos')->middleware('auth:sanctum','verified');//Ruta que redirige a la vista para asignar un Rol
+ Route::get('/Permisos.remover',[PermissionController::class,'RemoverPermiso']);
 
+ Route::get('/Permisos.asignarUsuario',[PermissionController::class,'AsignarPermisosUsuario'])->name('Permisos.asignarUsuario')->middleware('auth:sanctum','verified');//Ruta que permite obtener todos los Roles
 
  Route::post('Permisos/can',[PermissionController::class,'can'])->name('Permisos.can')->middleware('auth:sanctum','verified');
+ Route::get('Permisos.buscarUsuario/{id}',[PermissionController::class,'ObtenerPermisosUsuario'])->name('Permisos.buscarUsuario');
+ Route::get('/Permisos.buscar',[PermissionController::class,'Buscar'])->name('Permisos.buscar');
+
 
  //Fecha Reinscripciones
  Route::get('Inscripcion/RegistroFecha',[FechaReincripcionController::class,'index'])->name('FechaReinscripcion.index')->middleware('auth:sanctum','verified');
@@ -263,6 +306,13 @@ Route::get('PruebaMail.index',function(){
 Route::get('/reporte', function () {
     //return view('Reportes.Horarios');
     return view('Reportes.HorarioPDF');
+});
+
+
+Route::get('/AvisoEmail', function () {
+    //return view('Reportes.Horarios');
+    //return view('emails.NuevoAviso');
+    return view('emails.CorreoRegistro');
 });
 
 Route::get('/reporte/{id}',[horariosDocentesController::class,'verExcel'])->name('/reporte{id}');

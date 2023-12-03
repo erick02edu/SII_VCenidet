@@ -539,7 +539,7 @@
                                 Asignar cuenta
                             </div>
 
-                            <div class="w-full md:w-2/5 px-3">
+                            <div class="w-full md:w-2/5 px-3"  v-if="NuevoPersonal.EstatusEmpleado==1">
                                 <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2"  for="grid-last-name" v-if="NuevoPersonal.EstatusEmpleado==1">
                                     Cuenta de usuario
                                 </label>

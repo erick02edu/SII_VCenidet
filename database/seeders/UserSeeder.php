@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
            'email' => 'rbeo201569@upemor.edu.mx',
            'password' => Hash::make('password'),
            'estatus' => 1, // O el valor apropiado para el campo 'estatus'
-       ])->assignRole('Usuario RH');;
+       ])->assignRole('Recursos Humanos');;
 
        User::factory()->create([
         'name' => 'Erick',

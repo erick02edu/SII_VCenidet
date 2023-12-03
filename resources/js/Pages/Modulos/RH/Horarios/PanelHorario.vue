@@ -91,7 +91,16 @@
 
         <!-- <button @click="GuardarCambios" class="px-4 py-2 bg-[#014E82] rounded-md dark:text-gray-200 ml-5 mt-4">Guardar cambios</button> -->
 
-        <p class="flex font-roboto dark:text-gray-200 justify-center w-full items-center pt-5 ">Editar Horario Docente</p>
+        <p class="flex font-roboto dark:text-gray-200 items-center pt-5 ml-32 ">
+            <div class="w-1/2">
+            EDITAR HORARIO<br>
+            </div>
+            Docente:{{ ProfesorHorario.Nombre }} {{ ProfesorHorario.ApellidoP }} {{ ProfesorHorario.ApellidoM }}<br>
+            Periodo del horario:{{ PeriodoHorario.mesInicio }} {{ PeriodoHorario.AñoInicio }}
+            -{{ PeriodoHorario.mesTermino }} {{ PeriodoHorario.AñoTermino }}<br>
+
+
+        </p>
 
         <div class="container mx-auto px-6 py-4 w-auto "  >
 
@@ -122,7 +131,8 @@
                     <tbody class="align-top" >
 
                         <td class="border-0">
-                            <tr class="dark:text-gray-200P"  v-for="(clase,index) in NuevasClasesLunes" :key="index"  id="Lunes"  @click="showElement('Lunes',clase,index)" >
+                            <tr class="text-gray-200" :class="{ 'animate-pulse':clase.bordeError!=null  }"  v-for="(clase,index) in NuevasClasesLunes" :key="index"  id="Lunes"
+                            @click="showElement('Lunes',clase,index)" >
 
                                 <div :style="{ backgroundColor: clase.color }" class="px-10 py-5 mt-1 dark:text-gray-200">
 
@@ -148,7 +158,7 @@
                         </td>
 
                         <td>
-                            <tr class="dark:text-gray-200P"  v-for="(clase,index) in NuevasClasesMartes" :key="index"  id="Martes"  @click="showElement('Martes',clase,index)" >
+                            <tr class="text-gray-200" :class="{ 'animate-pulse':clase.bordeError!=null  }"   v-for="(clase,index) in NuevasClasesMartes" :key="index"  id="Martes"  @click="showElement('Martes',clase,index)" >
 
                                 <div :style="{ backgroundColor: clase.color }" class="px-10 py-5 mt-1 dark:text-gray-200">
                                     <span v-for="materia in materias">
@@ -173,7 +183,7 @@
 
 
                         <td>
-                            <tr class="dark:text-gray-200P"  v-for="(clase,index) in NuevasClasesMiercoles" :key="index"  id="Miercoles"  @click="showElement('Miercoles',clase,index)" >
+                            <tr class="text-gray-200" :class="{ 'animate-pulse':clase.bordeError!=null  }"   v-for="(clase,index) in NuevasClasesMiercoles" :key="index"  id="Miercoles"  @click="showElement('Miercoles',clase,index)" >
                                 <div :style="{ backgroundColor: clase.color }" class="px-10 py-5 mt-1 dark:text-gray-200">
                                     <span v-for="materia in materias">
                                         <span v-if="materia.id==clase.idMateria">{{ materia.Nombre }}</span>
@@ -197,7 +207,7 @@
 
 
                         <td>
-                            <tr class="dark:text-gray-200P"  v-for="(clase,index) in NuevasClasesJueves" :key="index"  id="Jueves"  @click="showElement('Jueves',clase,index)" >
+                            <tr class="text-gray-200" :class="{ 'animate-pulse':clase.bordeError!=null  }"   v-for="(clase,index) in NuevasClasesJueves" :key="index"  id="Jueves"  @click="showElement('Jueves',clase,index)" >
 
                                 <div :style="{ backgroundColor: clase.color }" class="px-10 py-5 mt-1 dark:text-gray-200">
 
@@ -224,7 +234,7 @@
 
 
                         <td>
-                            <tr class="dark:text-gray-200P"  v-for="(clase,index) in NuevasClasesViernes" :key="index"  id="Viernes"  @click="showElement('Viernes',clase,index)" >
+                            <tr class="text-gray-200" :class="{ 'animate-pulse':clase.bordeError!=null  }"  v-for="(clase,index) in NuevasClasesViernes" :key="index"  id="Viernes"  @click="showElement('Viernes',clase,index)" >
 
                                 <div :style="{ backgroundColor: clase.color }" class="px-10 py-5 mt-1 dark:text-gray-200">
                                     <span v-for="materia in materias">
@@ -259,145 +269,161 @@
 
 
 
-                                            <!--MODAL PARA UNA NUEVA CLASE-->
-                                            <div id="modalContainer">
-                                                <!-- Main modal -->
-                                                <div :class="{ hidden: !isVisible } " >
+        <!--MODAL PARA UNA NUEVA CLASE-->
+        <div id="modalContainer">
+            <!-- Main modal -->
+            <div :class="{ hidden: !isVisible } " >
 
-                                                    <div id="defaultModal" tabindex="-1" aria-hidden="true"  class="fixed inset-0 flex items-center justify-center z-50">
-                                                        <div class="relative w-full max-w-2xl max-h-full">
+                <div id="defaultModal" tabindex="-1" aria-hidden="true"  class="fixed inset-0 flex items-center justify-center z-50">
+                    <div class="relative w-full max-w-2xl max-h-full">
 
-                                                            <!-- Modal content -->
-                                                            <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
+                        <!-- Modal content -->
+                        <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
 
-                                                                <!-- Modal header -->
-                                                                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                                                                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                                                                        Editar Clase
-                                                                    </h3>
-                                                                    <button type="button" @click="hideElement()" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
-                                                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                                                        </svg>
-                                                                        <span class="sr-only">Close modal</span>
-                                                                    </button>
+                            <!-- Modal header -->
+                            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                                    Editar Clase
+                                </h3>
+                                <button type="button" @click="hideElement()" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
+                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                    </svg>
+                                    <span class="sr-only">Close modal</span>
+                                </button>
 
-                                                                </div>
+                            </div>
 
-                                                                <!-- Modal body -->
-                                                                <div class="p-6 space-y-6">
-                                                                    <form @submit.prevent=""  class="w-full max-w-lg">
-                                                                        <div class="flex flex-wrap -mx-3 mb-6">
+                            <!-- Modal body -->
+                            <div class="p-6 space-y-6">
+                                <form @submit.prevent=""  class="w-full max-w-lg">
+                                    <div class="flex flex-wrap -mx-3 mb-6">
 
-                                                                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                                                                    <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
-                                                                                        Hora Inicio
-                                                                                    </label>
-                                                                                    <input id="Nombre" v-model="claseEditar.HInicio"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="time" placeholder="" required>
-                                                                                </div>
-
-
-                                                                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                                                                    <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
-                                                                                        Hora fin
-                                                                                    </label>
-                                                                                    <input id="Nombre" v-model="claseEditar.HFin"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="time" placeholder="" required>
-                                                                                </div>
-
-
-
-
-                                                                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 pt-3 pb-3">
-                                                                                    <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-1" for="grid-first-name" select>
-                                                                                        Selecciona el una aula para la clase
-                                                                                    </label>
-
-                                                                                    <select name="periodos" v-model="claseEditar.idAula" class="dark:bg-slate-700 dark:text-slate-200 rounded-sm ">
-                                                                                        <option
-                                                                                            v-for="aula in aulas"
-                                                                                            :key="aula.id"
-                                                                                            :value="aula.id"
-                                                                                        >
-                                                                                            {{ aula.NombreAula }}
-
-                                                                                        </option>
-                                                                                    </select>
-
-
-                                                                                </div>
-
-
-
-                                                                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 pt-3 pb-3">
-                                                                                    <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-1" for="grid-first-name" select>
-                                                                                        Selecciona un grupo
-                                                                                    </label>
-
-                                                                                    <select name="periodos" v-model="claseEditar.idGrupo" class="dark:bg-slate-700 dark:text-slate-200 rounded-sm ">
-                                                                                        <option
-                                                                                            v-for="grupo in grupos"
-                                                                                            :key="grupo.id"
-                                                                                            :value="grupo.id"
-                                                                                        >
-                                                                                            {{ grupo.Semestre }}-{{grupo.Letra }} {{ grupo.Especialidad }}
-
-                                                                                        </option>
-                                                                                    </select>
-                                                                                </div>
-
-
-                                                                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 pt-3 pb-3">
-                                                                                    <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-1" for="grid-first-name" select>
-                                                                                        Selecciona el una materia para la clase
-                                                                                    </label>
-
-                                                                                    <select name="periodos" v-model="claseEditar.idMateria" class="dark:bg-slate-700 dark:text-slate-200 rounded-sm ">
-                                                                                        <option
-                                                                                            v-for="materia in materias"
-                                                                                            :key="materia.id"
-                                                                                            :value="materia.id"
-                                                                                        >
-                                                                                            {{ materia.Nombre }}
-
-                                                                                        </option>
-                                                                                    </select>
-                                                                                </div>
-
-
-                                                                                <div class="w-full md:w-1/2 px-3 mb-6 mt-3 md:mb-0">
-                                                                                    <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
-                                                                                        Selecciona un color
-                                                                                    </label>
-                                                                                    <input @onchange="CambiarColor" id="Nombre" v-model="claseEditar.color" type="color" placeholder="" class="rounded-lg m-0" required>
-                                                                                </div>
-
-
-                                                                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                                                                    <input id="Nombre" v-model="claseEditar.dia" readonly  class="appearance-none w-full hidden bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="" required>
-                                                                                </div>
-
-
-                                                                                <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                                                                    <input id="Nombre" v-model="claseEditar.idHorario" readonly  class="appearance-none w-full hidden bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="" required>
-                                                                                </div>
-
-                                                                            <!-- Modal footer -->
-                                                                            <div class="flex items-center mt-5 p-4 space-x-2 border-t border-gray-200 rounded-b dark:border-slate-500 ">
-                                                                                <button @click="hideElement()"  class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Aceptar</button>
-                                                                                <button @click="EliminarClase(claseEditar)" data-modal-hide="defaultModal" type="button" class="text-gray-200 bg-red-600  hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 focus:z-10  dark:border-gray-500  ">Eliminar esta clase</button>
-                                                                                </div>
-                                                                            </div>
-
-                                                                             <!-- {{ NuevasClasesLunes }} -->
-
-                                                                    </form>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
+                                                    Hora Inicio
+                                                </label>
+                                                <input id="Nombre" v-model="claseEditar.HInicio"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="time" placeholder="" required>
+                                                <div v-if="msjHoraInvalidas==true"
+                                                    class="text-red-400 text-xs ">
+                                                    {{ msjInvalido }}
                                                 </div>
+                                            </div>
+
+
+                                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
+                                                    Hora fin
+                                                </label>
+                                                <input id="Nombre" v-model="claseEditar.HFin"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="time" placeholder="" required>
+                                            </div>
+
+
+
+
+                                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 pt-3 pb-3">
+                                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-1" for="grid-first-name" select>
+                                                    Selecciona el una aula para la clase
+                                                </label>
+                                                <p v-if="mensajeAula==true" class="text-sm text-red-600 ">Por favor elige un aula</p>
+                                                <select name="periodos" v-model="claseEditar.idAula" class="dark:bg-slate-700 dark:text-slate-200 rounded-sm ">
+
+                                                    <option value="0">
+                                                        Seleccione un aula
+                                                    </option>
+
+                                                    <option
+                                                        v-for="aula in aulas"
+                                                        :key="aula.id"
+                                                        :value="aula.id"
+                                                    >
+                                                        {{ aula.NombreAula }}
+
+                                                    </option>
+                                                </select>
+
 
                                             </div>
+
+
+
+                                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0 pt-3 pb-3">
+                                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-1" for="grid-first-name" select>
+                                                    Selecciona el una materia para la clase
+                                                </label>
+                                                <p v-if="mensajeMateria==true" class="text-sm text-red-600 ">Por favor elige una materia</p>
+                                                <select name="periodos" v-model="claseEditar.idMateria" class="dark:bg-slate-700
+                                                    dark:text-slate-200 rounded-sm w-full ">
+
+                                                    <option value="0">
+                                                        Seleccione una materia
+                                                    </option>
+
+                                                    <option
+                                                        v-for="materia in materias"
+                                                        :key="materia.id"
+                                                        :value="materia.id"
+                                                    >
+                                                        {{ materia.Nombre }}
+
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <div class="w-full md:w-full px-3 mb-6 md:mb-0 pt-3 pb-3 ">
+                                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-1" for="grid-first-name" select>
+                                                    Selecciona un grupo
+                                                </label>
+                                                <p v-if="mensajeGrupo==true" class="text-sm text-red-600 ">Por favor elige un grupo</p>
+                                                <select name="periodos" v-model="claseEditar.idGrupo" class="dark:bg-slate-700 dark:text-slate-200 rounded-sm ">
+                                                    <option value="0">
+                                                        Seleccione un grupo
+                                                    </option>
+
+                                                    <option
+                                                        v-for="grupo in grupos"
+                                                        :key="grupo.id"
+                                                        :value="grupo.id"
+                                                    >
+                                                        {{ grupo.Semestre }}-{{grupo.Letra }} {{ grupo.Especialidad }}
+                                                    </option>
+                                                </select>
+                                            </div>
+
+                                            <div class="w-full md:w-1/3 px-3 mb-6 mt-3 md:mb-0">
+                                                <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
+                                                    Selecciona un color
+                                                </label>
+                                                <input @onchange="CambiarColor" id="Nombre" v-model="claseEditar.color" type="color" placeholder="" class="rounded-lg m-0" required>
+                                            </div>
+
+
+                                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                                <input id="Nombre" v-model="claseEditar.dia" readonly  class="appearance-none w-full hidden bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="" required>
+                                            </div>
+
+
+                                            <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                                <input id="Nombre" v-model="claseEditar.idHorario" readonly  class="appearance-none w-full hidden bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="" required>
+                                            </div>
+
+                                        <!-- Modal footer -->
+                                        <div class="flex items-center mt-5 p-4 space-x-2 border-t border-gray-200 rounded-b dark:border-slate-500 ">
+                                            <button @click="ComprobarClase(claseEditar.dia)"  class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Aceptar</button>
+                                            <button @click="EliminarClase(claseEditar)" data-modal-hide="defaultModal" type="button" class="text-gray-200 bg-red-600  hover:bg-red-500 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 focus:z-10  dark:border-gray-500  ">Eliminar esta clase</button>
+                                            </div>
+                                        </div>
+
+                                         <!-- {{ NuevasClasesLunes }} -->
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
 
     </main>
 </div>
@@ -428,12 +454,15 @@ export default {
         materias:Array,
         aulas:Array,
         grupos:Array,
+        periodos:Array,
         idHorario:'',
         ClasesLunes:Array,
         ClasesMartes:Array,
         ClasesMiercoles:Array,
         ClasesJueves:Array,
         ClasesViernes:Array,
+        PeriodoHorario:Array,
+        ProfesorHorario:Array,
     },
 
     mounted(){
@@ -485,7 +514,12 @@ export default {
             Edicion:true,
 
             claseEditar:[],
+            msjInvalido:'',
 
+            mensajeAula:false,
+            mensajeMateria:false,
+            mensajeGrupo:false,
+            msjHoraInvalidas:false,
         }
 
     },
@@ -500,6 +534,491 @@ export default {
 
 
     methods:{
+
+        ComprobarCampos(){
+            var camposValidos=true;
+
+            if(this.claseEditar.idAula==0){
+                this.mensajeAula=true;
+                camposValidos=false;
+            }
+            else{
+                this.mensajeAula=false;
+            }
+
+            if(this.claseEditar.idMateria==0){
+                this.mensajeMateria=true;
+                camposValidos=false;
+            }
+            else{
+                this.mensajeMateria=false;
+            }
+
+            if(this.claseEditar.idGrupo==0){
+                this.mensajeGrupo=true;
+                camposValidos=false;
+            }
+            else{
+                this.mensajeGrupo=false;
+            }
+
+            return camposValidos;
+
+        },
+
+
+        validarHorasMayor(hora1, hora2) {
+            // Divide las horas y minutos en cada cadena
+            const [h1, m1] = hora1.split(':').map(Number);
+            const [h2, m2] = hora2.split(':').map(Number);
+
+            // Crea objetos Date para las dos horas, estableciendo la fecha en 1970-01-01
+            const date1 = new Date(1970, 0, 1, h1, m1);
+            const date2 = new Date(1970, 0, 1, h2, m2);
+
+            // Compara las fechas para determinar cuál es mayor
+            if (date1 > date2) {
+                //this.msjHoraInvalidas=true
+                return false; //Es mayor la hora Inicio
+            } else {
+                //this.msjHoraInvalidas=false
+                return true; //Es menor la hora inicio
+            }
+        },
+
+
+
+        posicionaClaseEntreHoras(dia){
+            if(dia=='Lunes'){
+                var NuevasClasesDia=this.NuevasClasesLunes
+            }
+
+            if(dia=='Martes'){
+                var NuevasClasesDia=this.NuevasClasesMartes
+            }
+
+            if(dia=='Miercoles'){
+                var NuevasClasesDia=this.NuevasClasesMiercoles
+            }
+
+            if(dia=='Jueves'){
+                var NuevasClasesDia=this.NuevasClasesJueves
+            }
+
+            if(dia=='Viernes'){
+                var NuevasClasesDia=this.NuevasClasesViernes
+            }
+                //Ejeemplo
+                //8:00 a 9:00 <-Comprobar
+                //11:00 a 12:00 <- Dia lunes
+
+
+                //Obtener el ultimo elemento del arreglo que sera la clase que verificaremos ingresada
+                const claseComprobar=this.claseEditar;
+                console.log('Clase a comprobar:',claseComprobar);
+
+
+                //Recorrer la lista de clases para determinar su posicion
+                for (let i = 0; i < NuevasClasesDia.length; i++) {
+
+                    const claseActual = NuevasClasesDia[i];
+
+                    const indiceClaseComparar=NuevasClasesDia.indexOf(claseComprobar);
+
+
+                    // if(i!=indiceClaseComparar){
+
+                        console.log('Horas a comparar:',claseComprobar.HInicio," y ",claseActual.HInicio)
+                                                                //   8::00   ,    11:00
+                        var resultado=this.validarHorasMayor(claseComprobar.HInicio,claseActual.HInicio)
+                        console.log('Resultado de la comparacion:',resultado)
+
+                        //La horaInicio de comparar fue menor a continuacion se comparar con la hora siguiente de la horaComprobar
+                        //comprobar que la hora final no sea mayor a la hora inicio de la siguiente clase
+                        //Por ejemplo comparar que las
+                        //HFinal de comprobar       9::00     no sea mayor a la hora inicio de la siguiente clase
+                        //HInicio siguiente clase   11:00
+                        if(resultado==true){//La horaInicio de clase a comparar fue menor
+
+
+
+
+                            console.log('Horas a comparar 2:',claseComprobar.HFin," y ",claseActual.HInicio)
+                                                        // 9:00          ,    11:00
+                            resultado=this.validarHorasMayor(claseComprobar.HFin,claseActual.HInicio)
+                            console.log('Resultado de la comparacion 2:',resultado)
+                            if(resultado==true){
+                                //mover la clase comprobar antes de la clase actual
+
+                                //Obtener el indice de la clase que estamos comprobando
+                                const indiceEliminar = NuevasClasesDia.indexOf(claseComprobar);
+
+                                NuevasClasesDia.splice(indiceEliminar, 1);
+                                // i es la posicion en la que va a quedar la claseComprobar
+                                NuevasClasesDia.splice(i,0,claseComprobar);
+
+                                this.msjHoraInvalidas=false;
+                                this.msjInvalido='';
+
+                            }
+                            else{
+
+                                // this.msjHoraInvalidas=true;
+                                // this.msjInvalido='La hora final ingresada se empalma con la hora de inicio de la siguiente clase: '+ claseActual.HInicio+ '. Por favor revisa la hora fin'
+
+                                // console.log('La hora final ingresada ',claseComprobar.HFin ,'se empalma con la hora de inicio de la siguiente clase',claseActual.HInicio)
+
+                                if(i!=indiceClaseComparar){
+
+
+                                    //PENDIENTE--------------------------------------------------------------
+                                    const indiceEliminar = NuevasClasesDia.indexOf(claseComprobar);
+                                    NuevasClasesDia.splice(indiceEliminar, 1);
+                                    NuevasClasesDia.splice(i,0,claseComprobar);
+                                    //------------------------------------------------------------------------
+                                    this.msjHoraInvalidas=true;
+                                    this.msjInvalido='Hay horas que se estan empalmando por favor revisar las horas ingresadas';
+                                    //this.msjInvalido='La hora final ingresada se empalma con la hora de inicio de la siguiente clase: '+ claseActual.HInicio+ '. Por favor revisa la hora fin'
+                                    console.log('La hora final ingresada ',claseComprobar.HFin ,'se empalma con la hora de inicio de la siguiente clase',claseActual.HInicio)
+
+                                    return false;
+                                }
+                                else{
+
+
+
+                                    return true;
+                                }
+
+                            }
+                            //En este caso el indice es i
+                            //return true;
+                            break;
+
+
+                        // }
+
+                    }
+                }
+
+                if(dia=='Lunes'){
+                    this.NuevasClasesLunes=NuevasClasesDia;
+                }
+                if(dia=='Martes'){
+                    this.NuevasClasesMartes=NuevasClasesDia;
+                }
+                if(dia=='Miercoles'){
+                    this.NuevasClasesMiercoles=NuevasClasesDia;
+                }
+                if(dia=='Jueves'){
+                    this.NuevasClasesJueves=NuevasClasesDia;
+                }
+                if(dia=='Viernes'){
+                    this.NuevasClasesViernes=NuevasClasesDia;
+                }
+        },
+
+        moverClasesHaciaAdelante(dia){
+
+            console.log('----------HACIA ADELANTE COMPROBACION------------')
+
+            if(dia=='Lunes'){
+                var NuevasClasesDia=this.NuevasClasesLunes
+            }
+
+            if(dia=='Martes'){
+                var NuevasClasesDia=this.NuevasClasesMartes
+            }
+
+            if(dia=='Miercoles'){
+                var NuevasClasesDia=this.NuevasClasesMiercoles
+            }
+
+            if(dia=='Jueves'){
+                var NuevasClasesDia=this.NuevasClasesJueves
+            }
+
+            if(dia=='Viernes'){
+                var NuevasClasesDia=this.NuevasClasesViernes
+            }
+
+
+                //Obtener el ultimo elemento del arreglo que sera la clase que verificaremos ingresada
+                const claseComprobar=this.claseEditar;
+                console.log('Clase a comprobar:',claseComprobar);
+
+
+                //Recorrer la lista de clases para determinar su posicion
+                for (let i = 0; i < NuevasClasesDia.length; i++) {
+
+
+                    const claseActual = NuevasClasesDia[i];
+
+                    const indiceClaseComparar=NuevasClasesDia.indexOf(claseComprobar);
+
+                    if(i!=indiceClaseComparar){
+                                                            //8:00                   10:00
+                        console.log('Horas a comparar:',claseComprobar.HInicio," y ",claseActual.HInicio)
+
+                        var resultado=this.validarHorasMayor(claseComprobar.HInicio,claseActual.HInicio)
+                        console.log('Resultado de la comparacion:',resultado)
+
+
+
+                        var moverUltimo=false;
+
+                        if(resultado==false){
+
+                            //moverla delante de la clase actual y comprobar que no se empalmen con la siguiente en su hora final
+                            if(NuevasClasesDia.length>=i+1){
+                                console.log('Va al ultimo');
+                                var moverUltimo=true;
+                                var resultado=true; //ya no necesitas comprobar que la siguiente clase es menor ya que no hay siguiente clase
+                            }
+                            else{
+                                var siguienteClase=NuevasClasesDia[i+1];
+                                //si la siguiente clase es mayor
+                                var resultado=this.validarHorasMayor(claseComprobar.HInicio,SiguienteClase.HInicio)
+                            }
+
+
+                            if(resultado==true){//Ver si el siguiente es menor lo cual indicaria que ese es el espacio que le corresponde
+
+                                if(moverUltimo!=true){
+                                    console.log('Siguiente clase',siguienteClase);
+                                                                       //12:00             y       13:00
+                                    console.log('Horas a comparar 2:',claseComprobar.HFin," y ",siguienteClase.HInicio)
+
+                                    resultado=this.validarHorasMayor(claseComprobar.HFin,siguienteClase.HInicio)
+                                    console.log('Resultado de la comparacion 2:',resultado)
+                                }
+                                //Comprobar que no se empalme
+                                if(resultado==true){
+                                    //Obtener el indice de la clase que estamos comprobando
+                                    const indiceEliminar = NuevasClasesDia.indexOf(claseComprobar);
+
+                                    NuevasClasesDia.splice(indiceEliminar, 1);
+
+                                    NuevasClasesDia.splice(i, 0, claseComprobar);
+
+                                    this.msjHoraInvalidas=false;
+                                    this.msjInvalido='';
+                                }
+                                else{
+                                    this.msjHoraInvalidas=true;
+                                    this.msjInvalido='Hay horas que se estan empalmando por favor revisar las horas ingresadas';
+                                    //this.msjInvalido='La hora final ingresada se empalma con la hora de inicio de la siguiente clase: '+ siguienteClase.HInicio+ '. Por favor revisa la hora fin'
+                                    console.log('La hora final ingresada ',claseComprobar.HFin ,'se empalma con la hora de inicio de la siguiente clase',siguienteClase.HInicio)
+
+                                    return false;
+                                }
+                            }
+
+                        }
+                    }
+                }
+
+                if(dia=='Lunes'){
+                    this.NuevasClasesLunes=NuevasClasesDia;
+                }
+                if(dia=='Martes'){
+                    this.NuevasClasesMartes=NuevasClasesDia;
+                }
+                if(dia=='Miercoles'){
+                    this.NuevasClasesMiercoles=NuevasClasesDia;
+                }
+                if(dia=='Jueves'){
+                    this.NuevasClasesJueves=NuevasClasesDia;
+                }
+                if(dia=='Viernes'){
+                    this.NuevasClasesViernes=NuevasClasesDia;
+                }
+
+        },
+
+        ComprobarEmpalmes(){
+
+            var Empalmes=false//Esta variabkle determina si hubo al menos un empalme
+            var DiasRecorrer=[];
+            for(let i = 0; i < 5 ; i ++){
+                if(i==0){
+                    DiasRecorrer=this.NuevasClasesLunes
+                    var dia='Lunes'
+
+                }
+                if(i==1){
+                    DiasRecorrer=this.NuevasClasesMartes
+                    var dia='Martes'
+
+                }
+                if(i==2){
+                    DiasRecorrer=this.NuevasClasesMiercoles
+                    var dia='Miercoles'
+
+                }
+                if(i==3){
+                    DiasRecorrer=this.NuevasClasesJueves
+                    var dia='Jueves'
+
+                }
+                if(i==4){
+                    DiasRecorrer=this.NuevasClasesViernes
+                    var dia='Viernes'
+
+                }
+                // console.log(dia)
+                // console.log('Longitud dia:',DiasRecorrer.length)
+                //Recorrer dia
+                for (let j = 0; j < DiasRecorrer.length; j++) {
+
+                    var indiceSiguiente=j+1
+                    // console.log(indiceSiguiente);
+                    if(DiasRecorrer.length>indiceSiguiente){
+
+                        var claseActual=DiasRecorrer[j];
+                        var claseSiguiente=DiasRecorrer[j+1];
+
+
+                        var resultado=this.validarHorasMayor(claseActual.HFin,claseSiguiente.HInicio)
+                        // console.log('Resultado de la comparacion empalme',resultado)
+                        if(resultado==false){
+
+
+                            const indiceEmpalme1 = DiasRecorrer.indexOf(claseActual);
+                            const indiceEmpalme2 = DiasRecorrer.indexOf(claseSiguiente);
+
+                            console.log('Hay un empalme entre la clase:'+indiceEmpalme1+' y la clase:'+indiceEmpalme2+' del dia '+dia)
+                            if(dia=='Lunes'){
+                                console.log('ActivarErroEmpalme');
+                                this.NuevasClasesLunes[indiceEmpalme1].bordeError=true;
+                                this.NuevasClasesLunes[indiceEmpalme2].bordeError=true;
+                                console.log('ActivarErroEmpalme2');
+                            }
+
+                            if(dia=='Martes'){
+                                console.log('ActivarErroEmpalme');
+                                this.NuevasClasesMartes[indiceEmpalme1].bordeError=true;
+                                this.NuevasClasesMartes[indiceEmpalme2].bordeError=true;
+                                console.log('ActivarErroEmpalme2');
+                            }
+
+                            if(dia=='Miercoles'){
+                                console.log('ActivarErroEmpalme');
+                                this.NuevasClasesMiercoles[indiceEmpalme1].bordeError=true;
+                                this.NuevasClasesMiercoles[indiceEmpalme2].bordeError=true;
+                                console.log('ActivarErroEmpalme2');
+                            }
+
+                            if(dia=='Jueves'){
+                                console.log('ActivarErroEmpalme');
+                                this.NuevasClasesJueves[indiceEmpalme1].bordeError=true;
+                                this.NuevasClasesJueves[indiceEmpalme2].bordeError=true;
+                                console.log('ActivarErroEmpalme2');
+                            }
+
+                            if(dia=='Viernes'){
+                                console.log('ActivarErroEmpalme');
+                                this.NuevasClasesViernes[indiceEmpalme1].bordeError=true;
+                                this.NuevasClasesViernes[indiceEmpalme2].bordeError=true;
+                                console.log('ActivarErroEmpalme2');
+                            }
+
+                            Empalmes=true;
+
+                        }else{
+
+                            const indiceClaseActual = DiasRecorrer.indexOf(claseActual);
+                            const indiceClaseSiguiente = DiasRecorrer.indexOf(claseSiguiente);
+                            if(dia=='Lunes'){
+                                this.NuevasClasesLunes[indiceClaseActual].bordeError=null;
+                                this.NuevasClasesLunes[indiceClaseSiguiente].bordeError=null;
+                            }
+
+                            if(dia=='Martes'){
+                                this.NuevasClasesMartes[indiceClaseActual].bordeError=null;
+                                this.NuevasClasesMartes[indiceClaseSiguiente].bordeError=null;
+                            }
+
+                            if(dia=='Miercoles'){
+                                this.NuevasClasesMiercoles[indiceClaseActual].bordeError=null;
+                                this.NuevasClasesMiercoles[indiceClaseSiguiente].bordeError=null;
+                            }
+
+                            if(dia=='Jueves'){
+                                this.NuevasClasesJueves[indiceClaseActual].bordeError=null;
+                                this.NuevasClasesJueves[indiceClaseSiguiente].bordeError=null;
+                            }
+
+                            if(dia=='Viernes'){
+                                this.NuevasClasesViernes[indiceClaseActual].bordeError=null;
+                                this.NuevasClasesViernes[indiceClaseSiguiente].bordeError=null;
+                            }
+
+
+                        }
+
+                    }
+                    else{
+                        // console.log('ultimo dia no se comprueba')
+                    }
+
+                }
+            }
+
+
+            return Empalmes;
+        },
+
+
+
+
+        ComprobarClase(dia){
+
+            const camposValidos=this.ComprobarCampos();
+            const FechaInicioMayor=this.validarHorasMayor(this.claseEditar.HInicio,this.claseEditar.HFin)
+
+            const FechasIguales=this.HorasIguales(this.claseEditar.HInicio,this.claseEditar.HFin)
+
+            if(camposValidos==true){
+                if(FechaInicioMayor==true){
+
+                    if(FechasIguales==false){
+                        console.log('FECHAS IGUALES:',FechasIguales)
+
+                        var resultado1=this.posicionaClaseEntreHoras(dia);
+                        var resultado2=this.moverClasesHaciaAdelante(dia);
+
+                        console.log('RES1:',resultado1,'RES2',resultado2);
+                        if(resultado1==false || resultado2==false){
+                            this.ComprobarEmpalmes();
+                        }else{
+                            this.ComprobarEmpalmes();
+                            this.hideElement();
+                        }
+
+                    }
+                    else{
+                        this.msjHoraInvalidas=true;
+                        this.msjInvalido='La fechas de inicio y fin deben ser diferentes';
+                    }
+                }
+                else{
+                    this.msjHoraInvalidas=true;
+                    this.msjInvalido='La fecha de inicio debe ser menor a la fecha de fin';
+                }
+            }
+
+
+        },
+
+        HorasIguales(hora1, hora2) {
+            // Convertir las cadenas a objetos de fecha para facilitar la comparación
+            var fecha1 = new Date("1970-01-01T" + hora1 + ":00");
+            var fecha2 = new Date("1970-01-01T" + hora2 + ":00");
+
+            // Comparar las horas
+            return fecha1.getTime() === fecha2.getTime();
+        },
 
         showElement(dia,clase,index) {
 
@@ -530,7 +1049,33 @@ export default {
         },
 
         hideElement() {
-            this.isVisible=false
+
+            const camposValidos=this.ComprobarCampos();
+            const FechaInicioMayor=this.validarHorasMayor(this.claseEditar.HInicio,this.claseEditar.HFin)
+            const FechasIguales=this.HorasIguales(this.claseEditar.HInicio,this.claseEditar.HFin)
+
+
+            if(camposValidos==true){
+                if(FechaInicioMayor==true){
+
+                    if(FechasIguales==false){
+
+                        this.isVisible=false
+
+                    }
+                    else{
+                        this.msjHoraInvalidas=true;
+                        this.msjInvalido='La fechas de inicio y fin deben ser diferentes';
+                    }
+                }
+                else{
+                    this.msjHoraInvalidas=true;
+                    this.msjInvalido='La fecha de inicio debe ser menor a la fecha de fin';
+                }
+            }
+
+
+
         },
 
         Aumentar(dia){
@@ -543,7 +1088,8 @@ export default {
                 idMateria: 0,
                 idAula: 0,
                 idGrupo:0,
-                idHorario:this.$page.props.idHorario
+                idHorario:this.$page.props.idHorario,
+                bordeError:null
             };
 
             if(dia=='Lunes'){
@@ -582,14 +1128,18 @@ export default {
         async GuardarCambios(){
 
             try {
-                const response = await this.$inertia.post(route('Clases.store'), {
-                    NuevasClasesLunes: this.NuevasClasesLunes,
-                    NuevasClasesMartes: this.NuevasClasesMartes,
-                    NuevasClasesMiercoles: this.NuevasClasesMiercoles,
-                    NuevasClasesJueves: this.NuevasClasesJueves,
-                    NuevasClasesViernes: this.NuevasClasesViernes,
-                    idHorario:this.$page.props.idHorario
-                });
+
+                if(this.ComprobarEmpalmes()==false){
+
+                    const response = await this.$inertia.post(route('Clases.store'), {
+                        NuevasClasesLunes: this.NuevasClasesLunes,
+                        NuevasClasesMartes: this.NuevasClasesMartes,
+                        NuevasClasesMiercoles: this.NuevasClasesMiercoles,
+                        NuevasClasesJueves: this.NuevasClasesJueves,
+                        NuevasClasesViernes: this.NuevasClasesViernes,
+                        idHorario:this.$page.props.idHorario
+                    });
+                }
 
                 // Handle the response from the server as needed
             } catch (error) {
@@ -614,28 +1164,28 @@ export default {
 
                  // Utilizar splice para eliminar el registro
                 this.NuevasClasesLunes.splice(indice, 1);
-                this.hideElement()
+                this.isVisible=false
             }
 
             if(clase.dia=='Martes'){
                 const indice = this.NuevasClasesMartes.indexOf(clase);//Hallar el indice de la clase dentro del array
                  // Utilizar splice para eliminar el registro
                 this.NuevasClasesMartes.splice(indice, 1);
-                this.hideElement()
+                this.isVisible=false
             }
 
             if(clase.dia=='Miercoles'){
                 const indice = this.NuevasClasesMiercoles.indexOf(clase);//Hallar el indice de la clase dentro del array
                  // Utilizar splice para eliminar el registro
                 this.NuevasClasesMiercoles.splice(indice, 1);
-                this.hideElement()
+                this.isVisible=false
             }
 
             if(clase.dia=='Jueves'){
                 const indice = this.NuevasClasesJueves.indexOf(clase);//Hallar el indice de la clase dentro del array
                  // Utilizar splice para eliminar el registro
                 this.NuevasClasesJueves.splice(indice, 1);
-                this.hideElement()
+                this.isVisible=false
             }
 
 
@@ -643,7 +1193,7 @@ export default {
                 const indice = this.NuevasClasesViernes.indexOf(clase);//Hallar el indice de la clase dentro del array
                  // Utilizar splice para eliminar el registro
                 this.NuevasClasesViernes.splice(indice, 1);
-                this.hideElement()
+                this.isVisible=false
             }
 
         }

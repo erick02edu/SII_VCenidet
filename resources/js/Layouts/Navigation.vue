@@ -119,6 +119,14 @@
             </nav-link>
 
 
+            <nav-link :href="route('Avisos.index')" :active="route().current('Avisos.index')|| route().current('Avisos.edit')"
+            v-if="$page.props.user.roles.includes('Administrador') "  >
+                <template #icon>
+                    <i class="fa-solid fa-bullhorn"></i>
+                </template>
+                Avisos
+            </nav-link>
+
             <!-- <nav-link :href="route('Personal.index')" :active="route().current('Personal.index') || route().current('Personal.Activos') || route().current('Personal.Bajas') ||
             route().current('Personal.create')"
             v-if="$page.props.user.permissions.includes('Ver informacion del personal')|| $page.props.user.permissions.includes('Agregar Personal') ||
@@ -138,15 +146,16 @@
                 Personal
             </nav-link>
 
-            <!-- <nav-link :href="route('Plazas.index')" :active="route().current('Plazas.index') || route().current('Plazas.edit')"
-            v-if="$page.props.user.permissions.includes('Editar Plazas') || $page.props.user.permissions.includes('Eliminar Plazas') ||
-            $page.props.user.permissions.includes('Agregar Plazas') || $page.props.user.permissions.includes('Ver Plazas')"
-            >
+
+            <nav-link :href="route('Personal.Reportes')" :active="route().current('Personal.Reportes') "
+            v-if="$page.props.user.roles.includes('Recursos Humanos')" >
                 <template #icon>
-                    <i class="fa-solid fa-user-tie"></i>
+                    <i class="fa-solid fa-person"></i>
                 </template>
-                Plazas
-            </nav-link> -->
+                Reportes
+            </nav-link>
+
+
 
             <nav-link :href="route('Plazas.index')" :active="route().current('Plazas.index') || route().current('Plazas.edit')"
             v-if="$page.props.user.roles.includes('Recursos Humanos') "
@@ -180,43 +189,31 @@
 
 
 
+            <!----------VERSION ESCUELA ------------>
+                <nav-link :href="route('Alumnos.index')" :active="route().current('Alumnos.index') || route().current('Alumnos.edit')"
+                v-if="$page.props.user.roles.includes('Administrador')">
+                    <template #icon>
+                        <i class="fa-solid fa-book-open-reader"></i>
+                    </template>
+                    Alumnos
+                </nav-link>
 
-            <nav-link :href="route('Alumnos.index')" :active="route().current('Alumnos.index') || route().current('Alumnos.edit')"
-            v-if="$page.props.user.roles.includes('Administrador')">
-                <template #icon>
-                    <i class="fa-solid fa-book-open-reader"></i>
-                </template>
-                Alumnos
-            </nav-link>
+                <nav-link :href="route('Calificaciones.Promedios')" :active="route().current('Calificaciones.Promedios')"
+                v-if="$page.props.user.roles.includes('Administrador')">
+                    <template #icon>
+                        <i class="fa-solid fa-book-open-reader"></i>
+                    </template>
+                    Promedios
+                </nav-link>
 
-
-
-
-            <!-- <nav-link :href="route('Promedio.index')" :active="route().current('Promedio.index')" >
-                <template #icon>
-                    <i class="fa-solid fa-calculator"></i>
-                </template>
-                    Promedio Semestres
-            </nav-link> -->
-
-
-            <nav-link :href="route('Materias.index')" :active="route().current('Materias.index') || route().current('Materias.edit')"
-            v-if="$page.props.user.roles.includes('Administrador')">
-                <template #icon>
-                    <i class="fa-solid fa-book"></i>
-                </template>
-                    Materias
-            </nav-link>
-
-
-            <!-- <nav-link :href="route('HorariosDocentes.index')" :active="route().current('HorariosDocentes.index')"
-            v-if="$page.props.user.permissions.includes('Ver horarios') || $page.props.user.permissions.includes('Crear y Editar Horarios') ||
-            $page.props.user.permissions.includes('Eliminar Horarios')">
-                <template #icon>
-                    <i class="fa-regular fa-calendar"></i>
-                </template>
-                Horarios
-            </nav-link> -->
+                <nav-link :href="route('Materias.index')" :active="route().current('Materias.index') || route().current('Materias.edit')"
+                v-if="$page.props.user.roles.includes('Administrador')">
+                    <template #icon>
+                        <i class="fa-solid fa-book"></i>
+                    </template>
+                        Materias
+                </nav-link>
+            <!-------------------------------------->
 
             <nav-link :href="route('HorariosDocentes.index')" :active="route().current('HorariosDocentes.index')"
             v-if="$page.props.user.roles.includes('Recursos Humanos')">
@@ -225,17 +222,6 @@
                 </template>
                 Horarios
             </nav-link>
-
-
-
-            <!-- <nav-link :href="route('Departamentos.index')" :active="route().current('Departamentos.index')|| route().current('Departamentos.edit')"
-            v-if="$page.props.user.permissions.includes('Ver departamentos') || $page.props.user.permissions.includes('Agregar Departamentos') ||
-            $page.props.user.permissions.includes('Editar información de los departamentos') || $page.props.user.permissions.includes('Eliminar departamentos')">
-                <template #icon>
-                    <i class="fa-solid fa-building-user"></i>
-                </template>
-                Jefes
-            </nav-link> -->
 
 
             <nav-link :href="route('Departamentos.index')" :active="route().current('Departamentos.index')|| route().current('Departamentos.edit')"
@@ -247,41 +233,34 @@
             </nav-link>
 
 
-            <nav-link :href="route('Aulas.index')" :active="route().current('Aulas.index')"
-            v-if="$page.props.user.roles.includes('Administrador')">
-                <template #icon>
-                    <i class="fa-solid fa-school"></i>
-                </template>
-                Aulas
-            </nav-link>
+             <!----------VERSION ESCUELA ------------>
+                <nav-link :href="route('Aulas.index')" :active="route().current('Aulas.index')"
+                v-if="$page.props.user.roles.includes('Administrador')">
+                    <template #icon>
+                        <i class="fa-solid fa-school"></i>
+                    </template>
+                    Aulas
+                </nav-link>
+
+                <nav-link :href="route('Grupos.index')" :active="route().current('Grupos.index')"
+                v-if="$page.props.user.roles.includes('Administrador')">
+                    <template #icon>
+                        <i class="fa-solid fa-people-group"></i>
+                    </template>
+                    Grupos
+                </nav-link>
 
 
+                <nav-link :href="route('Calificaciones.index')" :active="route().current('Calificaciones.index')"
+                v-if="$page.props.user.roles.includes('Administrador')">
+                    <template #icon>
+                        <i class="fa-solid fa-clipboard"></i>
+                    </template>
+                    Calificaciones
+                </nav-link>
 
-            <nav-link :href="route('Grupos.index')" :active="route().current('Grupos.index')"
-            v-if="$page.props.user.roles.includes('Administrador')">
-                <template #icon>
-                    <i class="fa-solid fa-school"></i>
-                </template>
-                Grupos
-            </nav-link>
+            <!----------------------------------------->
 
-
-            <nav-link :href="route('Aulas.index')" :active="route().current('Aulas.index')"
-            v-if="$page.props.user.roles.includes('Administrador')">
-                <template #icon>
-                    <i class="fa-solid fa-school"></i>
-                </template>
-                Calificaciones
-            </nav-link>
-
-
-            <!-- <nav-link :href="route('backup.index')" :active="route().current('backup.index')"
-            v-if="$page.props.user.permissions.includes('Hacer respaldo de la base de datos') || $page.props.user.permissions.includes('Hacer restauración de la base de datos')">
-                <template #icon>
-                    <i class="fa-solid fa-database"></i>
-                </template>
-                Respaldar Base
-            </nav-link> -->
 
             <!-- <nav-link :href="route('backup.index')" :active="route().current('backup.index')">
                 <template #icon>
@@ -311,62 +290,7 @@ import axios from 'axios';
 export default {
 
 
-    directives:{
-        'canRol':{
-            async mounted(el, binding) {
 
-                //Obtemos la instancia del elemento
-                const vm = binding.instance;
-               // binding.value contiene el valor que pasaste a la directiva
-                console.log(binding.value);
-                //Obtenemos el rol enviado a traves de la directiva
-                vm.Rol=binding.value;
-
-                //Ejecutamos el metodo canRol y obtenemos el resultado
-                const resultado= await vm.canRol(vm.Rol);
-                vm.resultado=resultado
-
-                console.log("El resultado fue:",vm.resultado)
-
-                if(vm.resultado==true){
-
-                    el.style.display = 'block';  // Mostrar elemento
-                }
-                else{
-
-                    el.style.display = 'none';  // Ocultar elemento
-                }
-
-            },
-        },
-
-        'canPermiso':{
-            async mounted(el, binding) {
-                //Obtemos la instancia del elemento
-                const vm = binding.instance;
-                // binding.value contiene el valor que pasaste a la directiva
-                console.log(binding.value);
-                //Obtenemos el permiso enviado a traves de la directiva
-                vm.Permiso=binding.value;
-
-                //Ejecutamos el metodo canPermiso y obtenemos el resultado
-                var resultado= await vm.canPermiso(vm.Permiso);
-                vm.resultado=resultado
-
-                console.log("Directiva result:",vm.resultado);
-
-                if(vm.resultado==true){
-                    console.log("ver")
-                    el.style.display = 'block';  // Mostrar elemento
-                }
-                else{
-                    console.log("ocultar")
-                    el.style.display = 'none';  // Ocultar elemento
-                }
-            }
-        },
-
-    },
     //Objeto DATA
     data() {
         return {
@@ -396,44 +320,6 @@ export default {
     },
 
     methods:{
-        //Funcion can para saber rol de un usuario
-        //True si tiene ese rol--False no tiene ese rol
-        async canRol(Rol){
-            const userID=this.userID
-            const response=await axios.post('/Roles/can',{userID,Rol})
-
-            this.ListaRoles=response.data.roles;
-
-            if(this.ListaRoles.includes(Rol)){
-                console.log("Rol asignado")
-                return true;
-            }
-            else{
-                console.log("Rol no asignado")
-                return false;
-            }
-        },
-
-        async canPermiso(Permiso){
-
-            const userID=this.userID
-            const response=await axios.post('/Permisos/can',{userID,Permiso})
-            .catch(error => {
-                console.error('Error al obtener datos:', error);
-                return false;
-            });
-
-            this.decision=response.data.decision;
-
-            console.log("Tiene permisos de",Permiso,":",this.decision);
-
-
-            return this.decision
-
-
-        },
-
-
 
     },
 

@@ -16,6 +16,7 @@ use Exception;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 
 class UserController extends Controller
@@ -161,6 +162,18 @@ class UserController extends Controller
     {
         $usuariosDisponibles=User::where('estatus','0')->get();
         return $usuariosDisponibles;
+        
     }
+
+
+    //Funcion para obtener los permisos de un determinado rol
+    public function ObtenerPermisosUsuario(String $idUsuario){
+        $user = User::find($idUsuario); //obtener usuario autenticado
+        $permisos = $user->permissions;
+
+        $permisosNames = $permisos->pluck('name')->toArray(); //Obtener solo un array con el nombre de los roles
+        return $permisosNames;
+    }
+
 
 }

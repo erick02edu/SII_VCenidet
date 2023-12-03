@@ -153,6 +153,19 @@ class RoleController extends Controller
 
     }
 
+    public function ObtenerRoles(){
+        $Roles=Role::all();
+        return $Roles;
+    }
+
+    public function ObtenerUsuariosDeUnRol(String $IdRol){
+        $Rol=Role::find($IdRol);
+        $ListaUsuarios=User::role($Rol->name)->get();
+        $ListaUsuarios = $ListaUsuarios->map(function ($user) {
+            return $user->toArray();
+        })->all();
+        return $ListaUsuarios;
+    }
 
     //Funcion para obtener rol del usuario authenticadp
     public function ObtenerRolUsuarioAutenticado()

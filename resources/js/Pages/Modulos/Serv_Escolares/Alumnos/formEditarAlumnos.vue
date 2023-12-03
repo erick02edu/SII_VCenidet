@@ -71,6 +71,7 @@
 
 
                                 <select v-model="InfoEditar.idGrupo" class="py-2 px-3 rounded-lg border-2 border-gray-500 dark:text-gray-200 dark:bg-slate-700 mt-1 focus:outline-none focus:ring-2 focus:[#014E82] focus:border-transparent">
+                                    <option :value="null"> Sin grupo</option>
                                     <option
                                         v-for="(Grupo,index) in ListaGrupos"
                                         :key="Grupo.id"

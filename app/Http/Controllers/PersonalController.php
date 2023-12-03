@@ -188,7 +188,7 @@ class PersonalController extends Controller
 
         $Personal=new personal();
 
-        try{
+        // try{
 
         $Personal->ApellidoP=$request->ApellidoP;
         $Personal->ApellidoM=$request->ApellidoM;
@@ -239,39 +239,62 @@ class PersonalController extends Controller
 
         $Personal->TipoAct=$request->TipoAct;
 
-        $Personal->idUsuario=$request->idUsuario;
+
         $Personal->	idDepAdscripcion=$request->idDepAdscripcion;
         $Personal->	idDepAcademico=$request->idDepAcademico;
 
+
+
         $Personal->idUsuario=$request->idUsuario;
+
+        date_default_timezone_set('America/Mexico_City');//Zona horaria Mexico
+        $Personal->FechaRegistro=date("Y-m-d");
 
         $DescripcionEstatus=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleadosPorID($request->EstatusEmpleado);
 
 
         if($DescripcionEstatus->Descripcion!='Activo'){
             $Personal->Estatus='B';
+            $Personal->idUsuario=null;
         }
         else{
             $Personal->Estatus='A';
+            $Personal->idUsuario=$request->idUsuario;
         }
 
         $Personal->save();
 
-        $user=app(UserController::class)->ObtenerUsuarioPorID($request->idUsuario);
+        //Verificar si se ingreso como una baja
+        if($DescripcionEstatus->Descripcion!='Activo'){
+
+            $requestEnviar=new Request();
+            $parametros=[
+                'idPersonal'=>$Personal->id,
+                'idEstatus'=>$request->EstatusEmpleado,
+            ];
+            $requestEnviar->merge($parametros);
+            app(bajasPersonalController::class)->store($requestEnviar);
+
+        }
+
+        //Enviar correo si se asigno cuenta
+        if($request->idUsuario!=0){
+            $user=app(UserController::class)->ObtenerUsuarioPorID($request->idUsuario);
+            Mail::to($user->email)->send(new UsuarioRegistrado($user));
+        }
+
 
         Session::flash('mensaje', 'Se ha registrado el personal correctamente');
         Session::flash('TipoMensaje', 'Exitoso');
 
-        Mail::to($user->email)->send(new UsuarioRegistrado($user));
-
         return Redirect::route('Personal.index');
 
-        } catch (\Exception $e) {
+        // } catch (\Exception $e) {
 
-            Session::flash('mensaje', 'Se ha registrado el personal correctamente');
-            Session::flash('TipoMensaje', 'Exitoso');
-            return Redirect::route('Personal.index');
-        }
+        //     Session::flash('mensaje', 'Se ha registrado el personal correctamente');
+        //     Session::flash('TipoMensaje', 'Exitoso');
+        //     return Redirect::route('Personal.index');
+        // }
 
     }
 
@@ -318,8 +341,23 @@ class PersonalController extends Controller
             if($DescripcionEstatus->Descripcion!='Activo'){
                 $Personal->Estatus='B';
                 $Personal->save();
+
+                $requestEnviar=new Request();
+                $parametros=[
+                    'idPersonal'=>$Personal->id,
+                    'idEstatus'=>$request->EstatusEmpleado,
+                ];
+                $requestEnviar->merge($parametros);
+                app(bajasPersonalController::class)->store($requestEnviar);
+
             }
             else{
+
+                //Eliminar de bajas personal
+
+                app(bajasPersonalController::class)->delete($Personal->id);
+
+
                 $Personal->Estatus='A';
                 $Personal->save();
             }
@@ -513,5 +551,118 @@ class PersonalController extends Controller
         }
 
         return $Personal;
+    }
+
+    public function Reportes(){
+        return Inertia::render ('Modulos/RH/Reportes/Reportes',[
+        ]);
+    }
+
+
+    public function ReporteRotacion(Request $request){
+        $FechaInicio=$request->FechaInicio;
+        $FechaFin=$request->FechaFin;
+
+        //Obtener contratcaiones que estan entre el rango definido de fechas
+        $RegitrosContrataciones = Personal::whereBetween('FechaRegistro', [$FechaInicio, $FechaFin])->get([
+            'Nombre','ApellidoP','ApellidoM','Sexo','RFC','numEmpleado','FechaRegistro'
+        ]);
+        $RegitrosContrataciones=$RegitrosContrataciones->toArray();
+
+        //Obtener porcentajes
+        $totalHombres = 0;
+        $totalMujeres = 0;
+
+        foreach ($RegitrosContrataciones as $contratacion) {
+            if ($contratacion['Sexo'] == 'Masculino') {
+                $totalHombres++;
+            } elseif ($contratacion['Sexo'] == 'Femenino') {
+                $totalMujeres++;
+            }
+        }
+
+
+        // Calcular porcentajes
+        $totalContrataciones = count($RegitrosContrataciones);
+
+        if($totalContrataciones>0){
+            $porcentajeHombres =round( ($totalHombres / $totalContrataciones) * 100  , 2 );
+            $porcentajeMujeres =round( ($totalMujeres / $totalContrataciones) * 100  , 2 );
+        }
+        else{
+            $porcentajeHombres=0;
+            $porcentajeMujeres=0;
+        }
+
+
+
+        //dd($totalHombres,$totalMujeres);
+
+
+
+
+        //Obtener bajas defeinidas entre ese rango de fechas
+        $RegistrosBajas=app(bajasPersonalController::class)->ObtenerBajasEntreFechas($FechaInicio,$FechaFin);
+
+        //Obtner lista con los nombre de estatus sin repetir estatus
+            //primero obter ids sin repetir
+            $ListaIDSEstatus = array_values(array_unique(array_column($RegistrosBajas, 'idEstatus')));
+            $ListaNombresEstatus=[];
+            foreach($ListaIDSEstatus as $idEstatus){
+                //Obtener informacion del estatus
+                $NombreEstatus=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleadosPorID($idEstatus);
+                $NombreEstatus=$NombreEstatus->Descripcion;
+                array_push($ListaNombresEstatus,$NombreEstatus);
+            }
+
+
+        //Obtener porcentaje para cada estatus
+
+            // Obtener array con la frecuencia de cada idEstatus
+            $frecuenciaEstatus = array_count_values(array_column($RegistrosBajas, 'idEstatus'));
+
+
+
+            // Calcular el porcentaje para cada idEstatus
+            $porcentajesBajas = [];
+            $totalBajas = count($RegistrosBajas);
+
+            $i=0;
+            //Recorrer cada fecuencia por su idEstatus y obtner su frecuencia
+            foreach ($frecuenciaEstatus as $idEstatus => $frecuencia) {
+
+                if($totalBajas>0){
+                    $porcentaje = ($frecuencia / $totalBajas) * 100;
+                }
+                else{
+                    $porcentaje=0;
+                }
+                $porcentajesBajas[$i] = round($porcentaje,2);
+
+                $i++;
+            }
+
+        //Obtener la lista de los estatus empleado
+        $ListaEstatusEmpleado=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleados();
+
+            //dd($ListaIDSEstatus,$porcentajesBajas,$ListaNombresEstatus);
+
+
+        //dd($porcentajeHombres,$porcentajeMujeres);
+        return Inertia::render ('Modulos/RH/Reportes/ReporteRotacionPersonal',[
+            'RegitrosContrataciones'=>$RegitrosContrataciones,
+            'RegistrosBajas'=>$RegistrosBajas,
+            'ListaEstatusEmpleado'=>$ListaEstatusEmpleado,
+            'FechaInicio'=>$FechaInicio,
+            'FechaFin'=>$FechaFin,
+            'totalHombres'=>$totalHombres,
+            'totalMujeres'=>$totalMujeres,
+            'porcentajeHombres'=>$porcentajeHombres,
+            'porcentajeMujeres'=>$porcentajeMujeres,
+            'ListaNombreEstatus'=>$ListaNombresEstatus,
+            'porcentajesBajas'=>$porcentajesBajas,
+
+        ]);
+
     }
 }

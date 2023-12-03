@@ -66,6 +66,10 @@ return new class extends Migration
 
             $table->string('TipoAct');
 
+
+            //Fecha de registro
+            $table->date('FechaRegistro');
+
             $table->unsignedBigInteger('idPlaza')->nullable(); // Columna para la llave foránea
             $table->unsignedBigInteger('idUsuario')->nullable(); // Columna para la llave foránea
             $table->unsignedBigInteger('EstatusEmpleado')->nullable(); // Columna para la llave foránea

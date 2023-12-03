@@ -26,8 +26,7 @@ class horariosDocentesController extends Controller
     //     $this->middleware('can:Eliminar Horarios')->only('destroy');
     // }
 
-    public function __construct()
-    {
+    public function __construct(){
         $this->middleware(['role:Recursos Humanos'])->only('index','ver');
         $this->middleware(['role:Recursos Humanos'])->only('store','edit');
         $this->middleware(['role:Recursos Humanos'])->only('destroy');
@@ -95,7 +94,11 @@ class horariosDocentesController extends Controller
 
         $Materias=app(MateriasController::class)->ObtenerMaterias();
         $Aulas=app(AulaController::class)->ObtenerAulas();
-        $Grupos=app(GruposController::class)->ObtenerGrupos();
+        $Grupos=app(GruposController::class)->ObtenerGruposPorPeriodo($InfoHorario->idPeriodo);
+        $Periodos=app(PeriodoController::class)->ObtenerPeriodos();
+
+        $PeriodoHorario=app(PeriodoController::class)->ObtenerPeriodoPorID($InfoHorario->idPeriodo);
+        $ProfesorHorario=app(PersonalController::class)->ObtenerPersonalPorID($InfoHorario->idProfesor);
 
         $ClasesLunes=app(ClasesController::class)->ObtenerClasesDia('Lunes',$id);
         $ClasesMartes=app(ClasesController::class)->ObtenerClasesDia('Martes',$id);
@@ -104,19 +107,20 @@ class horariosDocentesController extends Controller
         $ClasesViernes=app(ClasesController::class)->ObtenerClasesDia('Viernes',$id);
 
 
-        // AAAA670105HY9
-
         return inertia('Modulos/RH/Horarios/PanelHorario',[
             'infoHorario'=>$InfoHorario,
             'materias'=>$Materias,
             'aulas'=>$Aulas,
             'grupos'=>$Grupos,
+            'periodos'=>$Periodos,
             'idHorario'=>$id,
             'ClasesLunes'=>$ClasesLunes,
             'ClasesMartes'=>$ClasesMartes,
             'ClasesMiercoles'=>$ClasesMiercoles,
             'ClasesJueves'=>$ClasesJueves,
             'ClasesViernes'=>$ClasesViernes,
+            'PeriodoHorario'=>$PeriodoHorario,
+            'ProfesorHorario'=>$ProfesorHorario
         ]);
     }
 

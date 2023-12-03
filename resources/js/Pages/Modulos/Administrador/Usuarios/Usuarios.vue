@@ -3,7 +3,7 @@
     <Head title="Usuarios" />
     <AuthenticatedLayout>
     <template #header>
-            Lista de Usuario
+            Lista de Usuarios
     </template>
 
 

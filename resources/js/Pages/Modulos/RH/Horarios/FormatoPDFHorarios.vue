@@ -1,4 +1,12 @@
 <template>
+
+<div class='flex items-center justify-center min-h-screen'>
+    <div style="border-top-color:transparent" class="w-8 h-8 border-4 border-[#014E82] rounded-full animate-spin"></div>
+    <p class="ml-2">GENERANDO PDF...</p>
+</div>
+
+
+
 <div class="hidden">
 <div id="pdfContent" >
     <div class="w-full h-full overflow-y-scroll pl-2">

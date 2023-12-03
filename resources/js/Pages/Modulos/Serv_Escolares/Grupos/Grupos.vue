@@ -104,7 +104,7 @@
                             type="text" placeholder="email" required>
                         </div>
 
-                        <div class="w-full px-3">
+                        <div class="w-1/2 px-3">
                                 <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-password">
                                     Letra del Grupo
                                 </label>
@@ -112,7 +112,23 @@
                                 type="text" placeholder="contraseña" required>
                         </div>
 
+                        <div class="w-1/2 px-3">
+                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
+                                Periodo
+                            </label>
+                            <select class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                            v-model="NuevoGrupo.idPeriodo">
+                                    <option value="0">Selecciona un periodo</option>
+                                    <option
+                                        v-for="periodo in periodos"
+                                        :key="periodo.id"
+                                        :value="periodo.id"
+                                    >
+                                        {{ periodo.mesInicio }} {{ periodo.AñoInicio }}-{{ periodo.mesTermino }} {{ periodo.AñoTermino }}
 
+                                    </option>
+                            </select>
+                        </div>
                         <br>
 
 
@@ -159,6 +175,10 @@
                             Letra
                         </th>
 
+                        <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                            Periodo
+                        </th>
+
                         <th v-if="$page.props.user.roles.includes('Administrador')"
                         class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-1 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                             Opciones
@@ -184,6 +204,17 @@
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
                             <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ grupo.Letra }}</p>
                         </td>
+
+                        <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                            <span v-for="periodo in periodos">
+                                <p v-if="grupo.idPeriodo==periodo.id" class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">
+                                    {{ periodo.mesInicio }} {{ periodo.AñoInicio }}-{{ periodo.mesTermino }} {{ periodo.AñoTermino }}
+                                </p>
+                            </span>
+
+
+                        </td>
+
 
                         <td  v-if="$page.props.user.roles.includes('Administrador')"
                         class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
@@ -326,6 +357,7 @@ export default {
     props:{
          grupos:Array,
          Paginator:Array,
+         periodos:Array,
          mensaje: String,
          tipoMensaje:String,
     },
@@ -355,6 +387,7 @@ export default {
           Semestre:'',
           Especialidad:'',
           Letra:'',
+          idPeriodo:0
       },
       //Roles:Array,
       ListaRoles:[],

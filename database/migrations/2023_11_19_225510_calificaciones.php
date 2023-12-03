@@ -16,12 +16,14 @@ return new class extends Migration
             $table->float('Calificacion');
             $table->float('NumSemestre');
             $table->unsignedBigInteger('idProfesor')->nullable();
+            $table->unsignedBigInteger('idGrupo')->nullable(); // Columna para la llave foránea
+
 
             //Llaves foraneas
             $table->foreign('idAlumno')->references('id')->on('alumnos')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('idMateria')->references('id')->on('materias')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('idProfesor')->references('id')->on('personal')->onDelete('set null')->onUpdate('cascade');
-
+            $table->foreign('idGrupo')->references('id')->on('grupos')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 
@@ -29,5 +31,5 @@ return new class extends Migration
     {
 
     }
-    
+
 };

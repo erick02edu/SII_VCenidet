@@ -16,6 +16,9 @@ return new class extends Migration
             $table->integer('Semestre');
             $table->string('Especialidad');
             $table->string('Letra');
+            $table->unsignedBigInteger('idPeriodo')->nullable(); // Columna para la llave foránea
+            //Llaves foraneas
+            $table->foreign('idPeriodo')->references('id')->on('periodos')->onDelete('set null')->onUpdate('cascade');
         });
     }
 

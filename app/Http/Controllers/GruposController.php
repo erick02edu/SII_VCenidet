@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Grupos;
+use App\Models\Periodos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
@@ -17,6 +18,7 @@ class GruposController extends Controller
     {
         $Pagination=Grupos::paginate(10);
         $Grupos=$Pagination->items();
+        $Periodos=app(PeriodoController::class)->ObtenerPeriodos();
         // Obtener datos flash de la sesión
         $mensaje = Session::get('mensaje');
         $TipoMensaje = Session::get('TipoMensaje');
@@ -24,6 +26,7 @@ class GruposController extends Controller
         return Inertia::render('Modulos/Serv_Escolares/Grupos/Grupos',[
             'grupos'=>$Grupos,
             'Paginator'=>$Pagination,
+            'periodos'=>$Periodos,
             'mensaje' => $mensaje,
             'tipoMensaje' => $TipoMensaje,
         ]);
@@ -36,6 +39,7 @@ class GruposController extends Controller
         $Grupo->Semestre=$request->Semestre;
         $Grupo->Especialidad=$request->Especialidad;
         $Grupo->Letra=$request->Letra;
+        $Grupo->idPeriodo=$request->idPeriodo;
         $Grupo->save();
 
         Session::flash('mensaje', 'Se ha registrado el grupo correctamente');
@@ -53,8 +57,13 @@ class GruposController extends Controller
     public function edit(string $id)
     {
         $Grupo = Grupos::find($id);
+        $Periodos=app(PeriodoController::class)->ObtenerPeriodos();
+
+
+
         return Inertia::render ('Modulos/Serv_Escolares/Grupos/formEditarGrupos',[
             'grupo'=>$Grupo,
+            'periodos'=>$Periodos
         ]);
     }
 
@@ -104,12 +113,15 @@ class GruposController extends Controller
 
     public function EditarAlumnos(String $id){
         $Grupo=Grupos::find($id);
+
+        $PeriodoGrupo=app(PeriodoController::class)->ObtenerPeriodoPorID($Grupo->idPeriodo);
         $AlumnosGrupo=app(AlumnosController::class)->AlumnosPorGrupo($id);
 
         $AlumnosSinGrupo=app(AlumnosController::class)->BuscarAlumnosSinGrupo();
 
         return Inertia::render ('Modulos/Serv_Escolares/Grupos/AsignarAlumnos',[
             'grupo'=>$Grupo,
+            'periodo'=>$PeriodoGrupo,
             'alumnos'=>$AlumnosGrupo,
             'alumnosSinGrupo'=>$AlumnosSinGrupo
         ]);
@@ -119,6 +131,12 @@ class GruposController extends Controller
         $Grupos=Grupos::all();
         return $Grupos;
     }
+
+    public function ObtenerGruposPorPeriodo($idPeriodo){
+        $Grupos=Grupos::where('idPeriodo',$idPeriodo)->get();
+        return $Grupos;
+    }
+
 
     public function ObtenerGrupoPorID(String $id)
     {

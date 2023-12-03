@@ -23,9 +23,11 @@ return new class extends Migration
             $table->string('Genero');
             $table->string('Telefono')->nullable();
 
+            $table->unsignedBigInteger('idCarrera')->nullable(); // Columna para la llave foránea
             $table->unsignedBigInteger('idGrupo')->nullable(); // Columna para la llave foránea
             //Llaves foraneas
             $table->foreign('idGrupo')->references('id')->on('grupos')->onDelete('set null')->onUpdate('cascade');
+            $table->foreign('idCarrera')->references('id')->on('carreras')->onDelete('set null')->onUpdate('cascade');
         });
     }
 

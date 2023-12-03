@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CategoriasSeeder::class);
         $this->call(SubdireccionSeeder::class);
         $this->call(PeriodosSeeder::class);
+        $this->call(CarrerasSeeder::class);
         // \App\Models\User::factory(10)->create();
 
 

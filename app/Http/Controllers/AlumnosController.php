@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Imports\AlumnosImport;
 use App\Models\Alumnos;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AlumnosController extends Controller
 {
@@ -174,5 +176,24 @@ class AlumnosController extends Controller
         $Alumno->idGrupo=null;
         $Alumno->save();
         return back();
+    }
+
+    public function ImportarDatos(Request $request){
+
+        try{
+            $archivo = $request->file('archivo');
+            Excel::import(new AlumnosImport,$archivo);
+
+            Session::flash('mensaje', 'Se importado correctamente los datos');
+            Session::flash('TipoMensaje', 'Exitoso');
+            return redirect::route('Alumnos.index');
+        }
+        catch(Exception $e){
+            Session::flash('mensaje', 'Ocurrio un error al realizar la importacion.Verifique el contenido del excel.Posibles causas del error:
+            1. Numero de control repetido en estudiantes
+            2. Error en el formato de los datos');
+            Session::flash('TipoMensaje', 'Error');
+            return Redirect::route('Alumnos.index');
+        }
     }
 }
