@@ -20,26 +20,16 @@ class AlumnosImport implements ToModel, WithHeadingRow
     * @return \Illuminate\Database\Eloquent\Model|null
     */
 
-
-    // private $Grupo;
-    // private $periodo;
-
-    // public function __construct() {
-    //     $this->Grupo=Grupos::pluck('id','name');
-    // }
-
     public function model(array $row)
     {
-
         //TRANSFORMAR LA FECHA
         $fechaNac = Carbon::instance(\PhpOffice\PhpSpreadsheet\Shared\Date::excelToDateTimeObject($row['fecha_nacimiento']));
-
-        //OBTENER ID DEL PERIODO
+        //OBTENER PERIODO COMPLETO DEL EXCEL
         $PeriodoCompleto=$row['periodo_actual'];
-        // Dividir el string por el caracter "-"
-        $partes = explode('-', $PeriodoCompleto);
+        // Dividir el string por el caracter "-" para obtener datos
+        $partesPeriodo = explode('-', $PeriodoCompleto);
         $i=0;
-        foreach ($partes as $parte) {
+        foreach ($partesPeriodo as $parte) {
             if($i==0){
                 $mesInicio=$parte;
             }
@@ -52,25 +42,19 @@ class AlumnosImport implements ToModel, WithHeadingRow
             if($i==3){
                 $AñoTermino=$parte;
             }
-
             $i++;
         }
-
+        //Obtener idPeriodo
         $idPeriodo=Periodos::
         where('mesInicio',$mesInicio)->
         where('AñoInicio',$AñoInicio)->
         where('mesTermino',$mesTermino)->
         where('AñoTermino',$AñoTermino)->
         value('id');
-
-        //OBTENER ID GRUPO
+        //OBTENER IDGRUPO
         $Semestre=$row['semestre'];
         $Letra=$row['grupo'];
         $Especialidad=$row['especialidad'];
-
-
-
-
         $idGrupo=Grupos::
         where('Semestre',$Semestre)->
         where('Letra',$Letra)->
@@ -78,11 +62,8 @@ class AlumnosImport implements ToModel, WithHeadingRow
         where('idPeriodo',$idPeriodo)->
         value('id');
 
-        //dd($idGrupo);
-
         return new Alumnos([
-            //Definir las columnas (mapeo)
-            // Agregar la conversión de la fecha aquí
+            // Realizar mapeo de los datos
             //Colum.BD ----- Colum.Excel
             'Nombre'=>$row['nombre'],
             'ApellidoP'=>$row['apellido_paterno'],

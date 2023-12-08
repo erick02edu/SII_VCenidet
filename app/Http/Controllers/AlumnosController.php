@@ -144,21 +144,18 @@ class AlumnosController extends Controller
 
     }
 
+    //Funcion para asignar un grupo a una lista de alumnos
     public function AsignarGrupo(Request $request){
-        //return response()->json(['Info enviada'=>$request->AlumnosSeleccionados]);
+        //Obtener lista de alumnos seleccionados y grupo que se asignara
         $ListaAlumnos=$request->AlumnosSeleccionados;
         $idGrupo=$request->idGrupo;
-
+        //iterar alumnos y asignarles el grupo
         foreach ($ListaAlumnos as $idAlumno) {
             $Alumno=Alumnos::find($idAlumno);
-
             $Alumno->idGrupo=$idGrupo;
             $Alumno->save();
         }
-
         return back();
-
-
     }
 
     public function AlumnosPorGrupo(String $id){
@@ -179,7 +176,6 @@ class AlumnosController extends Controller
     }
 
     public function ImportarDatos(Request $request){
-
         try{
             $archivo = $request->file('archivo');
             Excel::import(new AlumnosImport,$archivo);

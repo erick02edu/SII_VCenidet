@@ -137,14 +137,15 @@ class UserController extends Controller
         }
     }
 
-    //Funcion para eliminar un usuario
+    //Funcion para buscar un usuario
     public function buscarUsuario(Request $request){
+
+        //Recibir parametros
         $Usuario=$request->input('usuario');
-
         $campo = $request->input('campo');
-
+        //Hacer busqueda
         $result=User::where($campo, 'LIKE', '%'.$Usuario.'%')->get();
-
+        //Devolver resultados
         return $result;
     }
 
@@ -162,7 +163,7 @@ class UserController extends Controller
     {
         $usuariosDisponibles=User::where('estatus','0')->get();
         return $usuariosDisponibles;
-        
+
     }
 
 

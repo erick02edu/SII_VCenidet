@@ -111,14 +111,6 @@ class PlazaController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Plaza $plaza)
-    {
-        //
-    }
-
     public function ObtenerPlazas()
     {
         $plazas=Plaza::all();

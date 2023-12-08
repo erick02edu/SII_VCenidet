@@ -7,9 +7,9 @@
 
 
 
-<div class="hidden">
-<div id="pdfContent" >
-    <div class="w-full h-full overflow-y-scroll pl-2">
+<div v-show="false">
+<div id="pdfContent" class="w-full">
+    <div class="w-full h-full overflow-y-scroll ">
         <!--Encabezado con logos-->
         <div class="w-full h-14 inline-flex align-top ">
 
@@ -30,7 +30,7 @@
         <!--TABLA INFORMACION DEL PERSONAL-->
         <div class="w-full inline-flex text-xxs pl-5 h-1/12 ">
 
-            <table class="w-full mr-14 uppercase align-top border-collapse">
+            <table class="w-full mr-4 uppercase align-top border-collapse">
                 <tr class="align-top">
                     <td class="border-t border-l border-black pb-1 border-collapse">Institucion:<strong class="pl-2">CENTRO NACIONAL DE INVESTIGACION Y DESARROLLO TECNOLOGICO</strong></td>
                     <td class="border-t border-l border-black border-collapse">C.C.T</td>
@@ -38,7 +38,7 @@
                     <td class="border-t border-l border-black border-collapse">PERIODO ESCOLAR:</td>
                     <td class="border-t border-l border-black border-collapse"> <strong>{{ periodo.mesInicio }} {{ periodo.AñoInicio }}-{{ periodo.mesTermino }} {{ periodo.AñoTermino }}</strong></td>
                     <td class="border-t border-l border-black border-collapse">RFC:</td>
-                    <td class="border-t border-l border-r border-black border-collapse w-24"><strong>{{personal.RFC}}</strong></td>
+                    <td class="border-t border-l border-r border-black border-collapse "><strong>{{personal.RFC}}</strong></td>
                 </tr>
 
 
@@ -158,8 +158,10 @@
 
             <table class="w-full mr-14 uppercase align-top border-collapse">
 
-                <tr class="bg-neutral-300 text-center">
-                    <td class="border-r border-l border-t border-collapse border-black pb-1" rowspan="1">Asignatura</td>
+
+
+                <tr class="bg-neutral-300 text-center w-full">
+                    <td class="border-r border-l border-t border-collapse border-black  pb-1" rowspan="1">Asignatura</td>
                     <td class="border-r border-t border-collapse border-black" rowspan="1">Clave</td>
                     <td class="border-r border-t border-collapse border-black" rowspan="1">GPO </td>
                     <td class="border-r border-t border-collapse border-black" rowspan="1">Alumnos</td>
@@ -171,10 +173,10 @@
                     <td class="border-r border-t border-collapse border-black pb-1" rowspan="1">Total HRS semanales</td>
                 </tr>
 
-                <tr class="bg-neutral-300">
-                    <td class="border-b border-r border-l border-collapse border-black px-8 py-0"></td>
+                <tr class="bg-neutral-300 align-top">
+                    <td class="border-b border-r border-l border-collapse border-black px-20 py-0"></td>
                     <td class="border-b border-r border-collapse border-black px-8 py-0"></td>
-                    <td class="border-b border-r border-collapse border-black px-8 py-0"></td>
+                    <td class="border-b border-r border-collapse border-black px-4 py-0"></td>
                     <td class="border-b border-r border-collapse border-black px-8 py-0"></td>
                     <td class="border-b border-r border-collapse border-black px-8 py-0"></td>
                     <td class="border-b border-r border-collapse border-black px-8 py-0"></td>
@@ -189,7 +191,7 @@
                     <td class="border-r border-t border-b border-collapse border-black px-8 pb-0.5"> J </td>
                     <td class="border-r border-t border-b border-collapse border-black px-8 pb-0.5"> V </td>
                     <td class="border-r border-t border-b border-collapse border-black px-8 pb-0.5"> S </td>
-                    <td class="border-b border-r border-collapse border-black px-8"></td>
+                    <td class="border-b border-r border-collapse border-black px-8 pb-5"></td>
                 </tr>
 
                 <tr class="">
@@ -438,16 +440,16 @@
 
         <div class="w-full inline-flex text-xxs pl-5 h-1/12 align-top">
 
-            <table class="w-full mr-14 uppercase">
+            <table class="w-full mr-4 uppercase">
 
                 <tr class="bg-neutral-300 text-center">
                     <td class="border-t border-l border-r border-black w-1/3 py-1" rowspan="1">Nombre de la actividad</td>
                     <td class="border-t border-r border-black mb-2 w-1/6" rowspan="1">Metas a atender</td>
-                    <td class="border-t border-r border-b border-black mb-2 aling-top" colspan="6">Horario</td>
+                    <td class="border-t border-r border-b border-black mb-2 align-top" colspan="6">Horario</td>
                     <td class="border-t border-r border-black mb-2" rowspan="1">Total HRS semanales</td>
                 </tr>
 
-                <tr class="bg-neutral-300">
+                <tr class="bg-neutral-300 align-top">
 
                     <td class="border-b border-l border-r border-collapse border-black px-8 mt-1"></td>
                     <td class="border-b border-r border-collapse border-black px-8 mt-1"></td>
@@ -458,7 +460,7 @@
                     <td class="border-r  border-b border-black px-8">J</td>
                     <td class="border-r  border-b border-black px-8">V</td>
                     <td class="border-r  border-b border-black px-8">S</td>
-                    <td class="border-b border-r border-collapse border-black px-8 mt-2"></td>
+                    <td class="border-b border-r border-collapse border-black px-8 mt-2 pb-5"></td>
                 </tr>
 
                 <tr class="">
@@ -595,22 +597,22 @@
 
         <!--TABLA ACTIVIDADES DE APOYO-->
 
-        <div class="w-full pl-5 uppercase text-xxs mb-1">
+        <div class="w-full pl-5 uppercase text-xxs mb-0.5">
             <strong>III.- ACTIVIDADES EN LA ADMINISTRACIÓN</strong>
         </div>
 
         <div class="w-full inline-flex text-xxs pl-5 h-1/12 align-top">
 
-            <table class="w-full mr-14 uppercase">
+            <table class="w-full mr-4 uppercase">
 
                 <tr class="bg-neutral-300 text-center">
                     <td class="border-t border-l border-r border-black w-1/4 py-1" rowspan="1">Puesto</td>
                     <td class="border-t border-r border-black mb-2 w-1/4" rowspan="1">UNIDAD ORGÁNICA DE ADSCRIPCIÓN </td>
-                    <td class="border-t border-r border-b border-black mb-2 aling-top" colspan="6">Horario</td>
+                    <td class="border-t border-r border-b border-black mb-2 align-top" colspan="6">Horario</td>
                     <td class="border-t border-r border-black mb-2" rowspan="1">Total HRS semanales</td>
                 </tr>
 
-                <tr class="bg-neutral-300">
+                <tr class="bg-neutral-300 align-top">
 
                     <td class="border-b border-l border-r border-collapse border-black px-8 mt-1"></td>
                     <td class="border-b border-r border-collapse border-black px-8 mt-1"></td>
@@ -621,7 +623,7 @@
                     <td class="border-r  border-b border-black px-8">J</td>
                     <td class="border-r  border-b border-black px-8">V</td>
                     <td class="border-r  border-b border-black px-8">S</td>
-                    <td class="border-b border-r border-collapse border-black px-8 mt-2"></td>
+                    <td class="border-b border-r border-collapse border-black px-8 mt-2 pb-5"></td>
                 </tr>
 
                 <tr class="">
@@ -695,12 +697,12 @@
                     <td class="border-r border-b  border-black"></td>
                 </tr>
 
-                <tr class="">
+                <tr class="align-top">
                     <td class="py-1"></td>
 
 
                     <td class="text-end border-r border-black">Subtotal</td>
-                    <td class="border-r border-b  border-black pb-1 text-center">
+                    <td class="border-r border-b  border-black pb-2 text-center">
                         <strong>
                             {{ HorasTotalesLunes }}
                         </strong>
@@ -759,11 +761,11 @@
                 </tr>
 
 
-                <tr class="">
+                <tr class="align-top">
                     <td class="py-1"></td>
 
                     <td class="text-end border-r border-black">Total</td>
-                    <td class="border-r border-b border-black text-center">8</td>
+                    <td class="border-r border-b border-black text-center pb-1">8</td>
                     <td class="border-r border-b border-black text-center">8</td>
                     <td class="border-r border-b border-black text-center">8</td>
                     <td class="border-r border-b border-black text-center">8</td>
@@ -812,7 +814,7 @@
 
         <div class="w-full inline-flex align-top">
 
-            <div class="text-start pl-6 text-xxs pr-64">
+            <div class="text-start pl-6 text-xxs pr-64 pb-2">
                 Original.- Trabajador, DRH<br>
                 C.c.p.- DPPyP, Archivo<br>
                 CENIDET-AC-PO-004-06
@@ -879,7 +881,16 @@
 
         },
 
+        data() {
+            return {
+                NombreArchivo:'',
+            }
+        },
+
         async mounted() {
+
+            this.NombreArchivo='Horario_'+this.$page.props.personal.RFC;
+
             await this.generarPDF();
             window.close();
         },
@@ -891,7 +902,7 @@
 
                 const pdfOptions = {
                 margin: 0,
-                filename: 'Horario.pdf',
+                filename: this.NombreArchivo,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },//Hoja horizontal

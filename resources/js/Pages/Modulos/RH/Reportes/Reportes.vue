@@ -31,7 +31,8 @@
         </div>
 
 
-        <div class="max-w-md bg-white rounded-md overflow-hidden shadow-md dark:bg-slate-700 hover:border-blue-600 hover:border-2">
+        <div class="max-w-md bg-white rounded-md overflow-hidden shadow-md dark:bg-slate-700 hover:border-blue-600 hover:border-2"
+        @click="showElementAntiguedad">
             <img class="w-full h-56 object-cover object-center" src="https://www.creativefabrica.com/wp-content/uploads/2021/06/15/Leader-Icon-Graphics-13435401-1-580x376.jpg" alt="Imagen de la tarjeta">
             <div class="p-4 dark:bg-slate-700 ">
                 <h2 class="text-xl font-bold mb-2 dark:text-white ">Reporte de antiguedad</h2>
@@ -59,7 +60,7 @@
                 <!-- Modal header -->
                 <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                        Opciones para generar reporte de rotacion
+                        Instrucciones para generar reporte de rotacion
                     </h3>
                     <button type="button" @click="hideElementRotacion" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -96,7 +97,7 @@
 
 
                     <div
-                        class="text-red-400 text-xs">
+                        class="text-red-400 text-xs" v-if="msjHoraInvalida">
                         La fecha de inicio tiene que ser menor a la final
                     </div>
 
@@ -108,6 +109,134 @@
                             Generar reporte
                         </button>
                         <button @click="hideElementRotacion" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
+                            Cancelar
+                        </button>
+                    </div>
+
+                </form>
+
+        </div>
+
+            </div>
+        </div>
+        </div>
+        </div>
+    </div>
+
+
+
+    <!-- Capa oscura -->
+    <div :class="{ hidden: !isVisibleAntiguedad }" class="fixed inset-0 bg-black opacity-50">
+    </div>
+
+    <div id="modalContainer">
+
+        <!-- Main modal -->
+        <div :class="{ hidden: !isVisibleAntiguedad }">
+            <div id="defaultModal" tabindex="-1" aria-hidden="true"  class="fixed inset-0 flex items-center justify-center z-50">
+                <div class="relative w-full max-w-2xl max-h-screen overflow-auto">
+
+                <!-- Modal content -->
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
+                <!-- Modal header -->
+                <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
+                        Opciones para generar reporte de antiguedad
+                    </h3>
+                    <button type="button" @click="hideElementAntiguedad" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
+        </div>
+        <!-- Modal body -->
+        <div class="p-6 space-y-6">
+            <form @submit.prevent="GenerarReporteAntiguedad"  class="w-full mb-3">
+
+                    <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold ml-1 mb-3 " for="grid-last-name">
+                        Por favor define tus rangos para generar el reporte de antiguedad por ejemplo <br>
+                        <p class="pt-2 italic">1. Personal Antiguo + 10 años</p>
+                    </label>
+
+
+                    <div class="inline-flex mb-1 overflow-auto w-full ml-1 mt-2 dark:text-gray-200 text-xs font-bold  ">
+                        <div class="w-full inline-flex">
+                            <div class="w-1/2">
+                                Nombre del rango
+                            </div>
+
+                            <div class="w-2/5">
+                                Cant.años
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    <div class="inline-flex mb-1 overflow-auto w-full  mt-2 dark:text-gray-200 text-xs font-bold  "
+                    v-for="(Rango,index) in RangosAntiguedad">
+                        <div class="w-full inline-flex">
+                            <div class="w-2/3">
+
+                                <input id="NombreAula" v-model="Rango.NombreRango" class=" appearance-none inline w-5/6
+                                bg-gray-200 dark:bg-slate-600 text-gray-700
+                                 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded
+                                py-3 px-4  leading-tight focus:outline-none focus:bg-white"
+                                type="text" placeholder="" required>
+
+                            </div>
+
+                            <select v-model="Rango.Operador" class=" appearance-none inline w-4/12
+                                bg-gray-200 dark:bg-slate-600 text-gray-700
+                                 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded
+                                py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white">
+
+                                <option value="Mas">mas</option>
+                                <option value="Menos">menos</option>
+                            </select>
+
+
+                            <div class="w-3/5">
+                                <input id="NombreAula" v-model="Rango.Años" class="ml-2 appearance-none inline w-2/3
+                                bg-gray-200 dark:bg-slate-600 text-gray-700
+                                 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded
+                                py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                                type="number" placeholder="" required>
+
+                                <span class="pb-4 text-sm">
+                                año(s)
+                                </span>
+
+                            </div>
+
+
+
+                            <div class="w-2/5 inline-flex space-x-5">
+
+                                <div class=" rounded-xl h-1/2 mt-2 bg-gray-200 dark:bg-slate-500 px-2 py-0" @click="AgregarRango">
+                                    <i class="fa-solid fa-plus mt-2"></i>
+                                </div>
+
+
+                                <div v-if="index!=0" class=" rounded-xl h-1/2 mt-2 bg-gray-200 dark:bg-slate-500 px-2 py-0" @click="QuitarRango(index)">
+                                    <i class="fa-solid fa-minus mt-2"></i>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+
+
+
+
+                    <!-- Modal footer -->
+                    <div class="flex mt-2 items-center px-1 py-2 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                        <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            Generar reporte
+                        </button>
+                        <button @click="hideElementAntiguedad" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
                             Cancelar
                         </button>
                     </div>
@@ -169,14 +298,37 @@ export default {
         urlPaginacion:'',
 
         isVisibleRotacion: false,
-        isvisibleDelete:false,
+        isVisibleAntiguedad:false,
 
         NuevoReporteRotacion:{
             FechaInicio:'',
             FechaFin:''
         },
 
+        msjHoraInvalida:false,
+
         Activar:[],
+
+        // RangosAntiguedad:[
+        //     { NombreRango: '', Años:0 ,Operador:'Mas'  },
+        // ],
+
+        RangosAntiguedad:[
+            { NombreRango: 'Rango 1', Años:13 ,Operador:'Mas'  },
+            { NombreRango: 'Rango 2', Años:12 ,Operador:'Mas'  },
+            { NombreRango: 'Rango 3', Años:11 ,Operador:'Mas'  },
+            { NombreRango: 'Rango 4', Años:10 ,Operador:'Mas'  },
+            { NombreRango: 'Rango 5', Años:9 ,Operador:'Mas'  },
+            { NombreRango: 'Rango 6', Años:8 ,Operador:'Mas'  },
+            { NombreRango: 'Rango 7', Años:7 ,Operador:'Mas'  },
+            { NombreRango: 'Rango 8', Años:6 ,Operador:'Menos'  },
+            { NombreRango: 'Rango 9', Años:5 ,Operador:'Menos'  },
+            { NombreRango: 'Rango 10', Años:4 ,Operador:'Menos'  },
+            { NombreRango: 'Rango 11', Años:3 ,Operador:'Menos'  },
+            { NombreRango: 'Rango 12', Años:2 ,Operador:'Menos'  },
+            { NombreRango: 'Rango 13', Años:1 ,Operador:'Menos'  },
+
+        ],
 
     }
   },
@@ -190,11 +342,31 @@ export default {
 
     async GenerarReporteRotacion(){
 
-        await this.$inertia.post(route('Personal.Rotacion'),this.NuevoReporteRotacion)
+        var dateInicio = new Date(this.NuevoReporteRotacion.FechaInicio);
+        var dateFin = new Date(this.NuevoReporteRotacion.FechaFin);
+
+        // Comparar las fechas
+        if (dateInicio > dateFin) {
+            //alert('La fecha de inicio es mayor que la fecha de fin');
+            // Retornar true si la fecha de inicio es mayor
+            this.msjHoraInvalida=true;
+
+        } else {
+            //alert('La fecha de inicio no es mayor que la fecha de fin');
+            // Retornar false si la fecha de inicio no es mayor
+            this.msjHoraInvalida=false;
+            await this.$inertia.post(route('Personal.Rotacion'),this.NuevoReporteRotacion)
+        }
+
+
+
        // this.hideElement();
 
     },
 
+    async GenerarReporteAntiguedad(){
+        await this.$inertia.post(route('Personal.Antiguedad'),this.RangosAntiguedad)
+    },
 
     showElementRotacion() {
       this.isVisibleRotacion = true;
@@ -205,8 +377,28 @@ export default {
       this.isVisibleRotacion = false;
     },
 
+    showElementAntiguedad() {
+      this.isVisibleAntiguedad = true;
+    },
 
 
+    hideElementAntiguedad() {
+      this.isVisibleAntiguedad = false;
+    },
+
+    AgregarRango(){
+        const nuevoRango = {
+            NombreRango: '',
+            Años: 0,
+            Operador:'Mas'
+        };
+        this.RangosAntiguedad.push(nuevoRango);
+    },
+
+
+    QuitarRango(indice){
+        this.RangosAntiguedad.splice(indice,1);
+    },
 
   }
 };

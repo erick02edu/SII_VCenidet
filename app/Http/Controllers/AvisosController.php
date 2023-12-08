@@ -47,9 +47,9 @@ class AvisosController extends Controller
 
     public function store(Request $request){
 
-            $Aviso=new Avisos();
+        $Aviso=new Avisos();
 
-        // try{
+        try{
 
             $Aviso->Titulo=$request->Titulo;
             $Aviso->Descripcion=$request->Descripcion;
@@ -88,20 +88,15 @@ class AvisosController extends Controller
             $requestEnviar=new Request();
             $parametros=['ListaUsuario'=>$usuariosEnviar,'Aviso'=>$Aviso];
             $requestEnviar->merge($parametros);
-
-
             app(AvisosUsuarioController::class)->store($requestEnviar);
-
             Session::flash('mensaje', 'Se ha publicado el aviso correctamente');
             Session::flash('TipoMensaje', 'Exitoso');
-
             return Redirect::route('Avisos.index');
 
+        }
+        catch(Exception $e){
 
-        // }
-        // catch(Exception $e){
-
-        // }
+        }
 
     }
 

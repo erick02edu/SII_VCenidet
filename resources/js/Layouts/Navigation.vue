@@ -91,7 +91,8 @@
 
             </nav-link> -->
 
-            <nav-link :href="route('Users.index')" :active="route().current('Users.index') || route().current('Users.edit') || route().current('Users.editRole') "
+            <nav-link :href="route('Users.index')"
+            :active="route().current('Users.index') || route().current('Users.edit') || route().current('Users.editRole') "
             v-if="$page.props.user.roles.includes('Administrador')"
             >
 

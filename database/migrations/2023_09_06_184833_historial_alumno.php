@@ -11,16 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('historialAlumno', function (Blueprint $table) {
+        // Schema::create('historialAlumno', function (Blueprint $table) {
 
-            $table->id('id');
-            $table->string('no_control');
-            $table->string('materia');
-            $table->string('idperiodo');
-            $table->float('calificacion');
+        //     $table->id('id');
+        //     $table->string('no_control');
+        //     $table->string('materia');
+        //     $table->string('idperiodo');
+        //     $table->float('calificacion');
 
-            $table->timestamps();
-        });
+        //     $table->timestamps();
+        // });
     }
 
     /**

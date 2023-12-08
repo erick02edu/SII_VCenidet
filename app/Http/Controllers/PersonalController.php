@@ -12,7 +12,7 @@ use App\Models\Departamentos;
 use App\Models\EstatusEmpleado;
 use Exception;
 use Illuminate\Support\Facades\Session;
-
+use Carbon\Carbon;
 
 
 class PersonalController extends Controller
@@ -562,17 +562,14 @@ class PersonalController extends Controller
     public function ReporteRotacion(Request $request){
         $FechaInicio=$request->FechaInicio;
         $FechaFin=$request->FechaFin;
-
-        //Obtener contratcaiones que estan entre el rango definido de fechas
+        //Obtener contrataciones que estan entre el rango definido de fechas
         $RegitrosContrataciones = Personal::whereBetween('FechaRegistro', [$FechaInicio, $FechaFin])->get([
             'Nombre','ApellidoP','ApellidoM','Sexo','RFC','numEmpleado','FechaRegistro'
         ]);
         $RegitrosContrataciones=$RegitrosContrataciones->toArray();
-
         //Obtener porcentajes
         $totalHombres = 0;
         $totalMujeres = 0;
-
         foreach ($RegitrosContrataciones as $contratacion) {
             if ($contratacion['Sexo'] == 'Masculino') {
                 $totalHombres++;
@@ -580,11 +577,8 @@ class PersonalController extends Controller
                 $totalMujeres++;
             }
         }
-
-
         // Calcular porcentajes
         $totalContrataciones = count($RegitrosContrataciones);
-
         if($totalContrataciones>0){
             $porcentajeHombres =round( ($totalHombres / $totalContrataciones) * 100  , 2 );
             $porcentajeMujeres =round( ($totalMujeres / $totalContrataciones) * 100  , 2 );
@@ -593,62 +587,39 @@ class PersonalController extends Controller
             $porcentajeHombres=0;
             $porcentajeMujeres=0;
         }
-
-
-
-        //dd($totalHombres,$totalMujeres);
-
-
-
-
         //Obtener bajas defeinidas entre ese rango de fechas
         $RegistrosBajas=app(bajasPersonalController::class)->ObtenerBajasEntreFechas($FechaInicio,$FechaFin);
-
-        //Obtner lista con los nombre de estatus sin repetir estatus
-            //primero obter ids sin repetir
-            $ListaIDSEstatus = array_values(array_unique(array_column($RegistrosBajas, 'idEstatus')));
-            $ListaNombresEstatus=[];
-            foreach($ListaIDSEstatus as $idEstatus){
-                //Obtener informacion del estatus
-                $NombreEstatus=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleadosPorID($idEstatus);
-                $NombreEstatus=$NombreEstatus->Descripcion;
-                array_push($ListaNombresEstatus,$NombreEstatus);
-            }
-
-
+        //Obtener lista con los nombre de cada estatus sin repetir
+        $ListaIDSEstatus = array_values(array_unique(array_column($RegistrosBajas, 'idEstatus')));
+        $ListaNombresEstatus=[];
+        foreach($ListaIDSEstatus as $idEstatus){
+            //Obtener informacion del estatus
+            $NombreEstatus=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleadosPorID($idEstatus);
+            $NombreEstatus=$NombreEstatus->Descripcion;
+            array_push($ListaNombresEstatus,$NombreEstatus);
+        }
         //Obtener porcentaje para cada estatus
 
-            // Obtener array con la frecuencia de cada idEstatus
-            $frecuenciaEstatus = array_count_values(array_column($RegistrosBajas, 'idEstatus'));
-
-
-
-            // Calcular el porcentaje para cada idEstatus
-            $porcentajesBajas = [];
-            $totalBajas = count($RegistrosBajas);
-
-            $i=0;
-            //Recorrer cada fecuencia por su idEstatus y obtner su frecuencia
-            foreach ($frecuenciaEstatus as $idEstatus => $frecuencia) {
-
-                if($totalBajas>0){
-                    $porcentaje = ($frecuencia / $totalBajas) * 100;
-                }
-                else{
-                    $porcentaje=0;
-                }
-                $porcentajesBajas[$i] = round($porcentaje,2);
-
-                $i++;
+        //Obtener array con la frecuencia de cada idEstatus
+        $frecuenciaEstatus = array_count_values(array_column($RegistrosBajas, 'idEstatus'));
+        // Calcular el porcentaje para cada idEstatus
+        $porcentajesBajas = [];
+        $totalBajas = count($RegistrosBajas);
+        $i=0;
+        //Recorrer cada fecuencia por su idEstatus y obtner su frecuencia
+        foreach ($frecuenciaEstatus as $idEstatus => $frecuencia) {
+            if($totalBajas>0){
+                $porcentaje = ($frecuencia / $totalBajas) * 100;
             }
-
+            else{
+                $porcentaje=0;
+            }
+            $porcentajesBajas[$i] = round($porcentaje,2);
+            $i++;
+        }
         //Obtener la lista de los estatus empleado
         $ListaEstatusEmpleado=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleados();
-
-            //dd($ListaIDSEstatus,$porcentajesBajas,$ListaNombresEstatus);
-
-
-        //dd($porcentajeHombres,$porcentajeMujeres);
+        //Redigir a la vista con la informacion obtenida
         return Inertia::render ('Modulos/RH/Reportes/ReporteRotacionPersonal',[
             'RegitrosContrataciones'=>$RegitrosContrataciones,
             'RegistrosBajas'=>$RegistrosBajas,
@@ -661,8 +632,101 @@ class PersonalController extends Controller
             'porcentajeMujeres'=>$porcentajeMujeres,
             'ListaNombreEstatus'=>$ListaNombresEstatus,
             'porcentajesBajas'=>$porcentajesBajas,
-
         ]);
+    }
+    
+
+
+    public function ReporteAntiguedad(Request $request){
+
+        $RangoAntiguedades=$request->json()->all();
+        $NumeroDeRangos=count($RangoAntiguedades);
+
+        //Inicializar Objeto
+        $i=0;
+        foreach ($RangoAntiguedades as $Rangos => $Rango) {
+            $nombreRango=$Rango['NombreRango'];
+            $Años=(int) $Rango['Años'];
+            $Operador=$Rango['Operador'];
+            // Define las propiedades del objeto como un array asociativo
+            $propiedades = [
+                'NombreRango'=>$nombreRango,
+                'Años'=>$Años,
+                'Operador'=>$Operador,
+                'ListaPersonal' => [],
+                'NumPersonas'=>0,
+                'PorcentajeEmpleados'=>'',
+                'PorcentajeRestante'=>''
+            ];
+
+            // Crea el objeto stdClass y asigna las propiedades
+            $PersonalPorRango[$i] = (object)$propiedades;
+            $i++;
+        }
+
+        //dd($PersonalPorRango);
+
+        //Obtener antiguedad del personal
+        $empleados = Personal::all();
+        $i=0;
+        foreach ($empleados as $empleado) {
+
+            //Obtener los a;os de antiguedad del empleado
+            $fechaIngreso = new Carbon($empleado->FechaRegistro);
+            $antiguedad = $fechaIngreso->diffInYears(Carbon::now());
+
+
+            $i++;
+
+            foreach ($PersonalPorRango as $Rango) {
+                //Verificar si cumple con las condiciones para poder ingresar dentro de un personal
+
+                $Años=(int) $Rango->Años;
+                $Operador=$Rango->Operador;
+                // dd($Operador);
+                if($Operador=='Mas'){
+                    if($antiguedad>=$Años){
+                        $ArrayEmpleado=$empleado->toArray();
+                        array_push($Rango->ListaPersonal,$ArrayEmpleado);
+                    }
+                }
+
+                if($Operador=='Menos'){
+                    if($antiguedad<$Años){
+                        $ArrayEmpleado=$empleado->toArray();
+                        array_push($Rango->ListaPersonal,$ArrayEmpleado);
+                    }
+                }
+            }
+        }
+        //
+
+        //Obtener Promedios
+
+
+        $TotalEmpleados=count($empleados->toArray());
+
+        //dd($TotalEmpleados);
+        foreach ($PersonalPorRango as $Rango) {
+            $numEmpleadosRango=count($Rango->ListaPersonal);
+            $porcentaje =round( ($numEmpleadosRango / $TotalEmpleados) * 100,2);
+            $Rango->PorcentajeEmpleados=$porcentaje;
+            $PorcentajeRestante=100-$porcentaje;
+            $Rango->PorcentajeRestante=$PorcentajeRestante;
+
+            $Rango->NumPersonas=count($Rango->ListaPersonal);
+
+        }
+
+
+        //dd($PersonalPorRango);
+
+        return Inertia::render ('Modulos/RH/Reportes/ReporteAntiguedad',[
+            'InformacionRango'=>$PersonalPorRango,
+        ]);
+
+
+        //dd($PersonalPorRango); //Personal rango contiene toda la informacion necesaria
 
     }
 }

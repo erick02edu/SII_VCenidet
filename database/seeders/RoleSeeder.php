@@ -40,7 +40,7 @@ class RoleSeeder extends Seeder
         Permission::create(['name'=>'Generación de Folios']);
 
 
-        Permission::create(['name'=>'Alta de Alumnoss']);
+        Permission::create(['name'=>'Alta de Alumnos']);
         Permission::create(['name'=>'Modificación de datos de Alumnos']);
         Permission::create(['name'=>'Eliminación de Alumnos']);
         Permission::create(['name'=>'Modificación de Kardex']);

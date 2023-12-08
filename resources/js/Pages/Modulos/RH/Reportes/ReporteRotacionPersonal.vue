@@ -1,13 +1,16 @@
 <template>
 
-
-    <div class='flex items-center justify-center min-h-screen'>
-        <div style="border-top-color:transparent" class="w-8 h-8 border-4 border-[#014E82] rounded-full animate-spin"></div>
+<div class="overflow-hidden w-full max-h-screen">
+    <div class='flex items-center justify-center min-h-screen
+    overflow-hidden'>
+        <div style="border-top-color:transparent"
+        class="w-8 h-8 border-4 border-[#014E82]
+        rounded-full animate-spin overflow-hidden"></div>
         <p class="ml-2">GENERANDO REPORTE...</p>
     </div>
 
-    <div v-show="true">
-        <div id="pdfContent" class="w-full h-auto overflow-y-auto">
+    <div class="overflow-hidden ">
+        <div id="pdfContent" class="w-full h-auto overflow-y-hidden">
 
             <!--Encabezado con logos-->
             <div class="w-full h-14 inline-flex align-top mb-3">
@@ -129,7 +132,7 @@
             </div>
         </div>
     </div>
-
+</div>
 </template>
 
 
@@ -197,7 +200,7 @@
         async mounted() {
 
             this.nombreArchivo="RotacionPersonal_"+this.$page.props.FechaInicio+"_"+this.$page.props.FechaFin;
-  
+
             await this.renderChart();
 
             setTimeout(() => {

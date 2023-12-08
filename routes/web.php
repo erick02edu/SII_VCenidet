@@ -209,6 +209,10 @@ Route::get('Personal.Reportes',[PersonalController::class,'Reportes'])
 ->middleware('auth:sanctum','verified')->name('Personal.Reportes');
 
 
+Route::post('Personal.Antiguedad',[PersonalController::class,'ReporteAntiguedad'])
+->middleware('auth:sanctum','verified')->name('Personal.Antiguedad');
+
+
 Route::post('Personal.Rotacion',[PersonalController::class,'ReporteRotacion'])
 ->middleware('auth:sanctum','verified')->name('Personal.Rotacion');
 

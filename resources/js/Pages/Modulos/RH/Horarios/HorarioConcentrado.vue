@@ -1,11 +1,11 @@
 <template>
 
-    <div class='flex items-center justify-center min-h-screen'>
+    <!-- <div class='flex items-center justify-center min-h-screen'>
         <div style="border-top-color:transparent" class="w-8 h-8 border-4 border-[#014E82] rounded-full animate-spin"></div>
         <p class="ml-2">GENERANDO PDF ...</p>
-    </div>
+    </div> -->
 
-    <div v-show="false">
+    <div v-show="true">
     <div id="pdfContent" >
     <div v-for="(horario,index) in ListaHorarios" :key="index" class="overflow:hidden page-break-before:always" >
         <div class="w-full h-full overflow-y-scroll pl-2">
@@ -29,7 +29,7 @@
             <!--TABLA INFORMACION DEL PERSONAL-->
             <div class="w-full inline-flex text-xxs pl-5 h-1/12 ">
 
-                <table class="w-full mr-14 uppercase align-top border-collapse">
+                <table class="w-full mr-2 uppercase align-top border-collapse">
                     <tr class="align-top">
                         <td class="border-t border-l border-black pb-1 border-collapse">Institucion:<strong class="pl-2">CENTRO NACIONAL DE INVESTIGACION Y DESARROLLO TECNOLOGICO</strong></td>
                         <td class="border-t border-l border-black border-collapse">C.C.T</td>
@@ -171,10 +171,10 @@
                         <td class="border-r border-t border-collapse border-black pb-1" rowspan="1">Total HRS semanales</td>
                     </tr>
 
-                    <tr class="bg-neutral-300">
-                        <td class="border-b border-r border-l border-collapse border-black px-8 py-0"></td>
+                    <tr class="bg-neutral-300 align-top">
+                        <td class="border-b border-r border-l border-collapse border-black px-20 "></td>
                         <td class="border-b border-r border-collapse border-black px-8 py-0"></td>
-                        <td class="border-b border-r border-collapse border-black px-8 py-0"></td>
+                        <td class="border-b border-r border-collapse border-black px-4 py-0"></td>
                         <td class="border-b border-r border-collapse border-black px-8 py-0"></td>
                         <td class="border-b border-r border-collapse border-black px-8 py-0"></td>
                         <td class="border-b border-r border-collapse border-black px-8 py-0"></td>
@@ -183,17 +183,17 @@
 
 
 
-                        <td class="border-t border-r border-b border-collapse border-black px-8 py-0">   L </td>
+                        <td class="border-t border-r border-b border-collapse border-black px-8  ">  L </td>
                         <td class="border-t border-r border-b border-collapse border-black px-8 pb-0.5"> M </td>
                         <td class="border-r border-t border-b border-collapse border-black px-8 pb-0.5"> M </td>
                         <td class="border-r border-t border-b border-collapse border-black px-8 pb-0.5"> J </td>
                         <td class="border-r border-t border-b border-collapse border-black px-8 pb-0.5"> V </td>
                         <td class="border-r border-t border-b border-collapse border-black px-8 pb-0.5"> S </td>
-                        <td class="border-b border-r border-collapse border-black px-8"></td>
+                        <td class="border-b border-r border-collapse border-black px-8 pb-5"></td>
                     </tr>
 
                     <tr class="">
-                        <td class="border-r border-l border-collapse border-black align-top">1</td>
+                        <td class="border-r border-l border-collapse border-black align-top py-1"></td>
                         <td class="border-r border-collapse border-black"></td>
                         <td class="border-r border-collapse border-black"></td>
                         <td class="border-r border-collapse border-black"></td>
@@ -420,16 +420,16 @@
 
             <div class="w-full inline-flex text-xxs pl-5 h-1/12 align-top">
 
-                <table class="w-full mr-14 uppercase">
+                <table class="w-full mr-2 uppercase">
 
                     <tr class="bg-neutral-300 text-center">
                         <td class="border-t border-l border-r border-black w-1/3 py-1" rowspan="1">Nombre de la actividad</td>
                         <td class="border-t border-r border-black mb-2 w-1/6" rowspan="1">Metas a atender</td>
-                        <td class="border-t border-r border-b border-black mb-2 aling-top" colspan="6">Horario</td>
+                        <td class="border-t border-r border-b border-black mb-2 align-top" colspan="6">Horario</td>
                         <td class="border-t border-r border-black mb-2" rowspan="1">Total HRS semanales</td>
                     </tr>
 
-                    <tr class="bg-neutral-300">
+                    <tr class="bg-neutral-300 align-top">
 
                         <td class="border-b border-l border-r border-collapse border-black px-8 mt-1"></td>
                         <td class="border-b border-r border-collapse border-black px-8 mt-1"></td>
@@ -440,7 +440,7 @@
                         <td class="border-r  border-b border-black px-8">J</td>
                         <td class="border-r  border-b border-black px-8">V</td>
                         <td class="border-r  border-b border-black px-8">S</td>
-                        <td class="border-b border-r border-collapse border-black px-8 mt-2"></td>
+                        <td class="border-b border-r border-collapse border-black px-8 mt-2 pb-5"></td>
                     </tr>
 
                     <tr class="">
@@ -583,16 +583,16 @@
 
             <div class="w-full inline-flex text-xxs pl-5 h-1/12 align-top">
 
-                <table class="w-full mr-14 uppercase">
+                <table class="w-full mr-2 uppercase">
 
-                    <tr class="bg-neutral-300 text-center">
+                    <tr class="bg-neutral-300 text-center align-top">
                         <td class="border-t border-l border-r border-black w-1/4 py-1" rowspan="1">Puesto</td>
                         <td class="border-t border-r border-black mb-2 w-1/4" rowspan="1">UNIDAD ORGÁNICA DE ADSCRIPCIÓN </td>
-                        <td class="border-t border-r border-b border-black mb-2 aling-top" colspan="6">Horario</td>
+                        <td class="border-t border-r border-b border-black mb-2 align-top" colspan="6">Horario</td>
                         <td class="border-t border-r border-black mb-2" rowspan="1">Total HRS semanales</td>
                     </tr>
 
-                    <tr class="bg-neutral-300">
+                    <tr class="bg-neutral-300 align-top">
 
                         <td class="border-b border-l border-r border-collapse border-black px-8 mt-1"></td>
                         <td class="border-b border-r border-collapse border-black px-8 mt-1"></td>
@@ -603,10 +603,10 @@
                         <td class="border-r  border-b border-black px-8">J</td>
                         <td class="border-r  border-b border-black px-8">V</td>
                         <td class="border-r  border-b border-black px-8">S</td>
-                        <td class="border-b border-r border-collapse border-black px-8 mt-2"></td>
+                        <td class="border-b border-r border-collapse border-black px-8 mt-2 pb-5"></td>
                     </tr>
 
-                    <tr class="">
+                    <tr class="align-top">
                         <td class="border-l border-r border-b border-collapse border-black py-1 pb-1 ">
                             <span v-if="Listacategoria[index]!=null">
                             {{ Listacategoria[index].Descripcion }}
@@ -677,12 +677,13 @@
                         <td class="border-r border-b  border-black"></td>
                     </tr>
 
-                    <tr class="">
+                    <tr class="align-top">
                         <td class="py-1"></td>
 
 
                         <td class="text-end border-r border-black">Subtotal</td>
-                        <td class="border-r border-b  border-black pb-1 text-center">
+
+                        <td class="border-r border-b pb-2 border-black  text-center">
                             <strong>
                                 {{ ListaHorasTotalesLunes[index] }}
                             </strong>
@@ -690,6 +691,7 @@
                                 .{{ ListaminutosTotalesLunes[index] }}
                             </strong>
                         </td>
+
                         <td class="border-r border-b  border-black text-center">
                             <strong>
                                 {{ ListaHorasTotalesMartes[index]}}
@@ -698,6 +700,7 @@
                                 .{{ ListaminutosTotalesMartes[index] }}
                             </strong>
                         </td>
+
                         <td class="border-r border-b  border-black text-center ">
                             <strong>
                                 {{ ListaHorasTotalesMiercoles[index]}}
@@ -706,6 +709,7 @@
                                 .{{ ListaminutosTotalesMiercoles[index] }}
                             </strong>
                         </td>
+
                         <td class="border-r border-b  border-black text-center ">
                             <strong>
                                 {{ ListaHorasTotalesJueves[index]}}
@@ -714,6 +718,7 @@
                                 .{{ ListaminutosTotalesJueves[index] }}
                             </strong>
                         </td>
+
                         <td class="border-r border-b  border-black text-center">
                             <strong>
                                 {{ ListaHorasTotalesViernes[index]}}
@@ -722,6 +727,7 @@
                                 .{{ ListaminutosTotalesViernes[index] }}
                             </strong>
                         </td>
+
                         <td class="border-r border-b  border-black text-center ">
                             <strong>
                                 {{ ListaHorasTotalesSabado[index]}}
@@ -741,11 +747,11 @@
                     </tr>
 
 
-                    <tr class="">
+                    <tr class="align-top">
                         <td class="py-1"></td>
 
                         <td class="text-end border-r border-black">Total</td>
-                        <td class="border-r border-b border-black text-center">8</td>
+                        <td class="border-r border-b border-black text-center pb-2">8</td>
                         <td class="border-r border-b border-black text-center">8</td>
                         <td class="border-r border-b border-black text-center">8</td>
                         <td class="border-r border-b border-black text-center">8</td>
@@ -796,7 +802,7 @@
 
             <div class="w-full inline-flex align-top">
 
-                <div class="text-start pl-6 text-xxs pr-64">
+                <div class="text-start pl-6 text-xxs pr-64 pb-2">
                 Original.- Trabajador, DRH<br>
                 C.c.p.- DPPyP, Archivo<br>
                 CENIDET-AC-PO-004-06
@@ -815,7 +821,7 @@
                 </div>
             </div>
 
-            <div class="mb-1" v-if="ListaHorarios.length !== index + 1">
+            <div class="mb-2" v-if="ListaHorarios.length !== index + 1">
 
             </div>
 
@@ -872,7 +878,7 @@
 
         async mounted() {
             await this.generarPDF();
-            window.close();
+            //window.close();
         },
 
         methods:{
