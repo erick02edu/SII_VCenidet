@@ -287,15 +287,14 @@ Route::get('Aplicaciones.buscar',[AplicacionPeriodoController::class,'buscarApli
  Route::resource('backup',BackupController::class)
  ->middleware('auth:sanctum','verified')->only(['index']);
 
- use Illuminate\Support\Facades\Artisan;
 
- //Route::get('GenerarBackup',[BackupController::class,'Generar'])->name('GenerarBackup')->middleware('auth:sanctum','verified');
- Route::get('GenerarBackup', function() {
 
-    Artisan::call('backup:run');
-    dd(Artisan::output());
+ Route::get('GenerarBackup',[BackupController::class,'GenerarBackup'])->name('GenerarBackup')->middleware('auth:sanctum','verified');
+ Route::post('GenerarRestauracion',[BackupController::class,'Restaurar'])->name('GenerarRestauracion')->middleware('auth:sanctum','verified');
+ Route::post('EliminarRespaldo',[BackupController::class,'EliminarRespaldo'])->name('EliminarRespaldo')->middleware('auth:sanctum','verified');
+ Route::get('/descargar-archivo/{nombreArchivo}', [BackupController::class,'descargarSQL'])->name('descargar-archivo')->middleware('auth:sanctum','verified');;
 
-  })->name('GenerarBackup');
+
 
 
  Route::get('Prueba.index',[BackupController::class,'Prueba'])->name('Prueba.index')->middleware('auth:sanctum','verified');
@@ -325,7 +324,6 @@ Route::get('/reporte/{id}',[horariosDocentesController::class,'verExcel'])->name
 
 
 Route::get('PruebaReporte',[PDFController::class,'generatePDF'])->name('PruebaReporte');
-
 
 
 

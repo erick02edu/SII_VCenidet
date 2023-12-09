@@ -263,12 +263,12 @@
             <!----------------------------------------->
 
 
-            <!-- <nav-link :href="route('backup.index')" :active="route().current('backup.index')">
+            <nav-link :href="route('backup.index')" :active="route().current('backup.index')">
                 <template #icon>
                     <i class="fa-solid fa-database"></i>
                 </template>
                 Respaldar Base
-            </nav-link> -->
+            </nav-link>
 
 
 
