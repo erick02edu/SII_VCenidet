@@ -634,7 +634,7 @@ class PersonalController extends Controller
             'porcentajesBajas'=>$porcentajesBajas,
         ]);
     }
-    
+
 
 
     public function ReporteAntiguedad(Request $request){

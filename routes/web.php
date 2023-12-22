@@ -15,6 +15,7 @@ use App\Http\Controllers\FechaReincripcionController;
 use App\Http\Controllers\PromedioController;
 use App\Http\Controllers\PeriodoController;
 use App\Http\Controllers\AplicacionPeriodoController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AvisosController;
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\bajasPersonalController;
@@ -108,7 +109,7 @@ Route::middleware([
     Route::get('/HorConcentrado/{periodo}',[horariosDocentesController::class,'HorarioConcentrado'])->name('HorConcentrado');
     Route::get('HorariosDocentesExcel/{idHorario}',[horariosDocentesController::class,'GenerarExcel'])->name('HorariosDocentes.Excel');
     Route::get('HorariosDocentes.buscar',[horariosDocentesController::class,'buscarHorario']);
-
+    Route::post('EnviarCorreo',[horariosDocentesController::class,'CorreoHorario'])->name('EnviarCorreo');
 
 
     //Rutas para crud vigencia Personal
@@ -213,6 +214,7 @@ Route::post('Personal.Antiguedad',[PersonalController::class,'ReporteAntiguedad'
 ->middleware('auth:sanctum','verified')->name('Personal.Antiguedad');
 
 
+
 Route::post('Personal.Rotacion',[PersonalController::class,'ReporteRotacion'])
 ->middleware('auth:sanctum','verified')->name('Personal.Rotacion');
 
@@ -315,7 +317,7 @@ Route::get('/reporte', function () {
 Route::get('/AvisoEmail', function () {
     //return view('Reportes.Horarios');
     //return view('emails.NuevoAviso');
-    return view('emails.CorreoRegistro');
+    return view('emails.NotificacionHorario');
 });
 
 Route::get('/reporte/{id}',[horariosDocentesController::class,'verExcel'])->name('/reporte{id}');
@@ -328,3 +330,9 @@ Route::get('PruebaReporte',[PDFController::class,'generatePDF'])->name('PruebaRe
 
 
 
+
+
+
+Route::post('/login', [LoginController::class, 'authenticate'])
+    ->middleware(['guest'])
+    ->name('loginUser');

@@ -210,8 +210,13 @@
     </div>
 
 
+    <!-- Capa oscura -->
+    <div :class="{ hidden: !isVisibleCorreo }" class="fixed inset-0 bg-black opacity-50">
+    </div>
 
-
+    <!-- Capa oscura -->
+    <div :class="{ hidden: !isvisibleDelete }" class="fixed inset-0 bg-black opacity-50">
+    </div>
 
     <!-- Capa oscura -->
     <div :class="{ hidden: !isVisible }" class="fixed inset-0 bg-black opacity-50">
@@ -369,7 +374,8 @@
                                     <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap"
                                     v-if="horario.idPeriodo==periodo.id"
                                     >
-                                    <strong>Periodo:</strong>{{ periodo.mesInicio }}/{{ periodo.AñoInicio }}-{{ periodo.mesTermino }}/{{ periodo.AñoTermino }}
+                                    <strong>Periodo:</strong>
+                                    {{ periodo.mesInicio }}/{{ periodo.AñoInicio }}-{{ periodo.mesTermino }}/{{ periodo.AñoTermino }}
                                     </p>
                                 </div>
                             </div>
@@ -416,6 +422,17 @@
                                 </a>
 
 
+                                <span v-for="(profesor,index) in profesores">
+                                    <a type="button"  @click="showEnviar(profesor,horario.idProfesor)" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1"
+                                    v-if="$page.props.user.roles.includes('Recursos Humanos') && profesor.id==horario.idProfesor">
+                                    <i class="fa-solid fa-envelope text-while pt-1"></i> <p class="dark:text-white pl-1 ">Notificar a profesor</p>
+                                    </a>
+                                </span>
+
+
+
+
+
                                 <!-- <a :href="route('HorariosDocentes.Excel',horario.id)" target="_blank" class="p-3 rounded-md bg-[#38b640] mx-2 inline-flex mb-1"
                                 >
                                     <i class="fa-regular fa-file-excel text-white"></i>
@@ -423,9 +440,7 @@
 
 
 
-                                                            <!-- Capa oscura -->
-                            <div :class="{ hidden: !isvisibleDelete }" class="fixed inset-0 bg-black opacity-25">
-                            </div>
+
 
                             <div>
                                 <div :class="{ hidden: !isvisibleDelete }" v-bind:id="`Modal${horario.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">
@@ -451,6 +466,36 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <div>
+                                <div :class="{ hidden: !isVisibleCorreo }" v-bind:id="`Modal${horario.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">
+                                    <div class="relative w-full max-w-md max-h-full">
+                                        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                            <button @click="hideEnviar" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
+                                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                </svg>
+                                                <span class="sr-only">Close modal</span>
+                                            </button>
+                                            <div class="p-6 text-center">
+                                                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                </svg>
+                                                <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Esta seguro de enviar un correo a
+                                                    {{  ProfesorCorreo.Nombre }} {{ ProfesorCorreo.ApellidoP }}  {{  ProfesorCorreo.ApellidoM }}  informando que su horario esta listo </h3>
+                                                <button @click="EnviarCorreo" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                                                    Si, estoy seguro
+                                                </button>
+                                                <button @click="hideEnviar" data-modal-hide="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancelar</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
 
                             </div>
 
@@ -595,6 +640,10 @@ export default {
         isVisibleHConcentrado:'',
         isVisibleBuscar:'',
 
+        isVisibleCorreo:false,
+        ProfesorCorreo:'',
+        PeriodoHorarioCorreo:'',
+
         campoBusqueda:'Profesor',
         UsuarioBuscar:'',
 
@@ -686,6 +735,26 @@ export default {
     hideElementHorConcentrado() {
       this.isVisibleHConcentrado = false;
     },
+
+
+    showEnviar(profesor,PeriodoCorreo){
+
+        this.PeriodoHorarioCorreo=PeriodoCorreo;
+        this.ProfesorCorreo=profesor
+        this.isVisibleCorreo=true;
+    },
+
+    hideEnviar(){
+        this.isVisibleCorreo=false;
+    },
+
+    async EnviarCorreo(){
+        let request = { profesor:this.ProfesorCorreo.id ,periodo:this.PeriodoHorarioCorreo };
+
+        await this.$inertia.post(route('EnviarCorreo'),request)
+        this.hideEnviar();
+    },
+
 
     crearHorario(){
         this.$inertia.post(route('HorariosDocentes.store'),this.NuevoHorario);

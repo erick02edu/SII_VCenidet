@@ -64,6 +64,9 @@
     <div :class="{ hidden: !isVisible }" class="fixed inset-0 bg-black opacity-50">
     </div>
 
+    <!-- Capa oscura -->
+    <div :class="{ hidden: !isvisibleDelete }" class="fixed inset-0 bg-black opacity-50">
+    </div>
 
     <div id="modalContainer">
         <!-- Main modal -->
@@ -197,9 +200,7 @@
 
 
 
-                            <!-- Capa oscura -->
-                            <div :class="{ hidden: !isvisibleDelete }" class="fixed inset-0 bg-black opacity-25">
-                            </div>
+
 
                             <div>
                                 <div :class="{ hidden: !isvisibleDelete }" v-bind:id="`Modal${rol.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">

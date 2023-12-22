@@ -2,7 +2,7 @@
     <Head title="Backup" />
     <AuthenticatedLayout>
     <template #header>
-            Respaldo y Restauracion de la Base de datos
+            Respaldo y restauracion de la base de datos
     </template>
 
 
@@ -17,7 +17,7 @@
 
     <div id="modalContainer" class="w-full mb-2 inline ">
         <button :type="type" @click="GenerarBackup" class="inline rounded-md bg-[#014E82] px-5 py-3 mb-2  text-sm text-white hover:bg-[#0284c7]  ">
-            <i class="fa-solid fa-database text-white inline"></i> <span class="text-white pl-1">Respaldo</span>
+            <i class="fa-solid fa-database text-white inline"></i> <span class="text-white pl-1">Respaldar datos</span>
         </button>
     </div>
 
@@ -37,7 +37,7 @@
                     <tr class="border-b bg-gray-50 text-left text-xs font-semibold uppercase  text-gray-500">
 
                         <th class="border-b-2 w-3/6 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
-                            Respaldos
+                            Nombre del respaldo
                         </th>
 
                         <th class="border-b-2 w-1/6 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
@@ -56,8 +56,8 @@
                     <tr v-for="archivo in archivos"  class="text-gray-700">
 
                         <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
-                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">
-                                <p class="pl-2">{{ archivo.filename }}</p>
+                            <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap inline">
+                                <i class="fa-solid fa-file dark:text-white"></i> <span class="pl-2">{{ archivo.filename }}</span>
                             </p>
                         </td>
 
@@ -71,7 +71,15 @@
                         <td  class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
 
                             <a  v-if="$page.props.user.roles.includes('Administrador')" type="button" @click="descargarArchivo(archivo.pathname)"
-                            class="p-3 rounded-md bg-[#5765fc] mx-2 inline-flex mb-1">
+                            class="p-3 rounded-md bg-[#5765fc] mx-2 inline-flex mb-1"
+                            v-tippy="{
+                                content:'Descargar sql',
+                                placement: 'top' ,
+                                arrow: true,
+                                arrowType: 'round',
+                                theme: 'MiTheme'
+                            }"
+                            >
                                 <i class="fa-solid fa-download text-white"></i>
                             </a>
 
@@ -166,6 +174,13 @@
     import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
     import { Head } from '@inertiajs/vue3';
     import { Link } from '@inertiajs/vue3'
+
+    import 'tippy.js/themes/light.css'
+
+    import 'tippy.js/dist/tippy.css';
+    import 'tippy.js/animations/scale.css';
+    import { directive } from 'vue-tippy'
+
 </script>
 
 <script>
@@ -177,6 +192,12 @@ export default {
     components:{
         Link
     },
+
+
+    directives: {
+        tippy: directive,
+    },
+
 
     props:{
         archivos:Array,
@@ -245,3 +266,16 @@ export default {
 };
 </script>
 
+<style>
+
+        .tippy-box[data-theme~='MiTheme'] {
+            background-color: rgb(46, 53, 190);
+            color: rgb(255, 255, 255);
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .tippy-arrow {
+            border-top-color: rgb(38, 95, 230); /* Cambia este color según tus preferencias */
+        }
+</style>

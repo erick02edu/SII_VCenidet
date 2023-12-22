@@ -39,7 +39,6 @@ class BackupController extends Controller
                 'size'     => round($archivo->getSize()/1000,2), //Tamaño del archivo
             ];
         };
-
         // Aplicar la transformación a cada elemento del array original
         $archivosTransformados = array_map($transformarArchivo, $archivos);
 
@@ -56,6 +55,8 @@ class BackupController extends Controller
     }
 
     public function GenerarBackup(){
+
+        date_default_timezone_set('America/Mexico_City');//Zona horaria Mexico
         //Concatenar nombre para el archivo con la fecha y hora de generacion
         $backupFileName = 'RESPALDO_SII_CENIDET_' . date('Y-m-d_H-i-s') . '.sql';
 
@@ -66,10 +67,9 @@ class BackupController extends Controller
 
             //Concatenar el comando para respaldar                //Carpeta guardar        //Nombre del archivo para guardar
             $command = "mysqldump -u $UserName $NombreBase > " . app_path('backups') ."\\". $backupFileName;
-
+            dd($command);
             //Ejecutar comando
             $resultado = shell_exec($command);
-
 
             Session::flash('mensaje', 'Se ha generado correctamento el respaldo');
             Session::flash('TipoMensaje', 'Exitoso');
@@ -80,17 +80,13 @@ class BackupController extends Controller
             Session::flash('TipoMensaje', 'Error');
             return redirect::route('backup.index');
         }
-
-
     }
 
     public function Restaurar(Request $request){
-
         //Recibir la ruta del archivo que se restaurara
         $ArchivoRestaurar = $request->input('ruta');
 
         try{
-
             //Obtener datos para el comando
             $UserName=env('DB_USERNAME');
             $NombreBase=env('DB_DATABASE');
@@ -114,7 +110,7 @@ class BackupController extends Controller
 
     }
 
-
+    //Funcion para decargar archivo sql
     public function descargarSQL($rutaCompleta){
         //Descargar archivo
         return response()->download($rutaCompleta);

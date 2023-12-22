@@ -12,10 +12,11 @@ import TextInput from '@/Components/TextInput.vue';
 defineProps({
     canResetPassword: Boolean,
     status: String,
+
 });
 
 const form = useForm({
-    email: '',
+    name: '',
     password: '',
     remember: false,
 });
@@ -24,7 +25,7 @@ const submit = () => {
     form.transform(data => ({
         ...data,
         remember: form.remember ? 'on' : '',
-    })).post(route('login'), {
+    })).post(route('loginUser'), {
         onFinish: () => form.reset('password'),
     });
 };
@@ -37,20 +38,22 @@ const submit = () => {
     <div class="flex h-screen">
 
         <div class="w-1/2 justify-center items-center px-10 pt-10">
-            <div v-if="status" class="mb-4 font-medium text-sm text-green-600 pl-7">
-                {{ status }}
-            </div>
 
             <form @submit.prevent="submit" class="py-20 px-10">
 
-                <p class="py-10 text-2xl">INICIAR SESION</p>
+                <p class="pt-10 pb-2 text-2xl">INICIAR SESION</p>
+
+                <div v-if="status" class=" font-medium text-xs text-red-600 ">
+                Credenciales invalidas favor de revisar los datos ingresados
+                </div>
+
 
                 <div>
-                    <InputLabel for="email" value="Email"  />
+                    <InputLabel for="text" value="Usuario"  />
                     <TextInput
                         id="email"
-                        v-model="form.email"
-                        type="email"
+                        v-model="form.name"
+                        type="text"
                         class="mt-1 block w-full "
                         required
                         autofocus
@@ -61,7 +64,7 @@ const submit = () => {
 
                 <div class="mt-4">
                     <span>
-                        <InputLabel for="password" value="Password" />
+                        <InputLabel for="password" value="Contraseña" />
                         <TextInput
                             id="password"
                             v-model="form.password"
@@ -95,6 +98,8 @@ const submit = () => {
                 </div>
             </form>
         </div>
+
+
 
 
         <div class="w-1/2 bg-gray-300">

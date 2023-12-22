@@ -15,6 +15,8 @@ use Maatwebsite\Excel\Facades\Excel;
 use DateTime;
 use Exception;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\HorarioCreado;
 
 class horariosDocentesController extends Controller
 {
@@ -1141,6 +1143,49 @@ class horariosDocentesController extends Controller
             where('idPeriodo','=',$Periodo)->get();
         }
         return $Horarios;
+
+    }
+
+    public function CorreoHorario(Request $request){
+
+
+
+        $idProfesor=$request->input('profesor');
+        $idPeriodo=$request->input('periodo');
+
+
+
+        $Personal=app(PersonalController::class)->ObtenerPersonalPorID($idProfesor);
+        $Periodo=app(PeriodoController::class)->ObtenerPeriodoPorID($idPeriodo);
+
+
+
+        $Personal=$Personal->toArray();
+        $Periodo=$Periodo->toArray();
+
+
+        //Verificar si tiene una cuenta a la cual enviar el correo
+        if($Personal['idUsuario']!=null){
+            $Cuenta=app(UserController::class)->ObtenerUsuarioPorID($Personal['idUsuario']);
+
+            //dd($Cuenta->email);
+
+            //dd($Periodo);
+            Mail::to($Cuenta->email)->send(new HorarioCreado($Periodo,$Personal));
+
+            Session::flash('mensaje', 'Se ha enviado correctamento el correo al docente');
+            Session::flash('TipoMensaje', 'Exitoso');
+            return Redirect::route('HorariosDocentes.index');
+
+        }
+        else{
+            Session::flash('mensaje', 'Este personal no cuenta con un correo asociado por favor verifique la informacion del docente');
+            Session::flash('TipoMensaje', 'Error');
+            return Redirect::route('HorariosDocentes.index');
+        }
+
+
+
 
     }
 
