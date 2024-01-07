@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -10,17 +9,8 @@ use Exception;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 
-
 class PlazaController extends Controller
 {
-
-    // public function __construct()
-    // {
-    //     $this->middleware(['permission:Ver Plazas|Agregar Plazas|Editar Plazas|Eliminar Plazas'])->only('index');
-    //     $this->middleware('can:Agregar Plazas')->only('store');
-    //     $this->middleware('can:Editar Plazas')->only('edit','update');
-    //     $this->middleware('can:Eliminar Plazas')->only('destroy');
-    // }
     public function __construct()
     {
         $this->middleware(['role:Recursos Humanos'])->only('index','indexAsignado','indexSinAsignar');
@@ -28,10 +18,8 @@ class PlazaController extends Controller
         $this->middleware(['role:Recursos Humanos'])->only('edit','update');
         $this->middleware(['role:Recursos Humanos'])->only('destroy');
     }
-
-
-    public function index()
-    {
+    //Funcion index para redirigir a la vista Plazas
+    public function index() {
         $Pagination=Plaza::paginate(5);
         $Plazas=$Pagination->items();
         $Categorias=app(CategoriaController::class)->ObtenerCategorias();
@@ -39,8 +27,6 @@ class PlazaController extends Controller
         // Obtener datos flash de la sesión
         $mensaje = Session::get('mensaje');
         $TipoMensaje = Session::get('TipoMensaje');
-
-
         return Inertia::render('Modulos/RH/Plazas/Plazas',[
             'plazas'=>$Plazas,
             'categorias'=>$Categorias,
@@ -50,14 +36,11 @@ class PlazaController extends Controller
             'tipoMensaje' => $TipoMensaje,
         ]);
     }
-
-    public function indexAsignadas()
-    {
+    //Funcion para redirigir a vista donde se muestran las plazas asignadas
+    public function indexAsignadas()  {
         $Pagination=Plaza::where('estatus','1')->paginate(5);
-
         $Plazas=$Pagination->items();
         $Categorias=app(CategoriaController::class)->ObtenerCategorias();
-
         return Inertia::render('Modulos/RH/Plazas/Plazas',[
             'plazas'=>$Plazas,
             'categorias'=>$Categorias,
@@ -65,13 +48,11 @@ class PlazaController extends Controller
             'Filtro'=>'Asignadas',
         ]);
     }
-
-    public function indexNoAsignadas()
-    {
+    //Funcion para redirigir a vista donde se muestran las plazas sin asignar
+    public function indexNoAsignadas(){
         $Pagination=Plaza::where('estatus','0')->paginate(5);
         $Plazas=$Pagination->items();
         $Categorias=app(CategoriaController::class)->ObtenerCategorias();
-
         return Inertia::render('Modulos/RH/Plazas/Plazas',[
             'plazas'=>$Plazas,
             'categorias'=>$Categorias,
@@ -79,17 +60,13 @@ class PlazaController extends Controller
             'Filtro'=>'NoAsignadas',
         ]);
     }
-
-    public function store(Request $request)
-    {
-
+    //Funcion para registrar una nueva plaza
+    public function store(Request $request){
         $Plaza=new Plaza();
-
         if($request->idCategoria==0){
             $Plazas=Plaza::all();//Este bombre aulas debe coincidir con el props en el scrip de vue
             return Inertia::render ('Plazas',['plazas'=>$Plazas,'mensajeCategorias'=>'Por favor ingresa una categoria']);
         }
-
         try{
             $Estatus = False; // asigna el valor TRUE a $foo
             $Plaza->idCategoria=$request->idCategoria;
@@ -110,46 +87,34 @@ class PlazaController extends Controller
             return redirect::route('Plazas.index');
         }
     }
-
-    public function ObtenerPlazas()
-    {
+    //Funcion para obtener plazas
+    public function ObtenerPlazas() {
         $plazas=Plaza::all();
         return $plazas;
     }
-
-    public function ObtenerPlazaPorID(String $id)
-    {
+    //Funcion para obtener plazas por id
+    public function ObtenerPlazaPorID(String $id) {
         $plaza=Plaza::find($id);
         return $plaza;
     }
-
-    public function ObtenerPlazasDisponibles()
-    {
+    //Funcion para obtener plazas disponibles
+    public function ObtenerPlazasDisponibles() {
         $plazasDisponibles=Plaza::where('estatus','0')->get();
         return $plazasDisponibles;
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(String $id)
-    {
-
+    //Funcion para redirigir a vista para editar una plaza
+    public function edit(String $id)   {
         $Plaza = Plaza::find($id);
         $categoriaEditar=categoria::find($Plaza->idCategoria);
         $Listacategorias=categoria::all();
-
-
-
         return Inertia::render ('Modulos/RH/Plazas/formEditarPlaza',[
             'plaza'=>$Plaza,
             'categoriaEditar'=>$categoriaEditar,
             'ListaCategorias'=>$Listacategorias,
         ]);
     }
-
-    public function update(String $id,Request $request)
-    {
+    //Funcion para actualizar una plaza
+    public function update(String $id,Request $request){
         try{
             $Plaza=Plaza::find($id);
 
@@ -167,15 +132,12 @@ class PlazaController extends Controller
             return redirect::route('Plazas.index');
         }
     }
-
     public function getData(String $id){
         $Plaza = Plaza::find($id);
         return response()->json($Plaza);
     }
-
     //Funcion para eliminar una plaza
-    public function destroy(String $id)
-    {
+    public function destroy(String $id) {
         try{
             $Plaza = Plaza::find($id);
             $Plaza->delete();
@@ -188,27 +150,21 @@ class PlazaController extends Controller
             return Redirect::route('Plazas.index');
         }
     }
-
+    //Funcion para buscar una plaza
     public function buscarPlaza(Request $request){
         $Plaza=$request->input('plaza');
         $campo = $request->input('campo');
         $Filtro=$request->input('Filtro');
 
-
         if($Filtro=='Todos'){
-
             if($campo=='categoria'){
                 $request=new Request();
                 $parametros=['categoria'=>$Plaza,'campo'=>'Descripcion'];
                 //Unir $parametros a request
                 $request->merge($parametros);
-
                 $users=app(CategoriaController::class)->buscar($request);
-
                 $ListaIDS=$users->pluck('id');
-
                 $result=Plaza::whereIn('idCategoria',$ListaIDS)->get();
-
             }
             else{
             $result=Plaza::where($campo, 'LIKE', '%'.$Plaza.'%')->get();
@@ -221,11 +177,8 @@ class PlazaController extends Controller
                 $parametros=['categoria'=>$Plaza,'campo'=>'Descripcion'];
                 //Unir $parametros a request
                 $request->merge($parametros);
-
                 $users=app(CategoriaController::class)->buscar($request);
-
                 $ListaIDS=$users->pluck('id');
-
                 $result=Plaza::whereIn('idCategoria',$ListaIDS)->
                 where('estatus','=','1')->get();
             }
@@ -235,17 +188,13 @@ class PlazaController extends Controller
             }
         }
         else if($Filtro=='NoAsignadas'){
-
             if($campo=='categoria'){
                 $request=new Request();
                 $parametros=['categoria'=>$Plaza,'campo'=>'Descripcion'];
                 //Unir $parametros a request
                 $request->merge($parametros);
-
                 $users=app(CategoriaController::class)->buscar($request);
-
                 $ListaIDS=$users->pluck('id');
-
                 $result=Plaza::whereIn('idCategoria',$ListaIDS)->
                 where('estatus','=','0')->get();
             }

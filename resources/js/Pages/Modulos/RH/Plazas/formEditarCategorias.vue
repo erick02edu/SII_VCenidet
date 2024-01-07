@@ -1,54 +1,44 @@
 <template>
-
-    <Head title="Editar Aulas" />
+    <Head title="Editar categoría" />
         <AuthenticatedLayout>
-
-                <template #header>
-                        Editar Categorias
-                </template>
-                <div class="py-12">
+        <template #header>
+            <span class="pl-8">Editar categoría</span>
+        </template>
+            <div class="py-12">
                 <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
                     <div class="bg-white dark:bg-slate-700 overflow-hidden shadow-xl sm:rounded-lg">
-
                         <form @submit.prevent="EditarCategoria" class="mb-6">
-
-
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-8 mt-5 mx-7">
 
-                            <div class="grid grid-cols-1">
-                            <label class="uppercase md:text-sm text-xs text-gray-500 dark:text-gray-200 text-light font-semibold">Descripcion</label>
-                                <input
-                                    id="diagonal"
-                                    v-model="InfoEditar.Descripcion"
-                                    class="py-2 px-3 rounded-lg border-2 border-[#0285c7c6] dark:text-gray-200 dark:bg-slate-700 mt-1 focus:outline-none focus:ring-2 focus:[#014E82] focus:border-transparent" type="text"
-                            />
-                            </div>
-
-
-                            <div class="grid grid-cols-1">
-                            <label class="uppercase md:text-sm text-xs text-gray-500 dark:text-gray-200 text-light font-semibold">Clave</label>
-
-                                <input
-                                    id="diagonal"
-                                    v-model="InfoEditar.Clave"
-                                    class="py-2 px-3 rounded-lg border-2 border-[#0285c7c6] dark:text-gray-200 dark:bg-slate-700 mt-1 focus:outline-none focus:ring-2 focus:[#014E82] focus:border-transparent" type="text"
+                                <div class="grid grid-cols-1">
+                                <label class="uppercase md:text-sm text-xs text-gray-500 dark:text-gray-200 text-light font-semibold">
+                                    Descripción</label>
+                                    <input
+                                        id="diagonal"
+                                        v-model="InfoEditar.Descripcion"
+                                        class="py-2 px-3 rounded-lg border-2 border-[#0285c7c6] dark:text-gray-200 dark:bg-slate-700 mt-1 focus:outline-none focus:ring-2 focus:[#014E82] focus:border-transparent" type="text"
                                 />
+                                </div>
 
-                            </div>
+                                <div class="grid grid-cols-1">
+                                <label class="uppercase md:text-sm text-xs text-gray-500 dark:text-gray-200 text-light font-semibold">Clave</label>
 
+                                    <input
+                                        id="diagonal"
+                                        v-model="InfoEditar.Clave"
+                                        class="py-2 px-3 rounded-lg border-2 border-[#0285c7c6] dark:text-gray-200 dark:bg-slate-700 mt-1 focus:outline-none focus:ring-2 focus:[#014E82] focus:border-transparent" type="text"
+                                    />
 
-                            <div class="grid grid-cols-1">
-                            <label class="uppercase md:text-sm text-xs text-gray-500 dark:text-gray-200 text-light font-semibold">Horas/de la categoria</label>
-                            <input
-                                id="horas"
-                                v-model="InfoEditar.Horas"
-                                class="py-2 px-3 rounded-lg border-2 border-[#0285c7c6] dark:text-gray-200 dark:bg-slate-700 mt-1 focus:outline-none focus:ring-2 focus:[#014E82] focus:border-transparent" type="number"
-                            />
-                            </div>
+                                </div>
 
-
-
-
+                                <div class="grid grid-cols-1">
+                                <label class="uppercase md:text-sm text-xs text-gray-500 dark:text-gray-200 text-light font-semibold">Horas/de la categoria</label>
+                                <input
+                                    id="horas"
+                                    v-model="InfoEditar.Horas"
+                                    class="py-2 px-3 rounded-lg border-2 border-[#0285c7c6] dark:text-gray-200 dark:bg-slate-700 mt-1 focus:outline-none focus:ring-2 focus:[#014E82] focus:border-transparent" type="number"
+                                />
+                                </div>
                             </div>
 
                             <div class='flex justify-end md:gap-8 gap-4 pt-5 pb-5 pr-5'>
@@ -65,79 +55,57 @@
                             </button>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
-
-
-
         </AuthenticatedLayout>
+</template>
+
+<script setup>
+
+    import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
+    import Pagination from '@/Components/Pagination.vue'
+    import { Head, useForm } from '@inertiajs/vue3';
+    import { Link } from '@inertiajs/vue3'
+
+    const props=defineProps({
+        categoria:{
+            type:Array,
+            required:true,
+        },
+    })
+
+    var form=useForm({
+        id:props.categoria.id,
+        Descripcion:props.categoria.Descripcion,
+        Clave:props.categoria.Clave,
+        Horas:props.categoria.Horas,
+    })
 
 
+</script>
 
-    </template>
-
-    <script setup>
-
-        import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
-        import Pagination from '@/Components/Pagination.vue'
-        import { Head, useForm } from '@inertiajs/vue3';
-        import { Link } from '@inertiajs/vue3'
-
-        const props=defineProps({
-            categoria:{
-                type:Array,
-                required:true,
-            },
-        })
-
-        var form=useForm({
-            id:props.categoria.id,
-            Descripcion:props.categoria.Descripcion,
-            Clave:props.categoria.Clave,
-            Horas:props.categoria.Horas,
-        })
-
-
-    </script>
-
-    <script>
-
-        //console.log($props.Aula);
-
-        export default {
-
-            components:{
-                Link
-            },
-
-            data() {
-                return {
-                    InfoEditar: {
-
-                        Descripcion:this.$props.categoria.Descripcion,
-                        Clave:this.$props.categoria.Clave,
-                        Horas:this.$props.categoria.Horas,
-                    },
-
-
-                }
-            },
-
-            methods:{
-                EditarCategoria(){
-
-                    console.log(this.InfoEditar);
-
-                    this.$inertia.put(
-                    route("categorias.update",this.$props.categoria.id),
-                        this.InfoEditar
-                    );
+<script>
+    export default {
+        components:{
+            Link
+        },
+        data() {
+            return {
+                InfoEditar: {
+                    Descripcion:this.$props.categoria.Descripcion,
+                    Clave:this.$props.categoria.Clave,
+                    Horas:this.$props.categoria.Horas,
                 },
+            }
+        },
+        methods:{
+            EditarCategoria(){
+                this.$inertia.put(
+                route("categorias.update",this.$props.categoria.id),
+                    this.InfoEditar
+                );
             },
-
-
-        };
-
-    </script>
+        },
+    };
+</script>

@@ -6,30 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
-use Inertia\Response;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-
-use App\Mail\UsuarioRegistrado;
 use Exception;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
-
 
 class UserController extends Controller
 {
-
-    // public function __construct()
-    // {
-    //     $this->middleware(['permission:Agregar Usuarios|Editar Usuarios|Ver usuarios|Eliminar Usuarios|Asignar roles a los usuarios'])->only('index');
-    //     $this->middleware('can:Agregar Usuarios')->only('store');
-    //     $this->middleware('can:Editar Usuarios')->only('edit','update');
-    //     $this->middleware('can:Eliminar Usuarios')->only('destroy');
-    // }
-
+    //Constructor
     public function __construct()
     {
         $this->middleware(['role:Administrador'])->only('index');
@@ -37,43 +21,48 @@ class UserController extends Controller
         $this->middleware(['role:Administrador'])->only('edit','update');
         $this->middleware(['role:Administrador'])->only('destroy');
     }
-
     //Funcion para mostrar todos los usuarios retorna a la vista de Usuarios
-    public function index()
-    {
+    public function index(){
         $Pagination=User::paginate(10);
         $Usuarios=$Pagination->items();
-
         $roles=Role::all();
 
         // Obtener datos flash de la sesión
         $mensaje = Session::get('mensaje');
         $TipoMensaje = Session::get('TipoMensaje');
-
+        //Obtener lista del personal
+        $Personal=app(PersonalController::class)->ObtenerPersonalSinCuenta();
         return Inertia::render('Modulos/Administrador/Usuarios/Usuarios',[
             'usuarios'=>$Usuarios,
             'roles'=>$roles,
+            'personal'=>$Personal,
             'Paginator'=>$Pagination,
             'mensaje' => $mensaje,
             'tipoMensaje' => $TipoMensaje,
-
         ]);
     }
-
     //Funcion para crear un usuario
     public function store(Request $request){
-
-
         $user=new User();
-            try{
+        try{
+            //Obtener datos
             $user->name=$request->name;
             $user->email=$request->email;
             $user->password = Hash::make($request->input('password'));
             $user->Estatus='0';
+            //Guardar usuario
             $user->save();
-
+            //Obtener id del nuevo usuario
             $newUserId = $user->id;
-
+            //Asignar cuenta al personal
+            $requestCuenta=new Request();
+            $parametros=[
+                'idPersonal'=>$request->input('PersonalAsignar'),
+                'idCuenta'=>$newUserId
+            ];
+            $requestCuenta->merge($parametros);
+            app(PersonalController::class)->asignarCuenta($requestCuenta);
+            //Asignar roles a la cuenta
             return redirect()->route('Roles.asignar', [
                 'id' => $newUserId,
                 'RolesSeleccionados'=>$request->input('RolesSeleccionados'),
@@ -84,62 +73,68 @@ class UserController extends Controller
             Session::flash('TipoMensaje', 'Error');
             return Redirect::route('Users.index');
         }
-
-
-
-        //Mail::to($user->email)->send(new UsuarioRegistrado($user));
     }
-
-
     //Funcion para redirigir al formulario de edicion
     public function edit(String $id)
     {
+        //Obtener el usuario
         $User = User::find($id);
-        return Inertia::render ('Modulos/Administrador/Usuarios/formEditarUsuario',[
-            'usuario'=>$User,
-        ]);
-    }
-
-    //Funcion para actualizar un usuario
-    public function update(String $id,Request $request)
-    {
-        try{
-        $User=User::find($id);
-        $User->update($request->all());
-
-        Session::flash('mensaje', 'Se ha guardado los cambios');
-        Session::flash('TipoMensaje', 'Exitoso');
-        return redirect::route('Users.index');
+        //Verificar si el usuario existe
+        if ($User) {
+            return Inertia::render ('Modulos/Administrador/Usuarios/formEditarUsuario',[
+                'usuario'=>$User,
+            ]);
         }
-        catch(Exception $e){
-            Session::flash('mensaje', 'Ha ocurrido un error al intentar actualizar los datos del usuario');
-            Session::flash('TipoMensaje', 'Error');
+        else{
             return redirect::route('Users.index');
         }
     }
-
+    //Funcion para actualizar un usuario
+    public function update(String $id,Request $request)
+    {
+        $User=User::find($id);
+        //Verifica si el usuario existe
+        if($User){
+            try{
+                $User->update($request->all());
+                Session::flash('mensaje', 'Se ha guardado los cambios');
+                Session::flash('TipoMensaje', 'Exitoso');
+                return redirect::route('Users.index');
+            }
+            catch(Exception $e){
+                Session::flash('mensaje', 'Ha ocurrido un error al intentar actualizar los datos del usuario');
+                Session::flash('TipoMensaje', 'Error');
+                return redirect::route('Users.index');
+            }
+        }
+        else{
+            return redirect::route('Users.index');
+        }
+    }
     //Funcion para eliminar un usuario
     public function destroy(String $id)
     {
-
-        try{
-            $User = User::find($id);
-            $User->delete();
-
-            Session::flash('mensaje', 'Se ha eliminado correctamente al usuario '.$User->name);
-            Session::flash('TipoMensaje', 'Exitoso');
-
-            return Redirect::route('Users.index');
-        }catch(Exception $e){
-            Session::flash('mensaje', 'Ha ocurrido un error al eliminar al usuario '.$User->name);
-            Session::flash('TipoMensaje', 'Error');
+        $User = User::find($id);
+        //Verifica si el usuario existe
+        if($User){
+            try{
+                //Eliminar usuario
+                $User->delete();
+                Session::flash('mensaje', 'Se ha eliminado correctamente al usuario '.$User->name);
+                Session::flash('TipoMensaje', 'Exitoso');
+                return Redirect::route('Users.index');
+            }catch(Exception $e){
+                Session::flash('mensaje', 'Ha ocurrido un error al eliminar al usuario '.$User->name);
+                Session::flash('TipoMensaje', 'Error');
+                return Redirect::route('Users.index');
+            }
+        }
+        else{
             return Redirect::route('Users.index');
         }
     }
-
     //Funcion para buscar un usuario
     public function buscarUsuario(Request $request){
-
         //Recibir parametros
         $Usuario=$request->input('usuario');
         $campo = $request->input('campo');
@@ -163,18 +158,12 @@ class UserController extends Controller
     {
         $usuariosDisponibles=User::where('estatus','0')->get();
         return $usuariosDisponibles;
-
     }
-
-
     //Funcion para obtener los permisos de un determinado rol
     public function ObtenerPermisosUsuario(String $idUsuario){
-        $user = User::find($idUsuario); //obtener usuario autenticado
+        $user = User::find($idUsuario); //Obtener usuario autenticado
         $permisos = $user->permissions;
-
         $permisosNames = $permisos->pluck('name')->toArray(); //Obtener solo un array con el nombre de los roles
         return $permisosNames;
     }
-
-
 }

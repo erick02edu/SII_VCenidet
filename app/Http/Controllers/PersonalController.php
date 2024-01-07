@@ -8,41 +8,23 @@ use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\UsuarioRegistrado;
-use App\Models\Departamentos;
-use App\Models\EstatusEmpleado;
 use Exception;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 
-
 class PersonalController extends Controller
 {
-
-    // public function __construct()
-    // {
-    //     $this->middleware(['permission:Ver informacion del personal|Agregar Personal|Asignar cuentas de usuarios al personal|Asignar Plazas al personal|Editar información del personal|Eliminar al personal'])->only('index','indexActivos','indexBajas');
-    //     $this->middleware('can:Agregar Personal')->only('store');
-    //     $this->middleware('can:Editar información del personal')->only('edit','update');
-    //     $this->middleware('can:Eliminar al personal')->only('destroy');
-
-    //     $this->middleware('can:Asignar cuentas de usuarios al personal')->only('asignarCuenta');
-    //     $this->middleware('can:Asignar Plazas al personal')->only('asignarPlaza');
-    // }
-
-    public function __construct()
-    {
+    //Constructor
+    public function __construct(){
         $this->middleware(['role:Recursos Humanos'])->only('index','indexActivos','indexBajas');
         $this->middleware(['role:Recursos Humanos'])->only('store','create');
         $this->middleware(['role:Recursos Humanos'])->only('edit','update');
         $this->middleware(['role:Recursos Humanos'])->only('destroy');
-
-        $this->middleware(['role:Recursos Humanos'])->only('asignarCuenta');
+        //$this->middleware(['role:Recursos Humanos'])->only('asignarCuenta');
         $this->middleware(['role:Recursos Humanos'])->only('asignarPlaza');
     }
-
-
-    public function index()
-    {
+    //Ruta index para vista de personal
+    public function index(){
         $Pagination=personal::paginate(10);
         $personal=$Pagination->items();
 
@@ -86,20 +68,6 @@ class PersonalController extends Controller
             'tipoMensaje' => $TipoMensaje,
         ]); //Regresar a la vista personal
     }
-
-
-    public function create(){
-        $Departamentos=app(DepartamentoController::class)->ObtenerDepartamentos();
-        $EstatusEmpleados=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleados();
-        // $usuarios=app(UserController::class)->ObtenerUsuarios();
-        $usuarios=app(UserController::class)->ObtenerUsuariosDisponibles();
-        return Inertia::render('Modulos/RH/Personal/AltaPersonal',[
-            'departamentos'=>$Departamentos,
-            'estatus'=>$EstatusEmpleados,
-            'usuarios'=>$usuarios
-        ]);
-    }
-
     public function indexActivos(){
 
         $Pagination=personal::where('Estatus','A')->paginate(10);
@@ -140,8 +108,6 @@ class PersonalController extends Controller
             'periodos'=>$Periodos
         ]);
     }
-
-
     public function indexBajas(){
 
         $Pagination=personal::where('Estatus','B')->paginate(10);
@@ -182,9 +148,19 @@ class PersonalController extends Controller
             'periodos'=>$Periodos
         ]);
     }
-
-    public function store(Request $request)
-    {
+    //Funcion para redirigir a vista para dar de alta un personal
+    public function create(){
+        $Departamentos=app(DepartamentoController::class)->ObtenerDepartamentos();
+        $EstatusEmpleados=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleados();
+        $usuarios=app(UserController::class)->ObtenerUsuariosDisponibles();
+        return Inertia::render('Modulos/RH/Personal/AltaPersonal',[
+            'departamentos'=>$Departamentos,
+            'estatus'=>$EstatusEmpleados,
+            'usuarios'=>$usuarios
+        ]);
+    }
+    //Funcion para agregar un personal
+    public function store(Request $request){
 
         $Personal=new personal();
 
@@ -297,45 +273,32 @@ class PersonalController extends Controller
         // }
 
     }
-
-    public function edit(string $id)
-    {
-
+    //Funcion para redirigir a vista para editar un personal
+    public function edit(string $id){
         $Departamentos=app(DepartamentoController::class)->ObtenerDepartamentos();
         $EstatusEmpleados=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleados();
-        //$usuarios=app(UserController::class)->ObtenerUsuarios();
         $usuarios=app(UserController::class)->ObtenerUsuariosDisponibles();
-
         $Personal = personal::find($id);
-
         if($Personal->idUsuario!=null){
             $cuentaAsignada=app(UserController::class)->ObtenerUsuarioPorID($Personal->idUsuario);
         }
         else{
         $cuentaAsignada=0;
         }
-
         return Inertia::render ('Modulos/RH/Personal/formEditarPersonal',[
             'personalEditar'=>$Personal,
             'departamentos'=>$Departamentos,
             'estatus'=>$EstatusEmpleados,
             'usuarios'=>$usuarios,
             'cuentaAsignada'=>$cuentaAsignada
-
         ]);
     }
-
-    public function update(Request $request, string $id)
-    {
-
+    //Funcion para ctualizar la informacion de un personal
+    public function update(Request $request, string $id){
         try{
             $Personal=personal::find($id);
 
             $DescripcionEstatus=app(EstatusEmpleadoController::class)->ObtenerEstatusEmpleadosPorID($request->EstatusEmpleado);
-
-            $request->input('Estatus');
-
-
             $Personal->update($request->all());
 
             if($DescripcionEstatus->Descripcion!='Activo'){
@@ -349,19 +312,13 @@ class PersonalController extends Controller
                 ];
                 $requestEnviar->merge($parametros);
                 app(bajasPersonalController::class)->store($requestEnviar);
-
             }
             else{
-
                 //Eliminar de bajas personal
-
-                app(bajasPersonalController::class)->delete($Personal->id);
-
-
+                //app(bajasPersonalController::class)->delete($Personal->id);
                 $Personal->Estatus='A';
                 $Personal->save();
             }
-
             Session::flash('mensaje', 'Cambios guardados correctamente');
             Session::flash('TipoMensaje', 'Exitoso');
             return redirect::route('Personal.index');
@@ -371,40 +328,27 @@ class PersonalController extends Controller
             Session::flash('TipoMensaje', 'Error');
             return redirect::route('Personal.index');
         }
-
-
     }
-
-    public function destroy(string $id)
-    {
-
+    //Funcion para eliminar un personal
+    public function destroy(string $id){
         $Personal=personal::find($id);
-
         if($Personal->Estatus=='A'){
             $Personal->Estatus='B';
         }
         else if($Personal->Estatus=='B'){
             $Personal->Estatus='A';
         }
-
-
         $Personal->save();
-
         return redirect::route('Personal.index');
-
     }
-
+    //Funcion para buscar un personal
     public function buscarPersonal(Request $request){
-
         $Personal=$request->input('personal');
         $campo = $request->input('campo');
         $Filtro = $request->input('Filtro');
         $Departamento = $request->input('Departamento');
-
         if($Filtro=='Todos'){
-
             if($campo=='Nombre'){
-
                 if($Departamento==0){
                     $result=personal::
                     whereRaw("CONCAT(Nombre,' ',ApellidoP,' ',ApellidoM) LIKE ?",['%'.$Personal.'%'])->get();
@@ -424,11 +368,9 @@ class PersonalController extends Controller
                     where('idDepAdscripcion','=',$Departamento)->get();
                 }
             }
-
         }
         else if($Filtro=='Activos'){
             if($campo=='Nombre'){
-
                 if($Departamento==0){
                     $result=personal::
                     whereRaw("CONCAT(Nombre,' ',ApellidoP,' ',ApellidoM) LIKE ?",['%'.$Personal.'%'])->
@@ -440,7 +382,6 @@ class PersonalController extends Controller
                     where('Estatus','=','A')->
                     where('idDepAdscripcion','=',$Departamento)->get();
                 }
-
             }
             else{
                 if($Departamento==0){
@@ -455,7 +396,6 @@ class PersonalController extends Controller
             }
         }
         else if($Filtro=='Bajas'){
-
             if($campo=='Nombre'){
                 if($Departamento==0){
                     $result=personal::
@@ -482,83 +422,64 @@ class PersonalController extends Controller
 
             }
         }
-
         return $result;
     }
-
-
-
+    //Funcion para asignar una plaza a un personal
     public function asignarPlaza(Request $request){
-
         $Personal=personal::find($request->input('idPersonal'));
         $Personal->idPlaza=$request->input('idPlaza');
         $Personal->save();
         return redirect::route('Personal.index');
-
     }
-
+    //Funcion para asignar cuenta a un personal
     public function asignarCuenta(Request $request){
-
         $Personal=personal::find($request->input('idPersonal'));
         $Personal->idUsuario=$request->input('idCuenta');
         $Personal->save();
-        return redirect::route('Personal.index');
-
     }
-
+    //Funcion para obtener lista del personal
     public function ObtenerPersonal(){
-
         $Personal=personal::all();
         return $Personal;
     }
-
+    //Funcion para obtener el personal deado de alta
     public function ObtenerPersonalAlta(){
-
         $Personal=personal::where('Estatus','=','A')->get();
         return $Personal;
     }
-
-
+    //Funcion para obtener personal por medio del id
     public function ObtenerPersonalPorID(String $id){
-
         $Personal=personal::find($id);
         return $Personal;
     }
-
+    //Funcion para obtener todo el personal de un departamento
     public function ObtenerPersonalDepartamento(Request $request){
         $departamento = $request->input('departamento');
-
-
-
         $Personal=personal::where('idDepAdscripcion','=',$departamento)->get();
-
         if($Personal->isEmpty()){
             $Personal=[];
         }
-
         return response()->json(['Personal'=>$Personal]);
     }
-
-
-    public function PersonalDepartamento(Request $request){
-        $departamento = $request->input('departamento');
-
-
-        $Personal=personal::where('idDepAdscripcion','=',$departamento)->get();
-
-        if($Personal->isEmpty()){
-            $Personal=[];
-        }
-
-        return $Personal;
-    }
-
+    //Funcion que redirige a la vista para los reportes relacionados con el personal
     public function Reportes(){
         return Inertia::render ('Modulos/RH/Reportes/Reportes',[
         ]);
     }
-
-
+    //Funciones para obtener el personal que no tiene una cuenat de usuario
+    public function ObtenerPersonalSinCuenta(){
+        $PersonalSinCuenta=Personal::where('idUsuario',null)->get(['id','Nombre','ApellidoP','ApellidoM']);
+        return $PersonalSinCuenta;
+    }
+    public function PersonalDepartamento(Request $request){
+        $departamento = $request->input('departamento');
+        $Personal=personal::where('idDepAdscripcion','=',$departamento)->get();
+        if($Personal->isEmpty()){
+            $Personal=[];
+        }
+        return $Personal;
+    }
+    //Funcion para obtener informacion para el reporte de rotacion de personal
     public function ReporteRotacion(Request $request){
         $FechaInicio=$request->FechaInicio;
         $FechaFin=$request->FechaFin;
@@ -634,14 +555,10 @@ class PersonalController extends Controller
             'porcentajesBajas'=>$porcentajesBajas,
         ]);
     }
-
-
-
+    //Funcion para obtener informacion del reporte de antiguedad
     public function ReporteAntiguedad(Request $request){
-
         $RangoAntiguedades=$request->json()->all();
         $NumeroDeRangos=count($RangoAntiguedades);
-
         //Inicializar Objeto
         $i=0;
         foreach ($RangoAntiguedades as $Rangos => $Rango) {
@@ -658,29 +575,22 @@ class PersonalController extends Controller
                 'PorcentajeEmpleados'=>'',
                 'PorcentajeRestante'=>''
             ];
-
             // Crea el objeto stdClass y asigna las propiedades
             $PersonalPorRango[$i] = (object)$propiedades;
             $i++;
         }
-
         //dd($PersonalPorRango);
-
         //Obtener antiguedad del personal
         $empleados = Personal::all();
         $i=0;
         foreach ($empleados as $empleado) {
-
             //Obtener los a;os de antiguedad del empleado
             $fechaIngreso = new Carbon($empleado->FechaRegistro);
             $antiguedad = $fechaIngreso->diffInYears(Carbon::now());
-
-
             $i++;
 
             foreach ($PersonalPorRango as $Rango) {
                 //Verificar si cumple con las condiciones para poder ingresar dentro de un personal
-
                 $Años=(int) $Rango->Años;
                 $Operador=$Rango->Operador;
                 // dd($Operador);
@@ -690,7 +600,6 @@ class PersonalController extends Controller
                         array_push($Rango->ListaPersonal,$ArrayEmpleado);
                     }
                 }
-
                 if($Operador=='Menos'){
                     if($antiguedad<$Años){
                         $ArrayEmpleado=$empleado->toArray();
@@ -699,34 +608,27 @@ class PersonalController extends Controller
                 }
             }
         }
-        //
-
-        //Obtener Promedios
-
-
         $TotalEmpleados=count($empleados->toArray());
-
-        //dd($TotalEmpleados);
         foreach ($PersonalPorRango as $Rango) {
             $numEmpleadosRango=count($Rango->ListaPersonal);
             $porcentaje =round( ($numEmpleadosRango / $TotalEmpleados) * 100,2);
             $Rango->PorcentajeEmpleados=$porcentaje;
             $PorcentajeRestante=100-$porcentaje;
             $Rango->PorcentajeRestante=$PorcentajeRestante;
-
             $Rango->NumPersonas=count($Rango->ListaPersonal);
-
         }
-
-
-        //dd($PersonalPorRango);
-
         return Inertia::render ('Modulos/RH/Reportes/ReporteAntiguedad',[
             'InformacionRango'=>$PersonalPorRango,
         ]);
-
-
-        //dd($PersonalPorRango); //Personal rango contiene toda la informacion necesaria
-
+    }
+    //Funcion para verificar si existe un personal con un cierto ID
+    public function VerificarExistencia(String $id){
+        $Persona=Personal::find($id);
+        if($Persona){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 }

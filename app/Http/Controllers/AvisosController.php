@@ -10,9 +10,17 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
 use Inertia\Inertia;
 
-
 class AvisosController extends Controller
 {
+    //Constructor
+    public function __construct()
+    {
+        $this->middleware(['role:Administrador'])->only('index');
+        $this->middleware(['role:Administrador'])->only('store','create');
+        $this->middleware(['role:Administrador'])->only('edit','update');
+        $this->middleware(['role:Administrador'])->only('destroy');
+    }
+
     public function index(){
 
         $Pagination=Avisos::paginate(10);
@@ -23,7 +31,6 @@ class AvisosController extends Controller
         // Obtener datos flash de la sesión
         $mensaje = Session::get('mensaje');
         $TipoMensaje = Session::get('TipoMensaje');
-
 
         return Inertia::render('Modulos/RH/Avisos/Avisos',[
             'avisos'=>$Avisos,
@@ -50,7 +57,6 @@ class AvisosController extends Controller
         $Aviso=new Avisos();
 
         try{
-
             $Aviso->Titulo=$request->Titulo;
             $Aviso->Descripcion=$request->Descripcion;
 
@@ -58,13 +64,9 @@ class AvisosController extends Controller
             $Aviso->FechaPublicacion=date("Y-m-d");
             $Aviso->save();
 
-
             $usuariosEnviar=$request->UsuariosSeleccionados;
 
-
-
             if(count($request->RolesSeleccionados)>0){
-
                 foreach($request->RolesSeleccionados as $Rol){
 
                     $ListaUsuarios=app(RoleController::class)->ObtenerUsuariosDeUnRol($Rol['id']);
@@ -73,7 +75,6 @@ class AvisosController extends Controller
                     $usuariosEnviar = collect($usuariosEnviar);
                     $ListaUsuarios = collect($ListaUsuarios);
 
-
                     // Combinar las colecciones sin duplicados basados en la clave "id"
                     $usuariosEnviar = $usuariosEnviar->concat($ListaUsuarios)->unique('id');
 
@@ -81,9 +82,7 @@ class AvisosController extends Controller
                     $usuariosEnviar = $usuariosEnviar->values()->all();
 
                 }
-
             }
-
 
             $requestEnviar=new Request();
             $parametros=['ListaUsuario'=>$usuariosEnviar,'Aviso'=>$Aviso];
@@ -92,19 +91,21 @@ class AvisosController extends Controller
             Session::flash('mensaje', 'Se ha publicado el aviso correctamente');
             Session::flash('TipoMensaje', 'Exitoso');
             return Redirect::route('Avisos.index');
-
         }
         catch(Exception $e){
 
         }
-
     }
 
     public function edit(String $id){
         $Aviso = Avisos::find($id);
-        return Inertia::render ('Modulos/RH/Avisos/formEditarAviso',[
-            'aviso'=>$Aviso,
-        ]);
+        if($Aviso){
+            return Inertia::render ('Modulos/RH/Avisos/formEditarAviso',[
+                'aviso'=>$Aviso,
+            ]);
+        }else{
+            return back();
+        }
     }
 
     public function update(String $id,Request $request){
@@ -148,4 +149,15 @@ class AvisosController extends Controller
 
         return $result;
     }
+
+    //Funcion que redirige a ruta donde se muestra la informacion del anuncio completo
+    public function AnuncioCompleto(Request $request){
+        $idAnuncio=$request->input('id');
+        $Aviso=Avisos::find($idAnuncio);
+        return Inertia::render('Modulos/RH/Avisos/AvisoCompleto',[
+            'aviso'=>$Aviso
+        ]);
+    }
+
+
 }

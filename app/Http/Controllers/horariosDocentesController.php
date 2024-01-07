@@ -20,31 +20,18 @@ use App\Mail\HorarioCreado;
 
 class horariosDocentesController extends Controller
 {
-
-    // public function __construct()
-    // {
-    //     $this->middleware(['permission:Ver horarios|Crear y Editar Horarios|Eliminar Horarios'])->only('index','ver');
-    //     $this->middleware('permission:Crear y Editar Horarios')->only('store','edit');
-    //     $this->middleware('can:Eliminar Horarios')->only('destroy');
-    // }
-
+    //Constructor
     public function __construct(){
         $this->middleware(['role:Recursos Humanos'])->only('index','ver');
         $this->middleware(['role:Recursos Humanos'])->only('store','edit');
         $this->middleware(['role:Recursos Humanos'])->only('destroy');
     }
-
+    //Funcion index que redirige a la vista de horarios
     public function index(){
 
-        //$ListaHorarios=horariosDocentes::all();
-
         $Pagination=horariosDocentes::paginate(5);
-
         $ListaHorarios=$Pagination->items();
-
-
         $ListaProfesores=app(PersonalController::class)->ObtenerPersonal();
-
         $ListaPeriodos=app(PeriodoController::class)->ObtenerPeriodos();
         $ListaaDepartamentos=app(DepartamentoController::class)->ObtenerDepartamentos();
 
@@ -72,42 +59,35 @@ class horariosDocentesController extends Controller
             'tipoMensaje' => $TipoMensaje,
         ]);
     }
-
+    //Funcion que registra un nuevo horario
     public function store(Request $request){
         $HorarioDoc=new horariosDocentes();
-
         $HorarioDoc->idProfesor=$request->idProfesor;
         $HorarioDoc->idPeriodo=$request->idPeriodo;
-
-
         $HorarioDoc->save();
-
         $newHorarioId = $HorarioDoc->id;
-
         $InfoHorario=horariosDocentes::find($newHorarioId);
-
         return redirect()->route('HorariosDocentes.editAdmin',$newHorarioId);
     }
-
-
+    //Funcion que retorna al Panel de horario de un docente
     public function edit(String $id){
-
         $InfoHorario=horariosDocentes::find($id);
+
+        if(!$InfoHorario){
+            return redirect()->route('HorariosDocentes.index');
+        }
 
         $Materias=app(MateriasController::class)->ObtenerMaterias();
         $Aulas=app(AulaController::class)->ObtenerAulas();
         $Grupos=app(GruposController::class)->ObtenerGruposPorPeriodo($InfoHorario->idPeriodo);
         $Periodos=app(PeriodoController::class)->ObtenerPeriodos();
-
         $PeriodoHorario=app(PeriodoController::class)->ObtenerPeriodoPorID($InfoHorario->idPeriodo);
         $ProfesorHorario=app(PersonalController::class)->ObtenerPersonalPorID($InfoHorario->idProfesor);
-
         $ClasesLunes=app(ClasesController::class)->ObtenerClasesDia('Lunes',$id);
         $ClasesMartes=app(ClasesController::class)->ObtenerClasesDia('Martes',$id);
         $ClasesMiercoles=app(ClasesController::class)->ObtenerClasesDia('Miercoles',$id);
         $ClasesJueves=app(ClasesController::class)->ObtenerClasesDia('Jueves',$id);
         $ClasesViernes=app(ClasesController::class)->ObtenerClasesDia('Viernes',$id);
-
 
         return inertia('Modulos/RH/Horarios/PanelHorario',[
             'infoHorario'=>$InfoHorario,
@@ -125,19 +105,14 @@ class horariosDocentesController extends Controller
             'ProfesorHorario'=>$ProfesorHorario
         ]);
     }
-
+    //Funcion que retorna al Panel de horario de un administrativo
     public function editAdministrativo(String $id){
 
         $InfoHorario=horariosDocentes::find($id);
-
-
-
         if($InfoHorario==null){
             return redirect()->route('HorariosDocentes.index');
         }
-
         $periodo=app(PeriodoController::class)->ObtenerPeriodoPorID($InfoHorario->idPeriodo);
-
         $Personal=app(PersonalController::class)->ObtenerPersonalPorID($InfoHorario->idProfesor);
         $DiasLunes=app(DiasHorarioController::class)->ObtenerDiasHorario('Lunes',$id);
         $DiasMartes=app(DiasHorarioController::class)->ObtenerDiasHorario('Martes',$id);
@@ -210,7 +185,6 @@ class horariosDocentesController extends Controller
             $minutosTotalesJueves = $interval->i;
         }
 
-
         //Calcular horas viernes
         if($DiasViernes->isEmpty()){
             $DiasViernes=null;
@@ -242,8 +216,6 @@ class horariosDocentesController extends Controller
             $HorasTotalesSabado = $interval->h;
             $minutosTotalesSabado = $interval->i;
         }
-
-
         //Calcular horas totales
         //Sumar las horas y los minutos
         $total_horas = $HorasTotalesLunes + $HorasTotalesMartes+$HorasTotalesMiercoles+$HorasTotalesJueves+$HorasTotalesViernes+$HorasTotalesSabado;
@@ -254,7 +226,6 @@ class horariosDocentesController extends Controller
             $total_minutos -= 60;
             $total_horas += 1;
         }
-
         return inertia('Modulos/RH/Horarios/PanelHorarioAdministrativo',[
             'infoHorario'=>$InfoHorario,
             'periodo'=>$periodo,
@@ -284,8 +255,7 @@ class horariosDocentesController extends Controller
             'MinutosSemana'=>$total_minutos
         ]);
     }
-
-
+    //Funcion para eliminar un horario
     public function destroy(String $id){
         try{
             $Horario = horariosDocentes::find($id);
@@ -299,36 +269,28 @@ class horariosDocentesController extends Controller
             return Redirect::route('HorariosDocentes.index');
         }
     }
-
+    //Funcion que redirige a la ruta para ver un horario
     public function ver(String $id){
-
-
         $Horario=horariosDocentes::find($id);
-
         if($Horario==null){
             return redirect()->route('HorariosDocentes.index');
         }
-
         $idPersonal=$Horario->idProfesor;
         $idPeriodo=$Horario->idPeriodo;
         $Personal=app(PersonalController::class)->ObtenerPersonalPorID($idPersonal);
         $Periodo=app(PeriodoController::class)->ObtenerPeriodoPorID($idPeriodo);
-
         //COMPROBAR SI TIENE UNA PLAZA
         if($Personal->idPlaza!=null){
             //OBTENER INFORMACION DE LA PLAZA Y SU CATEGORIA
             $Plaza=app(PlazaController::class)->ObtenerPlazaPorID($Personal->idPlaza);
             $Categoria=app(CategoriaController::class)->ObtenerCategoriaPorID($Plaza->idCategoria);
-
         }
         else{
             //SI NO TIENE PLAZA
             $Plaza=null;
             $Categoria=null;
         }
-
         $DepartamentoAdscripcion=app(DepartamentoController::class)->ObtenerDepartamentoPorID($Personal->idDepAdscripcion);
-
         if($DepartamentoAdscripcion->idEncargado!=null){
             $EncargadoDepAdscripcion=app(PersonalController::class)->ObtenerPersonalPorID($DepartamentoAdscripcion->idEncargado);
         }
@@ -341,7 +303,6 @@ class horariosDocentesController extends Controller
         $DiasJueves=app(DiasHorarioController::class)->ObtenerDiasHorario('Jueves',$id);
         $DiasViernes=app(DiasHorarioController::class)->ObtenerDiasHorario('Viernes',$id);
         $DiasSabado=app(DiasHorarioController::class)->ObtenerDiasHorario('Sabado',$id);
-
         //Calcular horas Lunes
         if($DiasLunes->isEmpty()){
             $DiasLunes=null;
@@ -359,7 +320,6 @@ class horariosDocentesController extends Controller
             $minutosTotalesLunes = $interval->i;
             $FloatminutosTotalesLunes=number_format($minutosTotalesLunes/6,0);
         }
-
         //Calcular horas martes
         if($DiasMartes->isEmpty()){
             $DiasMartes=null;
@@ -377,7 +337,6 @@ class horariosDocentesController extends Controller
             $minutosTotalesMartes = $interval->i;
             $FloatminutosTotalesMartes=number_format($minutosTotalesMartes/6,0);
         }
-
         //Calcular horas miercoles
         if($DiasMiercoles->isEmpty()){
             $DiasMiercoles=null;
@@ -395,7 +354,6 @@ class horariosDocentesController extends Controller
             $minutosTotalesMiercoles = $interval->i;
             $FloatminutosTotalesMiercoles=number_format($minutosTotalesMiercoles/6,0);
         }
-
         //Calcular horas jueves
         if($DiasJueves->isEmpty()){
             $DiasJueves=null;
@@ -413,8 +371,6 @@ class horariosDocentesController extends Controller
             $minutosTotalesJueves = $interval->i;
             $FloatminutosTotalesJueves=number_format($minutosTotalesJueves/6,0);
         }
-
-
         //Calcular horas viernes
         if($DiasViernes->isEmpty()){
             $DiasViernes=null;
@@ -432,7 +388,6 @@ class horariosDocentesController extends Controller
             $minutosTotalesViernes = $interval->i;
             $FloatminutosTotalesViernes=number_format($minutosTotalesViernes/6,0);
         }
-
         //Calcular horas sabado
         if($DiasSabado->isEmpty()){
             $DiasSabado=null;
@@ -450,8 +405,6 @@ class horariosDocentesController extends Controller
             $minutosTotalesSabado = $interval->i;
             $FloatminutosTotalesSabado=number_format($minutosTotalesSabado/6,0);
         }
-
-
         //Calcular horas totales
         //Sumar las horas y los minutos
         $total_horas = $HorasTotalesLunes + $HorasTotalesMartes+$HorasTotalesMiercoles+$HorasTotalesJueves+$HorasTotalesViernes+$HorasTotalesSabado;
@@ -462,19 +415,7 @@ class horariosDocentesController extends Controller
             $total_minutos -= 60;
             $total_horas += 1;
         }
-
         $total_minutos=number_format($total_minutos/6,0);
-        // $Materias=app(MateriasController::class)->ObtenerMaterias();
-        // $Aulas=app(AulaController::class)->ObtenerAulas();
-        // $Grupos=app(GruposController::class)->ObtenerGrupos();
-
-        // $ClasesLunes=app(ClasesController::class)->ObtenerClasesDia('Lunes',$id);
-        // $ClasesMartes=app(ClasesController::class)->ObtenerClasesDia('Martes',$id);
-        // $ClasesMiercoles=app(ClasesController::class)->ObtenerClasesDia('Miercoles',$id);
-        // $ClasesJueves=app(ClasesController::class)->ObtenerClasesDia('Jueves',$id);
-        // $ClasesViernes=app(ClasesController::class)->ObtenerClasesDia('Viernes',$id);
-
-
         return inertia('Modulos/RH/Horarios/VistaHorario',[
             //INFORMACION NECESARIA PARA UN HORARIO
             'personal'=>$Personal,// INFORMACION DEL PERSONAL COMO NOMBRE,APELLDIOS,RFC,ESTUDIOS
@@ -514,92 +455,19 @@ class horariosDocentesController extends Controller
             // 'ClasesJueves'=>$ClasesJueves,
             // 'ClasesViernes'=>$ClasesViernes,
         ]);
-
-
     }
-
-    public function GenerarPDF(String $id){
-        $InfoHorario=horariosDocentes::find($id);
-
-        $Materias=app(MateriasController::class)->ObtenerMaterias();
-        $Aulas=app(AulaController::class)->ObtenerAulas();
-        $Grupos=app(GruposController::class)->ObtenerGrupos();
-
-        $ClasesLunes=app(ClasesController::class)->ObtenerClasesDia('Lunes',$id);
-        $ClasesMartes=app(ClasesController::class)->ObtenerClasesDia('Martes',$id);
-        $ClasesMiercoles=app(ClasesController::class)->ObtenerClasesDia('Miercoles',$id);
-        $ClasesJueves=app(ClasesController::class)->ObtenerClasesDia('Jueves',$id);
-        $ClasesViernes=app(ClasesController::class)->ObtenerClasesDia('Viernes',$id);
-
-        return inertia('Modulos/RH/Horarios/PDF_Horario',[
-            'infoHorario'=>$InfoHorario,
-            'materias'=>$Materias,
-            'aulas'=>$Aulas,
-            'grupos'=>$Grupos,
-            'idHorario'=>$id,
-            'ClasesLunes'=>$ClasesLunes,
-            'ClasesMartes'=>$ClasesMartes,
-            'ClasesMiercoles'=>$ClasesMiercoles,
-            'ClasesJueves'=>$ClasesJueves,
-            'ClasesViernes'=>$ClasesViernes,
-        ]);
-    }
-
-    public function GenerarExcel(String $id){
-
-        $InfoHorario=horariosDocentes::find($id);
-        $Materias=app(MateriasController::class)->ObtenerMaterias();
-        $Aulas=app(AulaController::class)->ObtenerAulas();
-        $Grupos=app(GruposController::class)->ObtenerGrupos();
-
-        $ClasesLunes=app(ClasesController::class)->ObtenerClasesDia('Lunes',$id);
-        $ClasesMartes=app(ClasesController::class)->ObtenerClasesDia('Martes',$id);
-        $ClasesMiercoles=app(ClasesController::class)->ObtenerClasesDia('Miercoles',$id);
-        $ClasesJueves=app(ClasesController::class)->ObtenerClasesDia('Jueves',$id);
-        $ClasesViernes=app(ClasesController::class)->ObtenerClasesDia('Viernes',$id);
-
-
-
-        return Excel::download(new HorariosExport($id,$InfoHorario,$Materias,$Aulas,$Grupos,$ClasesLunes,$ClasesMartes,$ClasesMiercoles,$ClasesJueves,$ClasesViernes),'Horario.xlsx');
-    }
-
-
-    public function verExcel(String $id){
-        $InfoHorario=horariosDocentes::find($id);
-
-        $Materias=app(MateriasController::class)->ObtenerMaterias();
-        $Aulas=app(AulaController::class)->ObtenerAulas();
-        $Grupos=app(GruposController::class)->ObtenerGrupos();
-
-        $ClasesLunes=app(ClasesController::class)->ObtenerClasesDia('Lunes',$id);
-        $ClasesMartes=app(ClasesController::class)->ObtenerClasesDia('Martes',$id);
-        $ClasesMiercoles=app(ClasesController::class)->ObtenerClasesDia('Miercoles',$id);
-        $ClasesJueves=app(ClasesController::class)->ObtenerClasesDia('Jueves',$id);
-        $ClasesViernes=app(ClasesController::class)->ObtenerClasesDia('Viernes',$id);
-
-        return view('Reportes.Horarios',[
-            'infoHorario'=>$InfoHorario,
-            'Materias'=>$Materias,
-            'Aulas'=>$Aulas,
-            'grupos'=>$Grupos,
-            'idHorario'=>$id,
-            'ClasesLunes'=>$ClasesLunes,
-            'ClasesMartes'=>$ClasesMartes,
-            'ClasesMiercoles'=>$ClasesMiercoles,
-            'ClasesJueves'=>$ClasesJueves,
-            'ClasesViernes'=>$ClasesViernes,
-        ]);
-    }
-
-
     public function FormatoPDF(String $id){
 
         $Horario=horariosDocentes::find($id);
-
         $idPersonal=$Horario->idProfesor;
         $idPeriodo=$Horario->idPeriodo;
         $Personal=app(PersonalController::class)->ObtenerPersonalPorID($idPersonal);
         $Periodo=app(PeriodoController::class)->ObtenerPeriodoPorID($idPeriodo);
+
+
+        //Obtener vigencia
+        $VigenciaInicio=app(VigenciaPersonalController::class)->ObtenerVigenciaInicio($idPersonal,$idPeriodo);
+        $VigenciaFin=app(VigenciaPersonalController::class)->ObtenerVigenciaFin($idPersonal,$idPeriodo);
 
         //COMPROBAR SI TIENE UNA PLAZA
         if($Personal->idPlaza!=null){
@@ -700,8 +568,6 @@ class horariosDocentesController extends Controller
             $minutosTotalesJueves = $interval->i;
             $FloatminutosTotalesJueves=number_format($minutosTotalesJueves/6,0);
         }
-
-
         //Calcular horas viernes
         if($DiasViernes->isEmpty()){
             $DiasViernes=null;
@@ -737,8 +603,6 @@ class horariosDocentesController extends Controller
             $minutosTotalesSabado = $interval->i;
             $FloatminutosTotalesSabado=number_format($minutosTotalesSabado/6,0);
         }
-
-
         //Calcular horas totales
         //Sumar las horas y los minutos
         $total_horas = $HorasTotalesLunes + $HorasTotalesMartes+$HorasTotalesMiercoles+$HorasTotalesJueves+$HorasTotalesViernes+$HorasTotalesSabado;
@@ -749,18 +613,7 @@ class horariosDocentesController extends Controller
             $total_minutos -= 60;
             $total_horas += 1;
         }
-
         $total_minutos=number_format($total_minutos/6,0);
-        // $Materias=app(MateriasController::class)->ObtenerMaterias();
-        // $Aulas=app(AulaController::class)->ObtenerAulas();
-        // $Grupos=app(GruposController::class)->ObtenerGrupos();
-
-        // $ClasesLunes=app(ClasesController::class)->ObtenerClasesDia('Lunes',$id);
-        // $ClasesMartes=app(ClasesController::class)->ObtenerClasesDia('Martes',$id);
-        // $ClasesMiercoles=app(ClasesController::class)->ObtenerClasesDia('Miercoles',$id);
-        // $ClasesJueves=app(ClasesController::class)->ObtenerClasesDia('Jueves',$id);
-        // $ClasesViernes=app(ClasesController::class)->ObtenerClasesDia('Viernes',$id);
-
 
         return inertia('Modulos/RH/Horarios/FormatoPDFHorarios',[
             //INFORMACION NECESARIA PARA UN HORARIO
@@ -789,21 +642,11 @@ class horariosDocentesController extends Controller
             'HorasTotalesSabado'=>$HorasTotalesSabado,
             'minutosTotalesSabado'=>$FloatminutosTotalesSabado,
             'HorasSemana'=>$total_horas,
+            'VigenciaInicio'=>$VigenciaInicio,
+            'VigenciaFin'=>$VigenciaFin,
             'MinutosSemana'=>$total_minutos
-            // 'infoHorario'=>$InfoHorario,
-            // 'materias'=>$Materias,
-            // 'aulas'=>$Aulas,
-            // 'grupos'=>$Grupos,
-            // 'idHorario'=>$id,
-            // 'ClasesLunes'=>$ClasesLunes,
-            // 'ClasesMartes'=>$ClasesMartes,
-            // 'ClasesMiercoles'=>$ClasesMiercoles,
-            // 'ClasesJueves'=>$ClasesJueves,
-            // 'ClasesViernes'=>$ClasesViernes,
         ]);
     }
-
-
     function HorarioConcentrado(String $idPeriodo){
 
         //Obtener todos los horarios de los docentes en el periodo seleccionado
@@ -846,13 +689,12 @@ class horariosDocentesController extends Controller
         $ListaHorasTotalesSabado=[];
         $ListaminutosTotalesSabado=[];
         $ListaFloatminutosTotalesSabado=[];
+        $ListaInicioVigencia=[];
+        $ListaFinVigencia=[];
 
         //Horas Semana
         $Listatotal_horas=[];
         $Listatotal_minutos=[];
-
-
-        // if($ListaHorarios->count()!=0){
 
             //Recorrer lista de horarios
             foreach($ListaHorarios as $Horario){
@@ -864,6 +706,13 @@ class horariosDocentesController extends Controller
                 $idPersonal=$Horario->idProfesor;
                 $Personal=app(PersonalController::class)->ObtenerPersonalPorID($idPersonal);
                 array_push($ListaPersonal,$Personal); //Agregarlo a la lista
+
+                //Obtener vigencia para el periodo que correponde
+                $VigenciaInicio=app(VigenciaPersonalController::class)->ObtenerVigenciaInicio($idPersonal,$Periodo->id);
+                array_push($ListaInicioVigencia,$VigenciaInicio);
+
+                $VigenciaFin=app(VigenciaPersonalController::class)->ObtenerVigenciaFin($idPersonal,$Periodo->id);
+                array_push($ListaFinVigencia,$VigenciaFin);
 
                 //COMPROBAR SI TIENE UNA PLAZA
                 if($Personal->idPlaza!=null){
@@ -1080,8 +929,13 @@ class horariosDocentesController extends Controller
 
                 array_push($Listatotal_horas,$total_horas);
                 array_push($Listatotal_minutos,$total_minutos);
+
+
             // }
-        }
+            }
+
+
+
 
         return inertia('Modulos/RH/Horarios/HorarioConcentrado',[
             'ListaHorarios'=>$ListaHorarios,
@@ -1111,11 +965,12 @@ class horariosDocentesController extends Controller
             'ListaminutosTotalesSabado'=>$ListaFloatminutosTotalesSabado,
             'ListaHorasSemana'=>$Listatotal_horas,
             'ListaMinutosSemana'=>$Listatotal_minutos,
+            'ListaInicioVigencia'=>$ListaInicioVigencia,
+            'ListaFinVigencia'=>$ListaFinVigencia,
             'numHorarios'=>$numeroDeHorarios
 
         ]);
     }
-
     public function buscarHorario(Request $request){
 
         //$departamento = $request->input('departamentoBuscar');
@@ -1145,48 +1000,28 @@ class horariosDocentesController extends Controller
         return $Horarios;
 
     }
-
     public function CorreoHorario(Request $request){
-
-
-
         $idProfesor=$request->input('profesor');
         $idPeriodo=$request->input('periodo');
-
-
-
         $Personal=app(PersonalController::class)->ObtenerPersonalPorID($idProfesor);
         $Periodo=app(PeriodoController::class)->ObtenerPeriodoPorID($idPeriodo);
-
-
-
         $Personal=$Personal->toArray();
         $Periodo=$Periodo->toArray();
-
 
         //Verificar si tiene una cuenta a la cual enviar el correo
         if($Personal['idUsuario']!=null){
             $Cuenta=app(UserController::class)->ObtenerUsuarioPorID($Personal['idUsuario']);
-
-            //dd($Cuenta->email);
-
-            //dd($Periodo);
             Mail::to($Cuenta->email)->send(new HorarioCreado($Periodo,$Personal));
 
             Session::flash('mensaje', 'Se ha enviado correctamento el correo al docente');
             Session::flash('TipoMensaje', 'Exitoso');
             return Redirect::route('HorariosDocentes.index');
-
         }
         else{
             Session::flash('mensaje', 'Este personal no cuenta con un correo asociado por favor verifique la informacion del docente');
             Session::flash('TipoMensaje', 'Error');
             return Redirect::route('HorariosDocentes.index');
         }
-
-
-
-
     }
 
 }

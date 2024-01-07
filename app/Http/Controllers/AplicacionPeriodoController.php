@@ -9,21 +9,10 @@ use App\Models\Periodos;
 use Exception;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Js;
-use Inertia\Response;
-
 
 class AplicacionPeriodoController extends Controller
 {
-
-    // public function __construct()
-    // {
-    //     $this->middleware(['permission:Ver periodos de aplicacion|Agregar Periodos de aplicacion|Editar Información de los periodos de aplicacion|Eliminar Periodos de Aplicacion|Actualizar fechas en los periodos de aplicacion'])->only('index');
-    //     $this->middleware('can:Agregar Periodos de aplicacion')->only('store');
-    //     $this->middleware('can:Actualizar fechas en los periodos de aplicacion')->only('actualizar');
-    //     $this->middleware('can:Eliminar Periodos de Aplicacion')->only('destroy');
-    // }
-
+    //Constructor
     public function __construct()
     {
         $this->middleware(['role:Administrador'])->only('index');
@@ -33,13 +22,8 @@ class AplicacionPeriodoController extends Controller
     }
 
     public function index(){
-
-        //$AplicacionPeriodo=AplicacionPeriodos::all();
-
         $Pagination=AplicacionPeriodos::paginate(10);
-
         $AplicacionPeriodo=$Pagination->items();
-
         $periodos=Periodos::all();
 
         $ListaIdPeriodos=AplicacionPeriodos::all()->pluck('idPeriodo')->toArray();
@@ -49,7 +33,7 @@ class AplicacionPeriodoController extends Controller
         $mensaje = Session::get('mensaje');
         $TipoMensaje = Session::get('TipoMensaje');
 
-        return Inertia::render('PeriodoAplicacion',[
+        return Inertia::render('Modulos/Administrador/PeriodoAplicacion/PeriodoAplicacion',[
             'aplicaciones'=>$AplicacionPeriodo,
             'periodos'=>$periodos,
             'ListaIDAplicaciones'=>$ListaIdAplicaciones,
@@ -60,17 +44,16 @@ class AplicacionPeriodoController extends Controller
         ]);
     }
 
-
+    //Funcion para registrar un nuevo periodo de aplicacion
     public function store(Request $request){
 
-
         $Aplicacion=new AplicacionPeriodos();
-
         try{
             $Aplicacion->descripcion=$request->descripcion;
             $Aplicacion->idPeriodo=$request->idPeriodo;
             $Aplicacion->save();
 
+            //Definir datos flash de la sesión
             Session::flash('mensaje', 'La aplicación se ha almacenado correctamente.');
             Session::flash('TipoMensaje', 'Exitoso');
             return Redirect::route('Aplicaciones.index');
@@ -78,10 +61,7 @@ class AplicacionPeriodoController extends Controller
         }catch(Exception $e){
             Session::flash('mensaje', 'Ha ocurrido un error al registrar la aplicacion.');
             Session::flash('TipoMensaje', 'Error');
-
-
         }
-
     }
 
     //Funcion para eliminar una aplicacion
@@ -90,6 +70,7 @@ class AplicacionPeriodoController extends Controller
         try{
             $Aplicacion = AplicacionPeriodos::find($id);
             $Aplicacion->delete();
+            //Definir datos flash de la sesión
             Session::flash('mensaje', 'La aplicación se ha eliminado correctamente.');
             Session::flash('TipoMensaje', 'Exitoso');
             return Redirect::route('Aplicaciones.index');
@@ -99,18 +80,16 @@ class AplicacionPeriodoController extends Controller
             Session::flash('TipoMensaje', 'Error');
             return Redirect::route('Aplicaciones.index');
         }
-        //$mensaje='Se ha eliminado correctamento esta aplicacion';
-
-
     }
 
     public function actualizar(Request $request){
-        $cont=0;
 
+        $cont=0;
         try{
             $ListaIDAplicaciones=$request->input('ListaIDAplicaciones');
             $ListaIdPeriodos=$request->input('ListaIDPeriodos');
 
+            //Actualizar el periodo de todas las aplicaciones
             foreach($ListaIDAplicaciones as $idAplicacion){
                 $Aplicacion=AplicacionPeriodos::find($idAplicacion);
                 $idNuevo=$ListaIdPeriodos[$cont];
@@ -118,8 +97,8 @@ class AplicacionPeriodoController extends Controller
                 $Aplicacion->save();
                 $cont=$cont+1;
             };
-
-            Session::flash('mensaje', 'Cambios guardados');
+            //Definir datos flash de la sesión
+            Session::flash('mensaje', 'Se han actualizado los periodos correctamente');
             Session::flash('TipoMensaje', 'Exitoso');
             return Redirect::route('Aplicaciones.index');
         }
@@ -128,13 +107,12 @@ class AplicacionPeriodoController extends Controller
             Session::flash('TipoMensaje', 'Error');
             return Redirect::route('Aplicaciones.index');
         }
-        //return response()->json(['respuesta'=>'Aplicaciones actualizadas']);
     }
 
     public function buscarAplicacion(Request $request){
-
-        $Aplicacion=$request->input('aplicacion');
-        $campo = $request->input('campo');
+        $Aplicacion=$request->input('aplicacion'); //Obtener cadena enviada por el usuario
+        $campo = $request->input('campo'); //Obtener el campo de busqueda
+        //Hacer busqueda de acuerdo al campo
         if($campo=='idPeriodo'){
             $request=new Request();
             $parametros=['periodoBuscar'=>$Aplicacion];
@@ -145,6 +123,7 @@ class AplicacionPeriodoController extends Controller
         }else{
             $result=AplicacionPeriodos::where($campo, 'LIKE', '%'.$Aplicacion.'%')->get();
         }
+        //Devolver resultados de la busqueda
         return $result;
     }
 }

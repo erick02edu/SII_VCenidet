@@ -11,16 +11,6 @@ use Illuminate\Support\Facades\Session;
 
 class CategoriaController extends Controller
 {
-
-
-    // public function __construct()
-    // {
-    //     $this->middleware(['permission:Ver categorias de plaza|Agregar categorias de plaza|Editar informacion de categorias plaza|Eliminar categorias plaza'])->only('index');
-    //     $this->middleware('can:Agregar categorias de plaza')->only('store');
-    //     $this->middleware('can:Editar informacion de categorias plaza')->only('edit','update');
-    //     $this->middleware('can:Eliminar categorias plaza')->only('destroy');
-    // }
-
     public function __construct()
     {
         $this->middleware(['role:Recursos Humanos'])->only('index');
@@ -29,13 +19,9 @@ class CategoriaController extends Controller
         $this->middleware(['role:Recursos Humanos'])->only('destroy');
     }
 
-
-
     public function index(){
-
-        $Pagination=categoria::paginate(10);//Este bombre aulas debe coincidir con el props en el scrip de vue
+        $Pagination=categoria::paginate(10);
         $categorias=$Pagination->items();
-
         // Obtener datos flash de la sesión
         $mensaje = Session::get('mensaje');
         $TipoMensaje = Session::get('TipoMensaje');
@@ -50,9 +36,7 @@ class CategoriaController extends Controller
     }
 
     public function store(Request $request){
-
         $categoria=new categoria();
-
         try{
             $categoria->Descripcion=$request->Descripcion;
             $categoria->Clave=$request->Clave;
@@ -70,16 +54,19 @@ class CategoriaController extends Controller
         }
     }
 
-
     public function edit(String $id){
+
         $Categoria = categoria::find($id);
-        return Inertia::render ('Modulos/RH/Plazas/formEditarCategorias',[
-            'categoria'=>$Categoria,
-        ]);
+        if($Categoria){
+            return Inertia::render ('Modulos/RH/Plazas/formEditarCategorias',[
+                'categoria'=>$Categoria,
+            ]);
+        }else{
+            return back();
+        }
     }
 
-    public function update(String $id,Request $request)
-    {
+    public function update(String $id,Request $request){
         try{
 
             $Categoria=categoria::find($id);
@@ -95,6 +82,7 @@ class CategoriaController extends Controller
         }
 
     }
+
     public function destroy(String $id){
         try{
             $Categoria = categoria::find($id);
@@ -109,37 +97,20 @@ class CategoriaController extends Controller
         }
     }
 
-    public function ObtenerCategorias()
-    {
+    public function ObtenerCategorias(){
         $categorias=categoria::all();
         return $categorias;
     }
 
-    public function ObtenerCategoriaPorID(String $id)
-    {
+    public function ObtenerCategoriaPorID(String $id) {
         $categoria=categoria::find($id);
         return $categoria;
     }
 
     public function buscar(Request $request){
         $Categoria=$request->input('categoria');
-
         $campo = $request->input('campo');
-
         $result=categoria::where($campo, 'LIKE', '%'.$Categoria.'%')->get();
-
         return $result;
-
-
-    }
-
-    public function cambiarPaginacion(Request $request){
-        $ElementosPorPagina=$request->input('NumElementos');
-
-
-        $Pagination=categoria::paginate($ElementosPorPagina);
-
-
-        return response()->json(['Paginator'=>$Pagination]);
     }
 }

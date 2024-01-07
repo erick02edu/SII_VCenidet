@@ -12,7 +12,9 @@ use Inertia\Inertia;
 
 class VigenciaPersonalController extends Controller
 {
-
+    public function __construct(){
+        $this->middleware(['role:Recursos Humanos'])->only('update','editVigencia','store');
+    }
 
     public function store(Request $request){
 
@@ -38,35 +40,41 @@ class VigenciaPersonalController extends Controller
     }
 
     public function editVigencia(Request $request,String $idPersonal, String $idPeriodo){
+        //Verificar que el personal y el periodo existan
+        $ExistPeriodo=app(PeriodoController::class)->VerificarExistencia($idPeriodo);
+        $ExistPersonal=app(PersonalController::class)->VerificarExistencia($idPersonal);
 
-        //return response()->json(['respuesta'=>$idPeriodo]);
-        $VigenciaPersona=VigenciaPersonal::
-        where('idPersonal','=',$idPersonal)
-        ->where('idPeriodo','=',$idPeriodo)
-        ->get();
+        if($ExistPeriodo && $ExistPersonal){
 
-        if($VigenciaPersona->isEmpty()){
-            $VigenciaPersona= array();
-            $nuevoElemento = array(
-                "id"=>null,
-                "InicioVigencia" => null,
-                "FinVigencia" => null,
-                "idPersonal"=>$idPersonal,
-                "idPeriodo"=>$idPeriodo,
-            );
-            //$nuevoElemento2 = array("FinVigencia" => "2000-03-01");
-            array_push($VigenciaPersona, $nuevoElemento);
+            $VigenciaPersona=VigenciaPersonal::
+            where('idPersonal','=',$idPersonal)
+            ->where('idPeriodo','=',$idPeriodo)
+            ->get();
+
+            if($VigenciaPersona->isEmpty()){
+                $VigenciaPersona= array();
+                $nuevoElemento = array(
+                    "id"=>null,
+                    "InicioVigencia" => null,
+                    "FinVigencia" => null,
+                    "idPersonal"=>$idPersonal,
+                    "idPeriodo"=>$idPeriodo,
+                );
+                array_push($VigenciaPersona, $nuevoElemento);
+            }
+
+            $Periodo=app(PeriodoController::class)->ObtenerPeriodoPorID($idPeriodo);
+            $Personal=app(PersonalController::class)->ObtenerPersonalPorID($idPersonal);
+
+            return Inertia::render('Modulos/RH/Personal/Vigencia',[
+                'InfoVigencia'=>$VigenciaPersona,
+                'personal'=>$Personal,
+                'periodo'=>$Periodo
+            ]);
         }
-
-        $Periodo=app(PeriodoController::class)->ObtenerPeriodoPorID($idPeriodo);
-
-        $Personal=app(PersonalController::class)->ObtenerPersonalPorID($idPersonal);
-
-        return Inertia::render('Modulos/RH/Personal/Vigencia',[
-            'InfoVigencia'=>$VigenciaPersona,
-            'personal'=>$Personal,
-            'periodo'=>$Periodo
-        ]);
+        else{
+            return back();
+        }
     }
 
     public function update(Request $request, string $id){
@@ -82,5 +90,23 @@ class VigenciaPersonalController extends Controller
             Session::flash('TipoMensaje', 'Error');
             return redirect::route('Personal.index');
         }
+    }
+
+    public function ObtenerVigenciaInicio(String $idPersonal,String $idPeriodo){
+        $VigenciaInicio=VigenciaPersonal::
+        where('idPersonal',$idPersonal)->
+        where('idPeriodo',$idPeriodo)
+        ->pluck('InicioVigencia')
+        ->first();
+        return $VigenciaInicio;
+    }
+
+    public function ObtenerVigenciaFin(String $idPersonal,String $idPeriodo){
+        $VigenciaFin=VigenciaPersonal::
+        where('idPersonal',$idPersonal)->
+        where('idPeriodo',$idPeriodo)
+        ->pluck('FinVigencia')
+        ->first();
+        return $VigenciaFin;
     }
 }

@@ -12,15 +12,7 @@ use Illuminate\Support\Facades\Session;
 
 class DepartamentoController extends Controller
 {
-
-    // public function __construct()
-    // {
-    //     $this->middleware(['permission:Ver departamentos|Agregar Departamentos|Editar información de los departamentos|Eliminar departamentos'])->only('index');
-    //     $this->middleware('can:Agregar Departamentos')->only('store');
-    //     $this->middleware('can:Editar información de los departamentos')->only('edit','update');
-    //     $this->middleware('can:Eliminar departamentos')->only('destroy');
-    // }
-
+    //Constructor
     public function __construct()
     {
         $this->middleware(['role:Recursos Humanos'])->only('index');
@@ -28,24 +20,16 @@ class DepartamentoController extends Controller
         $this->middleware(['role:Recursos Humanos'])->only('edit','update');
         $this->middleware(['role:Recursos Humanos'])->only('destroy');
     }
-
-    public function index()
-    {
-        //$departamentos=Departamentos::all();
-
+    //Funcion que redirige a vista de departamentos
+    public function index(){
         $Pagination=Departamentos::paginate(10);
-
         $departamentos=$Pagination->items();
-
         $personal=app(PersonalController::class)->ObtenerPersonal();
-
         $subdirecciones=app(SubdireccionController::class)->ObtenerSubdirecciones();
-
         // Obtener datos flash de la sesión
         $mensaje = Session::get('mensaje');
         $TipoMensaje = Session::get('TipoMensaje');
-
-        return Inertia::render('Departamentos',[
+        return Inertia::render('Modulos/RH/Departamentos/Departamentos',[
             'departamentos'=>$departamentos,
             'personal'=>$personal,
             'Paginator'=>$Pagination,
@@ -53,15 +37,10 @@ class DepartamentoController extends Controller
             'mensaje' => $mensaje,
             'tipoMensaje' => $TipoMensaje,
         ]);
-
-
     }
-
     //Crear nuevo departamento
-    public function store(Request $request)
-    {
+    public function store(Request $request)    {
         $Departamento=new Departamentos();
-
         try{
             $Departamento->Nombre=$request->Nombre;
             $Departamento->Descripcion=$request->Descripcion;
@@ -80,26 +59,22 @@ class DepartamentoController extends Controller
         }
 
     }
-
-    public function edit(string $id)
-    {
+    //Funcion que redirige a vista para editar un departamento
+    public function edit(string $id)   {
         $Departamento = Departamentos::find($id);
         $personal=app(PersonalController::class)->ObtenerPersonalAlta();
-
         if($Departamento->idEncargado!=null){
             $JefeActual=app(PersonalController::class)->ObtenerPersonalPorID($Departamento->idEncargado);
         }
         else{
             $JefeActual=0;
         }
-
         $subdirecciones=app(SubdireccionController::class)->ObtenerSubdirecciones();
-
         // Obtener datos flash de la sesión
         $mensaje = Session::get('mensaje');
         $TipoMensaje = Session::get('TipoMensaje');
 
-        return Inertia::render ('formEditarDepartamento',[
+        return Inertia::render ('Modulos/RH/Departamentos/formEditarDepartamento',[
             'departamento'=>$Departamento,
             'personal'=>$personal,
             'JefeActual'=>$JefeActual,
@@ -108,13 +83,10 @@ class DepartamentoController extends Controller
             'tipoMensaje' => $TipoMensaje,
         ]);
     }
-
-
-    public function update(Request $request, string $id)
-    {
+    //Funcion que redirige a ruta para actualizar la informacion de un departamento
+    public function update(Request $request, string $id)    {
         try{
             $Departamento=Departamentos::find($id);
-
             $Departamento->update($request->all());
             Session::flash('mensaje', 'Se han guardado los cambios correctamente');
             Session::flash('TipoMensaje', 'Exitoso');
@@ -126,10 +98,8 @@ class DepartamentoController extends Controller
             return redirect::route('Departamentos.index');
         }
     }
-
-
-    public function destroy(string $id)
-    {
+    //Funcion que permite realizar la eliminacion de un departamento
+    public function destroy(string $id){
         try{
             $Departamento = Departamentos::find($id);
             $Departamento->delete();
@@ -144,25 +114,21 @@ class DepartamentoController extends Controller
             return redirect::route('Departamentos.index');
         }
     }
-
-
+    //Funcion que devuelv la lista de departamentos
     public function ObtenerDepartamentos(){
         $Departamentos=Departamentos::all();
         return $Departamentos;
     }
-
+    //Funcion que devuelve un departamento por medio de su id
     public function ObtenerDepartamentoPorID(String $id){
         $Departamento=Departamentos::find($id);
         return $Departamento;
     }
-
+    //Funcion que busca un departamento
     public function buscarDepartamento(Request $request){
         $Departamento=$request->input('departamento');
-
         $campo = $request->input('campo');
-
         if($campo=='idEncargado'){
-
             $request=new Request();
             $parametros=['usuario'=>$Departamento,'campo'=>'name'];
             //Unir $parametros a request
@@ -174,8 +140,6 @@ class DepartamentoController extends Controller
         else{
             $result=Departamentos::where($campo, 'LIKE', '%'.$Departamento.'%')->get();
         }
-        //return $result;
         return $result;
-
     }
 }

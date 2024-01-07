@@ -1,44 +1,33 @@
 <template>
 
-    <Head title="Crear aviso" />
+    <Head title="Editar aviso" />
     <AuthenticatedLayout>
     <template #header>
             Editar aviso
     </template>
-
-
     <div class="w-full mb-5">
-
         <div class="w-11/12 mb-1  ">
-
-
             <label class=" uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2 mr-2" for="grid-first-name">
-                Titulo
+                Título
             </label>
-
         </div>
-
         <p v-if="mensajeTitulo==true" class="text-sm text-red-600 ">Por favor llena este campo</p>
         <input id="Nombre"
             class="  mr-56 appearance-none  w-3/6 bg-white dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none
              focus:bg-white" v-model="InfoEditar.Titulo"
         type="text" placeholder="Ingresa un titulo" required>
 
-
         <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
-            Descripcion
+            DESCRIPCIÓN
         </label>
         <p v-if="mensajeDescripcion==true" class="text-sm text-red-600 ">Por favor llena este campo</p>
         <div class="flex items-start justify-start ">
-            <input id="Nombre"
-                class="appearance-none w-11/12 bg-white dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-slate-600 rounded
-                px-4 mb-3 focus:bg-white h-60 content-start"
-                v-model="InfoEditar.Descripcion"
-                type="text" placeholder="Ingresa un titulo" required>
+                <textarea class="appearance-none w-11/12 bg-white dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-slate-600 rounded
+                px-4 mb-3 focus:bg-white h-60 content-start" placeholder="Escribe aquí..."
+                v-model="InfoEditar.Descripcion" required></textarea>
         </div>
 
     </div>
-
 
     <div class="flex items-center  space-x-2 rounded-b dark:border-gray-200">
         <button type="submit" @click="EditarAviso"
@@ -52,9 +41,7 @@
         </Link>
     </div>
 
-
     </AuthenticatedLayout>
-
 
 </template>
 
@@ -75,77 +62,70 @@ import { useDark,useToggle} from '@vueuse/core'
 const isDark=useDark()
 
 export default {
-
     components:{
         Link
     },
-
     mounted() {
 
     },
-
     props:{
         aviso:Array,
     },
-
     data() {
-    return {
+        return {
+            mensajeTitulo:false,
+            mensajeDescripcion:false,
 
-        mensajeTitulo:false,
-        mensajeDescripcion:false,
 
-
-        InfoEditar: {
-            id:this.$props.aviso.id,
-            Titulo:this.$props.aviso.Titulo,
-            Descripcion:this.$props.aviso.Descripcion,
-        },
-    }
-  },
-
-  methods: {
-
-    ComprobarCampos(){
-
-        var camposValidos=true;
-
-        if(this.InfoEditar.Titulo==''){
-            this.mensajeTitulo=true;
-            camposValidos=false;
+            InfoEditar: {
+                id:this.$props.aviso.id,
+                Titulo:this.$props.aviso.Titulo,
+                Descripcion:this.$props.aviso.Descripcion,
+            },
         }
-        else{
-            this.mensajeTitulo=false;
-        }
-
-        if(this.InfoEditar.Descripcion==''){
-            this.mensajeDescripcion=true;
-            camposValidos=false;
-        }
-        else{
-            this.mensajeDescripcion=false;
-        }
-
-        return camposValidos;
     },
+    methods: {
 
-    async EditarAviso(){
+        ComprobarCampos(){
 
-        try{
-            if(this.ComprobarCampos()==true){
-                this.$inertia.put(
-                    route("Avisos.update",this.$props.aviso.id),
-                        this.InfoEditar
-                );
+            var camposValidos=true;
+
+            if(this.InfoEditar.Titulo==''){
+                this.mensajeTitulo=true;
+                camposValidos=false;
             }
-        }catch (error) {
-            console.error(error); // Puedes imprimir el error en la consola para depuración.
-        }
+            else{
+                this.mensajeTitulo=false;
+            }
+
+            if(this.InfoEditar.Descripcion==''){
+                this.mensajeDescripcion=true;
+                camposValidos=false;
+            }
+            else{
+                this.mensajeDescripcion=false;
+            }
+
+            return camposValidos;
+        },
+
+        async EditarAviso(){
+
+            try{
+                if(this.ComprobarCampos()==true){
+                    this.$inertia.put(
+                        route("Avisos.update",this.$props.aviso.id),
+                            this.InfoEditar
+                    );
+                }
+            }catch (error) {
+                console.error(error);
+            }
 
 
-    },
+        },
 
-
-  }
+    }
 };
 </script>
 

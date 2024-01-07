@@ -1,6 +1,4 @@
 <template>
-
-
     <div :class="$page.props.showingMobileMenu ? 'block' : 'hidden'" @click="$page.props.showingMobileMenu = false"
          class="fixed inset-0 z-20 bg-[#014e8200] transition-opacity lg:hidden"></div>
 
@@ -17,57 +15,20 @@
             <nav-link :href="route('dashboard')" :active="route().current('dashboard')"
             >
                 <template #icon>
-                    <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                    <!-- <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                          stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"/>
-                    </svg>
+                    </svg> -->
+                    <i class="fa-solid fa-house"></i>
                 </template>
                 Inicio
 
             </nav-link>
 
 
-            <!-- <nav-link :href="route('Prueba.index')" target="_blank" :active="route().current('Plazas.Index')"  > -->
-            <!-- <nav-link :href="route('Prueba.index')" target="_blank" :active="route().current('Plazas.Index')"  >
-                <template #icon>
-                    <i class="fa-solid fa-briefcase"></i>
-                </template>
-                    Descargar PDF
-            </nav-link> -->
-
-
-            <!-- <nav-link :href="route('FechaReinscripcion.index')" :active="route().current('Plazas.Index')"  >
-                <template #icon>
-                    <i class="fa-solid fa-briefcase"></i>
-                </template>
-                    Horario reinscripcion
-            </nav-link> -->
-
-
-
-
-            <!-- <nav-link :href="route('PruebaMail.index')" :active="route().current('PruebaMail.Index')"  >
-                <template #icon>
-                    <i class="fa-solid fa-briefcase"></i>
-                </template>
-                    Prueba mail
-            </nav-link> -->
-
-
-
-            <!-- <nav-link :href="route('Aplicaciones.index')" :active="route().current('Aplicaciones.index')"
-            v-if="$page.props.user.permissions.includes('Ver periodos de aplicacion') || $page.props.user.permissions.includes('Agregar Periodos de aplicacion') ||
-            $page.props.user.permissions.includes('Editar Información de los periodos de aplicacion') || $page.props.user.permissions.includes('Eliminar Periodos de Aplicacion') ||
-            $page.props.user.permissions.includes('Actualizar fechas en los periodos de aplicacion')"
-            >
-                <template #icon>
-                    <i class="fa-solid fa-clock"></i>
-                </template>
-                    Periodo aplicación
-            </nav-link> -->
             <nav-link :href="route('Aplicaciones.index')" :active="route().current('Aplicaciones.index')"
             v-if="$page.props.user.roles.includes('Administrador')"
             >
@@ -76,20 +37,6 @@
                 </template>
                     Periodo aplicación
             </nav-link>
-
-<!--
-            <nav-link :href="route('Users.index')" :active="route().current('Users.index') || route().current('Users.edit') || route().current('Users.editRole') "
-            v-if="$page.props.user.permissions.includes('Agregar Usuarios') || $page.props.user.permissions.includes('Editar Usuarios') ||
-            $page.props.user.permissions.includes('Eliminar Usuarios') || $page.props.user.permissions.includes('Ver usuarios') ||
-             $page.props.user.permissions.includes('Asignar roles a los usuarios')"
-            >
-
-                <template #icon>
-                    <i class="fa-solid fa-user"></i>
-                </template>
-                Usuarios
-
-            </nav-link> -->
 
             <nav-link :href="route('Users.index')"
             :active="route().current('Users.index') || route().current('Users.edit') || route().current('Users.editRole') "
@@ -102,13 +49,6 @@
                 Usuarios
 
             </nav-link>
-
-
-
-            <!-- <nav-link :href="route('Roles.index')" :active="route().current('Roles.index')|| route().current('Roles.edit') || route().current('Roles.editPermisos')"
-            v-if="$page.props.user.roles.includes('Administrador')|| $page.props.user.permissions.includes('Ver Roles') ||
-            $page.props.user.permissions.includes('Crear roles') ||  $page.props.user.permissions.includes('Editar información de los roles')
-            ||  $page.props.user.permissions.includes('Eliminar roles') "  > -->
 
             <nav-link :href="route('Roles.index')" :active="route().current('Roles.index')|| route().current('Roles.edit') || route().current('Roles.editPermisos')"
             v-if="$page.props.user.roles.includes('Administrador') "  >
@@ -128,16 +68,6 @@
                 Avisos
             </nav-link>
 
-            <!-- <nav-link :href="route('Personal.index')" :active="route().current('Personal.index') || route().current('Personal.Activos') || route().current('Personal.Bajas') ||
-            route().current('Personal.create')"
-            v-if="$page.props.user.permissions.includes('Ver informacion del personal')|| $page.props.user.permissions.includes('Agregar Personal') ||
-            $page.props.user.permissions.includes('Asignar cuentas de usuarios al personal') ||  $page.props.user.permissions.includes('Asignar Plazas al personal')
-            ||  $page.props.user.permissions.includes('Editar información del personal')  ||  $page.props.user.permissions.includes('Eliminar al personal') " >
-                <template #icon>
-                    <i class="fa-solid fa-person"></i>
-                </template>
-                Personal
-            </nav-link> -->
             <nav-link :href="route('Personal.index')" :active="route().current('Personal.index') || route().current('Personal.Activos') || route().current('Personal.Bajas') ||
             route().current('Personal.create') || route().current('Personal.edit') "
             v-if="$page.props.user.roles.includes('Recursos Humanos')" >
@@ -147,16 +77,15 @@
                 Personal
             </nav-link>
 
-
-            <nav-link :href="route('Personal.Reportes')" :active="route().current('Personal.Reportes') "
+        <!-------- Version escuela---------------------------->
+            <!-- <nav-link :href="route('Personal.Reportes')" :active="route().current('Personal.Reportes') "
             v-if="$page.props.user.roles.includes('Recursos Humanos')" >
                 <template #icon>
                     <i class="fa-solid fa-person"></i>
                 </template>
                 Reportes
-            </nav-link>
-
-
+            </nav-link> -->
+            <!----------------------------------------------------->
 
             <nav-link :href="route('Plazas.index')" :active="route().current('Plazas.index') || route().current('Plazas.edit')"
             v-if="$page.props.user.roles.includes('Recursos Humanos') "
@@ -167,18 +96,6 @@
                 Plazas
             </nav-link>
 
-
-            <!-- <nav-link :href="route('categorias.index')" :active="route().current('categorias.index') || route().current('categorias.edit')"
-            v-if="$page.props.user.permissions.includes('liminar categorias plaza') || $page.props.user.permissions.includes('Editar informacion de categorias plaza') ||
-            $page.props.user.permissions.includes('Agregar categorias de plaza') || $page.props.user.permissions.includes('Ver categorias de plaza')"
-            >
-                <template #icon>
-                    <i class="fa-solid fa-briefcase"></i>
-                </template>
-                Categorias Plazas
-            </nav-link> -->
-
-
             <nav-link :href="route('categorias.index')" :active="route().current('categorias.index') || route().current('categorias.edit')"
             v-if="$page.props.user.roles.includes('Recursos Humanos') ">
                 <template #icon>
@@ -188,10 +105,8 @@
             </nav-link>
 
 
-
-
             <!----------VERSION ESCUELA ------------>
-                <nav-link :href="route('Alumnos.index')" :active="route().current('Alumnos.index') || route().current('Alumnos.edit')"
+                <!-- <nav-link :href="route('Alumnos.index')" :active="route().current('Alumnos.index') || route().current('Alumnos.edit')"
                 v-if="$page.props.user.roles.includes('Administrador')">
                     <template #icon>
                         <i class="fa-solid fa-book-open-reader"></i>
@@ -213,7 +128,7 @@
                         <i class="fa-solid fa-book"></i>
                     </template>
                         Materias
-                </nav-link>
+                </nav-link> -->
             <!-------------------------------------->
 
             <nav-link :href="route('HorariosDocentes.index')" :active="route().current('HorariosDocentes.index')"
@@ -235,7 +150,7 @@
 
 
              <!----------VERSION ESCUELA ------------>
-                <nav-link :href="route('Aulas.index')" :active="route().current('Aulas.index')"
+                <!-- <nav-link :href="route('Aulas.index')" :active="route().current('Aulas.index')"
                 v-if="$page.props.user.roles.includes('Administrador')">
                     <template #icon>
                         <i class="fa-solid fa-school"></i>
@@ -258,12 +173,13 @@
                         <i class="fa-solid fa-clipboard"></i>
                     </template>
                     Calificaciones
-                </nav-link>
+                </nav-link> -->
 
             <!----------------------------------------->
 
 
-            <nav-link :href="route('backup.index')" :active="route().current('backup.index')">
+            <nav-link :href="route('backup.index')" :active="route().current('backup.index')"
+            v-if="$page.props.user.roles.includes('Administrador')">
                 <template #icon>
                     <i class="fa-solid fa-database"></i>
                 </template>

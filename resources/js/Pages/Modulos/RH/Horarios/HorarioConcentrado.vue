@@ -1,9 +1,9 @@
 <template>
-
-    <!-- <div class='flex items-center justify-center min-h-screen'>
+    <Head title="Horario Concentrado PDF" />
+    <div class='flex items-center justify-center min-h-screen'>
         <div style="border-top-color:transparent" class="w-8 h-8 border-4 border-[#014E82] rounded-full animate-spin"></div>
         <p class="ml-2">GENERANDO PDF ...</p>
-    </div> -->
+    </div>
 
     <div v-show="true">
     <div id="pdfContent" >
@@ -766,8 +766,13 @@
 
 
             <div class="w-full pl-10 uppercase text-xxs mb-1">
-                <p class="inline-flex">INICIO DE VIGENCIA:</p><strong>31 de Julio del 2023</strong><br>
-                <p class="inline-flex">FIN DE VIGENCIA:</p><strong>12 de Enero del 2024</strong>
+                <p v-if="ListaInicioVigencia[index]!=null" class="inline-flex">INICIO DE VIGENCIA:<strong>{{ ListaInicioVigencia[0] }}</strong> </p>
+                <p v-if="ListaInicioVigencia[index]==null" class="inline-flex">INICIO DE VIGENCIA:<strong>Sin vigencia</strong><br> </p>
+
+                <br>
+
+                <p v-if="ListaFinVigencia[index]!=null" class="inline-flex">FIN DE VIGENCIA:<strong>{{ListaFinVigencia[0]}}</strong> </p>
+                <p v-if="ListaFinVigencia[index]==null" class="inline-flex">FIN DE VIGENCIA:<strong>Sin vignecia</strong> </p>
             </div>
 
             <div class="w-10/12 ml-24 mt-5 text-xxs uppercase">
@@ -871,6 +876,8 @@
             ListaminutosTotalesSabado:0,
             ListaHorasSemana:0,
             ListaMinutosSemana:0,
+            ListaInicioVigencia:0,
+            ListaFinVigencia:0,
 
             numHorarios:0
 
@@ -878,7 +885,7 @@
 
         async mounted() {
             await this.generarPDF();
-            //window.close();
+            window.close();
         },
 
         methods:{
@@ -903,6 +910,11 @@
 
     }
 </script>
+
+<script setup>
+    import { Head } from '@inertiajs/vue3';
+</script>
+
 
 
 

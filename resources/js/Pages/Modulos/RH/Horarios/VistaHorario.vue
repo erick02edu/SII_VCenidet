@@ -1,5 +1,5 @@
 <template>
-
+    <Head title="Vista horario" />
     <div class="bg-white">
         <div class="w-full h-full overflow-y-scroll pl-2 ">
             <!--Encabezado con logos-->
@@ -824,16 +824,16 @@
 
 
             </div>
-
             <!--ESPACIADO PARA LA SIGUIENTE PAGINA PONER EN 8 O 10-->
             <!-- <div class="mt-8">
             </div> -->
-
             </div>
         </div>
-
-
     </template>
+
+    <script setup>
+        import { Head } from '@inertiajs/vue3';
+    </script>
 
     <script>
       import html2pdf from "html2pdf.js";
@@ -870,31 +870,6 @@
                 MinutosSemana:0,
 
             },
-
-            async mounted() {
-                //await this.generarPDF();
-            },
-
-            methods:{
-
-                async generarPDF() {
-                    var element=document.getElementById('pdfContent');//obtener elemento
-
-                    const pdfOptions = {
-                    margin: 0,
-                    filename: 'Horario.pdf',
-                    image: { type: 'jpeg', quality: 0.98 },
-                    html2canvas: { scale: 2 },
-                    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },//Hoja horizontal
-                    };
-
-                    const pdf=new html2pdf().from(element).set(pdfOptions).outputPdf();
-                    console.log(pdf)
-                    await pdf.save();
-                    //window.history.back();
-                },
-            }
-
         }
     </script>
 

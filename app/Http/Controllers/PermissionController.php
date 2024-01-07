@@ -3,16 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-//use Spatie\Permission\Contracts\Permission;
 use Inertia\Inertia;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 use App\Models\User;
 use Exception;
-use Illuminate\Contracts\Session\Session as SessionSession;
 use Illuminate\Support\Facades\Session;
-
-
 
 class PermissionController extends Controller
 {
@@ -21,22 +17,6 @@ class PermissionController extends Controller
     {
         $this->middleware(['role:Administrador'])->only(['editPermisos','asignar']);
     }
-
-    public function index()
-    {
-
-    }
-
-    public function GetPermisos(){
-        $Permisos=Permission::all();
-        return response()->json(['ListaPermisos'=>$Permisos]);
-    }
-
-    public function ObtenerPermisos(){
-        $Permisos=Permission::all();
-        return $Permisos;
-    }
-
     //Asignar permisos a un determinado Rol por su Id
     public function asignarPermisos(Request $request){
         $id=$request->input('id');
@@ -49,26 +29,16 @@ class PermissionController extends Controller
 
         return back()->with([$id]);
     }
-
     //Funcion para ir al formulario para editar los permisos de un rol
     public function EditPermisos(String $id){
-
         $Role = Role::find($id);
-
-        // $permissions = $Role->permissions;
-        // $permissionsArray = $permissions->pluck('name')->toArray();
-        // $permissionsID = $permissions->pluck('id')->toArray();
-
+        if($Role){
         $UsuarioRoles=$Role->users;
-
         $ListaCarreras=app(CarreraController::class)->ObtenerCarreras();
-
         $ListaPermisos=Permission::all();
-
          // Obtener datos flash de la sesión
         $mensaje = Session::get('mensaje');
         $TipoMensaje = Session::get('TipoMensaje');
-
         return Inertia::render ('Modulos/Administrador/RolesPermisos/AsignarPermisos',[
             'rol'=>$Role,
             'usuarios'=>$UsuarioRoles,
@@ -78,45 +48,46 @@ class PermissionController extends Controller
             'tipoMensaje' => $TipoMensaje,
 
         ]);
+        }
+        else{
+            return back();
+        }
     }
-
+    //Funcion para obtener lista de permisos
+    public function ObtenerPermisos(){
+        $Permisos=Permission::all();
+        return $Permisos;
+    }
     //Funcion para obtener los permisos de un determinado rol
     public function ObtenerPermisosRol(String $id){
         $Role = Role::find($id); //obtener usuario autenticado
-
         $permisos = $Role->permissions;// Esto obtendrá una colección de permisos asignados a un rol
         $permisosNames = $permisos->pluck('name')->toArray(); //Obtener solo un array con el nombre de los roles
         return response()->json(['ListaPermisosRol'=>$permisosNames]);
     }
-
+    //Funcion para obtener los permisos de un usuario
     public function ObtenerPermisosUsuario(String $idUsuario){
         $user=app(UserController::class)->ObtenerUsuarioPorID($idUsuario);
         $permisosUsuario = $user->permissions;
-
         return $permisosUsuario;
-
     }
-
+    //Funcion para asignar una lista de permisos a un usuario
     public function AsignarPermisosUsuario(Request $request){
-
-        $idUsuario=$request->input('idUsuario');
-        $user=app(UserController::class)->ObtenerUsuarioPorID($idUsuario);
-        $PermisosSeleccionados=$request->input('PermisosSeleccionados');
+        $idUsuario=$request->input('idUsuario'); //Obtener id usuario
+        $user=app(UserController::class)->ObtenerUsuarioPorID($idUsuario); //Obtener Usuario
+        $PermisosSeleccionados=$request->input('PermisosSeleccionados'); //Obtener lista de permisos
 
         foreach($PermisosSeleccionados as $Permiso){
             $user->givePermissionTo($Permiso); //AsignarPermisos a un determinado Usuario
         }
-
         return response()->json([
             'mensaje'=>'Se ha asignado todos los permisos del sistema correctamente',
             'tipoMensaje'=>'Exitoso'
         ]);
-
         return back();
     }
-
+    //Quitar un permiso a un usuario
     public function RemoverPermiso(Request $request){
-
         try{
             $idUsuario=$request->input('idUsuario');
             $idPermiso=$request->input('idPermiso');
@@ -124,8 +95,7 @@ class PermissionController extends Controller
             $user=app(UserController::class)->ObtenerUsuarioPorID($idUsuario);
             $permiso = Permission::findById($idPermiso);
 
-            $user->revokePermissionTo($permiso);
-
+            $user->revokePermissionTo($permiso);//Remover permiso
 
             return response()->json([
                 'mensaje'=>'Se ha removido el permiso correctamente',
@@ -139,14 +109,10 @@ class PermissionController extends Controller
             ]);
         }
     }
-
+    //Funcion para buscar un permiso
     public function Buscar(Request $request){
-        $Permiso=$request->input('Permiso');
-
-        $result=Permission::where('name', 'LIKE', '%'.$Permiso.'%')->get();
-
-        return $result;
-
+        $Permiso=$request->input('Permiso'); //Obtener cadena enviada
+        $result=Permission::where('name', 'LIKE', '%'.$Permiso.'%')->get(); //Hacer busqueda
+        return $result;//Devolver resultados
     }
-
 }

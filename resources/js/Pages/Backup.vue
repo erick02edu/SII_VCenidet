@@ -267,15 +267,13 @@ export default {
 </script>
 
 <style>
-
-        .tippy-box[data-theme~='MiTheme'] {
-            background-color: rgb(46, 53, 190);
-            color: rgb(255, 255, 255);
-            padding: 5px;
-            border-radius: 4px;
-        }
-
-        .tippy-arrow {
-            border-top-color: rgb(38, 95, 230); /* Cambia este color según tus preferencias */
-        }
+    .tippy-box[data-theme~='MiTheme'] {
+        background-color: rgb(46, 53, 190);
+        color: rgb(255, 255, 255);
+        padding: 5px;
+        border-radius: 4px;
+    }
+    .tippy-arrow {
+        border-top-color: rgb(38, 95, 230); 
+    }
 </style>

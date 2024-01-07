@@ -1,11 +1,9 @@
 <template>
-
+ <Head title="Generar PDF" />
 <div class='flex items-center justify-center min-h-screen'>
     <div style="border-top-color:transparent" class="w-8 h-8 border-4 border-[#014E82] rounded-full animate-spin"></div>
     <p class="ml-2">GENERANDO PDF...</p>
 </div>
-
-
 
 <div v-show="false">
 <div id="pdfContent" class="w-full">
@@ -778,10 +776,12 @@
             </table>
         </div>
 
-
         <div class="w-full pl-10 uppercase text-xxs mb-1">
-            <p class="inline-flex">INICIO DE VIGENCIA:</p><strong>31 de Julio del 2023</strong><br>
-            <p class="inline-flex">FIN DE VIGENCIA:</p><strong>12 de Enero del 2024</strong>
+            <p v-if="VigenciaInicio!=null" class="inline-flex">INICIO DE VIGENCIA:<strong>{{ VigenciaInicio }}</strong></p>
+            <p v-if="VigenciaInicio==null" class="inline-flex">INICIO DE VIGENCIA:<strong>Sin vigencia</strong></p>
+            <br>
+            <p v-if="VigenciaFin!=null" class="inline-flex">FIN DE VIGENCIA:<strong>{{ VigenciaFin }}</strong></p>
+            <p v-if="VigenciaFin==null" class="inline-flex">FIN DE VIGENCIA:<strong>Sin vigencia</strong></p>
         </div>
 
         <div class="w-10/12 ml-24 mt-5 text-xxs uppercase">
@@ -845,6 +845,11 @@
 
 </template>
 
+<script setup>
+    import { Head } from '@inertiajs/vue3';
+</script>
+
+
 <script>
   import html2pdf from "html2pdf.js";
 
@@ -876,6 +881,8 @@
             minutosTotalesViernes:0,
             HorasTotalesSabado:0,
             minutosTotalesSabado:0,
+            VigenciaInicio:0,
+            VigenciaFin:0,
             HorasSemana:0,
             MinutosSemana:0,
 

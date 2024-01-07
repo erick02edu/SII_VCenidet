@@ -15,6 +15,7 @@ return new class extends Migration
 
             $table->unsignedBigInteger('idAviso')->nullable(); // Columna para la llave foránea
             $table->unsignedBigInteger('idUsuario')->nullable(); // Columna para la llave foránea
+            $table->boolean('Leido');
 
             $table->foreign('idAviso')->references('id')->on('avisos')->onDelete('cascade')->onUpdate('cascade');
             $table->foreign('idUsuario')->references('id')->on('users')->onDelete('cascade')->onUpdate('cascade');

@@ -1,83 +1,43 @@
 <template>
     <header class="flex items-center justify-between border-b-2 border-[#014E82] dark:border-slate-500    bg-white  dark:bg-slate-800 px-6 py-4">
-
-
         <div class="flex items-center w-1/2 py-0">
             <button @click="$page.props.showingMobileMenu = !$page.props.showingMobileMenu" class="text-gray-500 dark:text-white focus:outline-none lg:hidden">
                 <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M4 6H20M4 12H20M4 18H11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                 </svg>
             </button>
-
-
             <div class="dark:text-gray-200 justify-start pl-2">
-
                 <span> <i class="fa-solid fa-users pr-1"></i>
-                    Rol: </span>
+                    Tipo de usuario: </span>
                     <span v-for="(rol,index) in Roles">
                         {{rol}}
                         <span v-if="Roles.length-1!=index">,</span>
                     </span>
-
                 <span v-if="Roles.length==0">Sin rol</span>
-
             </div>
-
-            
-
-
         </div>
 
-
-        <div
-        class="flex items-center">
-
+        <div class="flex items-center">
             <img :src="LogoCenidetURL" alt="Descripción de la imagen" class="w-25 h-10 pl-4">
-
-            <button class="relative inline overflow-hidden dark:text-slate-100 pr-2 pl-3"
-            v-tippy="{
-                content:Hola[0],
-                placement: 'left' ,
-                arrow: true,
-                theme:'mediano'
-
-            }">
-
-                <div class="hover:bg-gray-200 dark:hover:bg-slate-500 pr-1 pl-2 pt-1.5 pb-0.5 rounded-md">
-                    <i class="fa-solid fa-bell absolute z-0  "></i>
-                    <div class=" bg-red-600 rounded-full pr-1 pl-1 inline relative text-sm z-100 ml-2"> <span class="text-slate-200">1</span> </div>
-                </div>
-            </button>
-
-
             <button @click="toggleDark()" class="relative inline overflow-hidden dark:text-slate-100 pr-3 pl-3 "
             v-tippy="{
                 content: 'ModoOscuro',
                 placement: 'top' ,
                 arrow: true,
-                theme: 'mediano'
+                theme: 'MyTheme'
 
             }">
-
                 <div @click="CambiarIcono" class="hover:bg-gray-200 dark:hover:bg-slate-500  pr-2 pl-2 pt-0.5 pb-0.5 rounded-md">
                     <i :class="icono"></i>
                 </div>
-
             </button>
-
-
             <dropdown>
-
-
                 <template #trigger>
-
-                        <button @click="dropdownOpen = ! dropdownOpen" class="relative inline overflow-hidden dark:text-slate-100 pl-5  ">
-                            {{ $page.props.auth.user.name }}
-                        </button>
+                    <button @click="dropdownOpen = ! dropdownOpen" class="relative inline overflow-hidden dark:text-slate-100 pl-5  ">
+                        {{ $page.props.auth.user.name }}
+                    </button>
 
                 </template>
-
-
 
                 <template #content>
                     <dropdown-link :href="route('profile.show')">
@@ -89,10 +49,6 @@
                     </dropdown-link>
                 </template>
             </dropdown>
-
-
-
-
         </div>
     </header>
 </template>
@@ -100,43 +56,22 @@
 <script setup>
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
-
-
 </script>
 
-
-
 <script>
-
-
     import { useDark,useToggle} from '@vueuse/core'
-
     import { directive } from 'vue-tippy'
     import { roundArrow } from 'vue-tippy'
     import { ref } from 'vue'
 
-
     const isDark=useDark()
     const toggleDark=useToggle(isDark)
-    const Hola=['1 notificacion','2 notificacion','3 notificacion ']
-
-    // const refContent = ref(this.notificaciones);
-
-    const refContent = ref(Hola[0]);
 
     export default {
-
-
         directives: {
             tippy: directive,
         },
-
-
-
         mounted() {
-
-
-            console.log('Modo oscuro inicial:',isDark.value)
             if(isDark.value==false){
                 this.icono='fa-solid fa-moon'
                 this.LogoCenidetURL='/img/CenidetLogoClaro.png'
@@ -146,16 +81,10 @@ import DropdownLink from '@/Components/DropdownLink.vue';
             else{
                 this.LogoCenidetURL='/img/CenidetLogoOscuro.png'
                 this.icono='fa-solid fa-sun'
-
-
                 this.$page.props.colorModal="#1f2937"
                 this.$page.props.textoModal="#f1f5f9"
             }
-
-
-
         },
-
         methods:{
             CambiarIcono(){
                 if(isDark.value==true){
@@ -172,7 +101,6 @@ import DropdownLink from '@/Components/DropdownLink.vue';
                 }
             }
         },
-
         data() {
             return {
                 icono:'',
@@ -181,15 +109,11 @@ import DropdownLink from '@/Components/DropdownLink.vue';
                 LogoCenidetURL:'/img/CenidetLogoClaro.png'
             }
         },
-
     }
-
 </script>
 
-
 <style>
-
-    .tippy-box[data-theme~='mediano'] {
+    .tippy-box[data-theme~='MyTheme'] {
         background-color: rgb(51 65 85);
 
         color: rgb(255, 250, 250);

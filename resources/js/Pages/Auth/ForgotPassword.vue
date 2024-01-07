@@ -25,8 +25,8 @@ const submit = () => {
 
 
     <div class="min-h-screen flex flex-col sm:justify-start items-center pt-6 sm:pt-12 bg-gray-100">
+    <img src="/img/IconoTec.png" alt="Error al cargar imagen" class="w-50 h-20 pl-4">
 
-            <img src="/img/IconoTec.png" alt="Error al cargar imagen" class="w-50 h-20 pl-4">
     <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg  border-t-4 border-[#316385]">
 
             <p class="flex items-center justify-center w-full py-4 text-lg font-black"> Restablecimiento de contraseña</p>

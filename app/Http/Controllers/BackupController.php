@@ -67,7 +67,7 @@ class BackupController extends Controller
 
             //Concatenar el comando para respaldar                //Carpeta guardar        //Nombre del archivo para guardar
             $command = "mysqldump -u $UserName $NombreBase > " . app_path('backups') ."\\". $backupFileName;
-            dd($command);
+            //dd($command);
             //Ejecutar comando
             $resultado = shell_exec($command);
 
@@ -136,16 +136,6 @@ class BackupController extends Controller
             return redirect::route('backup.index');
         }
     }
-
-    public function Prueba(){
-
-        $User=User::all();
-
-        //return inertia::render('Prueba',['usuarios'=> $User]);
-
-        return inertia::render('Modulos/RH/Horarios/FormatoPDFHorarios',['usuarios'=> $User]);
-    }
-
 
 }
 

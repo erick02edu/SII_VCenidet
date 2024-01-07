@@ -49,6 +49,7 @@ const submit = () => {
 
 
                 <div>
+                    <i class="fa-solid fa-user pr-2"></i>
                     <InputLabel for="text" value="Usuario"  />
                     <TextInput
                         id="email"
@@ -63,8 +64,14 @@ const submit = () => {
                 </div>
 
                 <div class="mt-4">
-                    <span>
-                        <InputLabel for="password" value="Contraseña" />
+
+                    <span class="">
+
+                        <div class="w-full ">
+                            <i class="fa-brands fa-expeditedssl inline pr-2 pt-1"></i>
+                            <InputLabel for="password" value="Contraseña" />
+                        </div>
+
                         <TextInput
                             id="password"
                             v-model="form.password"
