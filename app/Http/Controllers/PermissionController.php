@@ -93,9 +93,9 @@ class PermissionController extends Controller
             $idPermiso=$request->input('idPermiso');
 
             $user=app(UserController::class)->ObtenerUsuarioPorID($idUsuario);
-            $permiso = Permission::findById($idPermiso);
+            $permiso = Permission::findById($idPermiso,'web');
 
-            $user->revokePermissionTo($permiso);//Remover permiso
+            $user->revokePermissionTo($permiso); //Remover permiso
 
             return response()->json([
                 'mensaje'=>'Se ha removido el permiso correctamente',
@@ -104,7 +104,7 @@ class PermissionController extends Controller
         }
         catch(Exception $e){
             return response()->json([
-                'mensaje'=>'Ocurrio un erroral remover el permiso',
+                'mensaje'=>'Ocurrio un error al remover el permiso',
                 'tipoMensaje'=>'Error'
             ]);
         }

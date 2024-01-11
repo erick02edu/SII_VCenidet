@@ -53,41 +53,32 @@ class AvisosController extends Controller
     }
 
     public function store(Request $request){
-
         $Aviso=new Avisos();
-
         try{
             $Aviso->Titulo=$request->Titulo;
             $Aviso->Descripcion=$request->Descripcion;
-
             date_default_timezone_set('America/Mexico_City');//Zona horaria Mexico
             $Aviso->FechaPublicacion=date("Y-m-d");
             $Aviso->save();
-
             $usuariosEnviar=$request->UsuariosSeleccionados;
-
             if(count($request->RolesSeleccionados)>0){
                 foreach($request->RolesSeleccionados as $Rol){
-
                     $ListaUsuarios=app(RoleController::class)->ObtenerUsuariosDeUnRol($Rol['id']);
-
                     // Convertir los arrays a colecciones
                     $usuariosEnviar = collect($usuariosEnviar);
                     $ListaUsuarios = collect($ListaUsuarios);
-
                     // Combinar las colecciones sin duplicados basados en la clave "id"
                     $usuariosEnviar = $usuariosEnviar->concat($ListaUsuarios)->unique('id');
-
                     // Convertir la colección combinada de nuevo a un array
                     $usuariosEnviar = $usuariosEnviar->values()->all();
-
                 }
             }
-
+            //Asignar aviso a la lista de usuarios
             $requestEnviar=new Request();
             $parametros=['ListaUsuario'=>$usuariosEnviar,'Aviso'=>$Aviso];
             $requestEnviar->merge($parametros);
             app(AvisosUsuarioController::class)->store($requestEnviar);
+
             Session::flash('mensaje', 'Se ha publicado el aviso correctamente');
             Session::flash('TipoMensaje', 'Exitoso');
             return Redirect::route('Avisos.index');

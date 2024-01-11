@@ -11,7 +11,7 @@
             <input type="radio" value="Nombre" name="Campos" v-model="campoBusqueda" required > Nombre
         </h3>
 
-        <div class="inline-flex w-full" >
+        <div class="inline-flex w-full mb-1" >
             <div class="relative text-gray-700 dark:text-gray-200 focus-within:text-gray-700  dark:focus-within:text-slate-200 mb">
                 <input
                     class=" border-gray-100 dark:border-gray-500 bg-white dark:bg-slate-700 h-10 px-4 pr-20 rounded-lg text-sm focus:outline-none"
@@ -21,7 +21,7 @@
                     @keyup="contarTiempo"
                 />
             </div>
-            <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
+            <!-- <button :type="type" @click="showElement" class=" ml-auto mr-9 rounded-md bg-[#014E82] px-6 py-2.5 mb-4 text-center text-sm text-white hover:bg-[#0284c7] "
             v-if="$page.props.user.roles.includes('Recursos Humanos')"
             v-tippy="{
                 content:'Agregar departamento',
@@ -31,7 +31,7 @@
                 theme: 'MiThemeBlue'
             }">
                 Nuevo
-            </button>
+            </button> -->
         </div>
         <!-- Capa oscura -->
         <div :class="{ hidden: !isvisibleDelete }" class="fixed inset-0 bg-black opacity-50">
@@ -133,7 +133,7 @@
             <span class="block sm:inline">{{ mensaje}}</span>
         </div>
         <!--TABLA DE DEPARTAMENTOS-->
-        <div class="inline-block min-w-full overflow-hidden rounded-lg shadow">
+        <div class="inline-block min-w-full overflow-hidden rounded-lg shadow mt-2">
             <table class="w-full whitespace-no-wrap">
                 <!--Encabezados-->
                 <thead>
@@ -196,45 +196,6 @@
                             }">
                                 <strong>Cambiar Jefe<span>  <i class="fa-solid fa-user-plus pl-1"></i> </span> </strong>
                             </Link>
-
-
-                            <a type="button" @click="showDelete(departamento.id,departamento.Nombre)" class="p-3 rounded-md text-white bg-[#dc2626] mx-2 inline-flex mb-2"
-                            v-if="$page.props.user.roles.includes('Recursos Humanos')"
-                            v-tippy="{
-                                content:'Eliminar departamento',
-                                placement: 'left' ,
-                                arrow: true,
-                                arrowType: 'MyArrow',
-                                theme: 'MiThemeRed'
-                            }">
-                                <strong>Eliminar<span>  <i class="fa-solid fa-trash text-white pl-3"></i> </span> </strong>
-                            </a>
-
-
-                            <div>
-                                <div :class="{ hidden: !isvisibleDelete }" v-bind:id="`Modal${departamento.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">
-                                    <div class="relative w-full max-w-md max-h-full">
-                                        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                            <button @click="hideDelete" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
-                                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                                </svg>
-                                                <span class="sr-only">Close modal</span>
-                                            </button>
-                                            <div class="p-6 text-center">
-                                                <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                                                </svg>
-                                                <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Esta seguro de eliminar el departamento: {{ nameBorrarSeleccionado }} </h3>
-                                                <Link @click="hideDelete" method="delete" :href="route('Departamentos.destroy', idBorrarSeleccionado)" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
-                                                    Si, estoy seguro
-                                                </Link>
-                                                <button @click="hideDelete" data-modal-hide="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancelar</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
 
                         </td>
 

@@ -10,12 +10,8 @@ use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-
         $this->call(RoleSeeder::class);
         $this->call(UserSeeder::class);
         $this->call(EstatusEmpleadoSeeder::class);
@@ -25,8 +21,5 @@ class DatabaseSeeder extends Seeder
         $this->call(PeriodosSeeder::class);
         $this->call(AplicacionesPeriodosSeeder::class);
         $this->call(CarrerasSeeder::class);
-        // \App\Models\User::factory(10)->create();
-
-
     }
 }

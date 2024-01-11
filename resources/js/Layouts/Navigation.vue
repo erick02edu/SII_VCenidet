@@ -5,7 +5,7 @@
     <div :class="$page.props.showingMobileMenu ? 'translate-x-0 ease-out' : '-translate-x-full ease-in'"
          class="overflow-y-auto fixed inset-y-0 left-0 z-30 w-68 bg-[#014E82] dark:bg-slate-900 transition duration-300 transform lg:translate-x-0 lg:static lg:inset-0">
 
-         <div class="flex ml-8 items-center mt-8 mb-6">
+         <div class="flex ml-8 items-center mt-8 mb-6 mr-5">
             <div class="flex items-center">
                     <img src="/img/LogoTecNacional3.png" alt="Descripción de la imagen" class="w-30 h-20  ">
             </div>
@@ -35,7 +35,8 @@
                 <template #icon>
                     <i class="fa-solid fa-clock"></i>
                 </template>
-                    Periodo aplicación
+                <span class="">Configuración periodos</span>
+                    <!-- Periodo aplicación -->
             </nav-link>
 
             <nav-link :href="route('Users.index')"
@@ -105,32 +106,6 @@
             </nav-link>
 
 
-            <!----------VERSION ESCUELA ------------>
-                <!-- <nav-link :href="route('Alumnos.index')" :active="route().current('Alumnos.index') || route().current('Alumnos.edit')"
-                v-if="$page.props.user.roles.includes('Administrador')">
-                    <template #icon>
-                        <i class="fa-solid fa-book-open-reader"></i>
-                    </template>
-                    Alumnos
-                </nav-link>
-
-                <nav-link :href="route('Calificaciones.Promedios')" :active="route().current('Calificaciones.Promedios')"
-                v-if="$page.props.user.roles.includes('Administrador')">
-                    <template #icon>
-                        <i class="fa-solid fa-book-open-reader"></i>
-                    </template>
-                    Promedios
-                </nav-link>
-
-                <nav-link :href="route('Materias.index')" :active="route().current('Materias.index') || route().current('Materias.edit')"
-                v-if="$page.props.user.roles.includes('Administrador')">
-                    <template #icon>
-                        <i class="fa-solid fa-book"></i>
-                    </template>
-                        Materias
-                </nav-link> -->
-            <!-------------------------------------->
-
             <nav-link :href="route('HorariosDocentes.index')" :active="route().current('HorariosDocentes.index')"
             v-if="$page.props.user.roles.includes('Recursos Humanos')">
                 <template #icon>
@@ -150,21 +125,7 @@
 
 
              <!----------VERSION ESCUELA ------------>
-                <!-- <nav-link :href="route('Aulas.index')" :active="route().current('Aulas.index')"
-                v-if="$page.props.user.roles.includes('Administrador')">
-                    <template #icon>
-                        <i class="fa-solid fa-school"></i>
-                    </template>
-                    Aulas
-                </nav-link>
-
-                <nav-link :href="route('Grupos.index')" :active="route().current('Grupos.index')"
-                v-if="$page.props.user.roles.includes('Administrador')">
-                    <template #icon>
-                        <i class="fa-solid fa-people-group"></i>
-                    </template>
-                    Grupos
-                </nav-link>
+                <!--
 
 
                 <nav-link :href="route('Calificaciones.index')" :active="route().current('Calificaciones.index')"

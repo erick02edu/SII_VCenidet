@@ -879,23 +879,26 @@
             ListaInicioVigencia:0,
             ListaFinVigencia:0,
 
-            numHorarios:0
+            numHorarios:0,
+            nombreArchivo:''
 
         },
 
         async mounted() {
-            await this.generarPDF();
+            const nombreArchivo='Horarios_'+this.$page.props.periodo.mesInicio+'_'+this.$page.props.periodo.AñoInicio+'_'+this.$page.props.periodo.mesTermino+'_'+this.$page.props.periodo.AñoTermino
+            console.log(this.nombreArchivo);
+            await this.generarPDF(nombreArchivo);
             window.close();
         },
 
         methods:{
 
-            async generarPDF() {
+            async generarPDF(nombreArchivo) {
                 var element=document.getElementById('pdfContent');//obtener elemento
 
                 const pdfOptions = {
                 margin: 0,
-                filename: 'Horario.pdf',
+                filename:nombreArchivo,
                 image: { type: 'jpeg', quality: 0.98 },
                 html2canvas: { scale: 2 },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' },//Hoja horizontal

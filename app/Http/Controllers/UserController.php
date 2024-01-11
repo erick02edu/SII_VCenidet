@@ -18,7 +18,7 @@ class UserController extends Controller
     {
         $this->middleware(['role:Administrador'])->only('index');
         $this->middleware(['role:Administrador'])->only('store');
-        $this->middleware(['role:Administrador'])->only('edit','update');
+        $this->middleware(['role:Administrador'])->only('edit','editPassword','update');
         $this->middleware(['role:Administrador'])->only('destroy');
     }
     //Funcion para mostrar todos los usuarios retorna a la vista de Usuarios
@@ -47,21 +47,26 @@ class UserController extends Controller
         try{
             //Obtener datos
             $user->name=$request->name;
-            $user->email=$request->email;
+            //$user->email=$request->email;
             $user->password = Hash::make($request->input('password'));
-            $user->Estatus='0';
+            $user->Estatus='1';
+
             //Guardar usuario
             $user->save();
             //Obtener id del nuevo usuario
             $newUserId = $user->id;
+
+
             //Asignar cuenta al personal
-            $requestCuenta=new Request();
-            $parametros=[
-                'idPersonal'=>$request->input('PersonalAsignar'),
-                'idCuenta'=>$newUserId
-            ];
-            $requestCuenta->merge($parametros);
-            app(PersonalController::class)->asignarCuenta($requestCuenta);
+            if($request->input('PersonalAsignar')!=null){
+                $requestCuenta=new Request();
+                $parametros=[
+                    'idPersonal'=>$request->input('PersonalAsignar'),
+                    'idCuenta'=>$newUserId
+                ];
+                $requestCuenta->merge($parametros);
+                app(PersonalController::class)->asignarCuenta($requestCuenta);
+            }
             //Asignar roles a la cuenta
             return redirect()->route('Roles.asignar', [
                 'id' => $newUserId,
@@ -87,6 +92,41 @@ class UserController extends Controller
         }
         else{
             return redirect::route('Users.index');
+        }
+    }
+
+    public function editPassword(String $id){
+        $Usuario=User::find($id);
+        if($Usuario){
+            return Inertia::render ('Modulos/Administrador/Usuarios/CambiarContraseña',[
+                'usuario'=>$Usuario,
+            ]);
+        }
+        else{
+            return redirect::route('Users.index');
+        }
+    }
+
+    public function CambiarContra(Request $request){
+        $idUsuario=$request->input('id');
+        $Usuario=User::find($idUsuario);
+
+        if($Usuario){
+            try{
+                $Usuario->password = Hash::make($request->input('password'));
+                $Usuario->save();
+                Session::flash('mensaje', 'Se ha cambiado la contraseña correctamente');
+                Session::flash('TipoMensaje', 'Exitoso');
+                return Redirect::route('Users.index');
+            }
+            catch(Exception $e){
+                Session::flash('mensaje', 'Ha ocurrido un error al intentar cambiar la contraseña del usuario');
+                Session::flash('TipoMensaje', 'Error');
+                return Redirect::route('Users.index');
+            }
+        }
+        else{
+            return back();
         }
     }
     //Funcion para actualizar un usuario
@@ -133,10 +173,11 @@ class UserController extends Controller
             return Redirect::route('Users.index');
         }
     }
-    //Funcion para buscar un usuario
+    //Función para buscar un usuario
     public function buscarUsuario(Request $request){
         //Recibir parametros
         $Usuario=$request->input('usuario');
+
         $campo = $request->input('campo');
         //Hacer busqueda
         $result=User::where($campo, 'LIKE', '%'.$Usuario.'%')->get();

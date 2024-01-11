@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.30, for Win64 (x86_64)
 --
--- Host: localhost    Database: sii_del_cenidet
+-- Host: localhost    Database: SII
 -- ------------------------------------------------------
 -- Server version	8.1.0
 
@@ -16,45 +16,6 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `alumnos`
---
-
-DROP TABLE IF EXISTS `alumnos`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `alumnos` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `Nombre` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ApellidoP` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `ApellidoM` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `FechaNac` date NOT NULL,
-  `noControl` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `curp` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Direccion` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Genero` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Telefono` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `idCarrera` bigint unsigned DEFAULT NULL,
-  `idGrupo` bigint unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `alumnos_nocontrol_unique` (`noControl`),
-  KEY `alumnos_idgrupo_foreign` (`idGrupo`),
-  KEY `alumnos_idcarrera_foreign` (`idCarrera`),
-  CONSTRAINT `alumnos_idcarrera_foreign` FOREIGN KEY (`idCarrera`) REFERENCES `carreras` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `alumnos_idgrupo_foreign` FOREIGN KEY (`idGrupo`) REFERENCES `grupos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `alumnos`
---
-
-LOCK TABLES `alumnos` WRITE;
-/*!40000 ALTER TABLE `alumnos` DISABLE KEYS */;
-INSERT INTO `alumnos` VALUES (3,'Martin','Torrez','Gomez','2002-02-01','66662','RDBQ011710UTIXC2','Col.Lomas Cortes #6','Masculino','7778920041',NULL,NULL),(4,'Ana','Roman','Palacios','2001-07-12','66663','RDBQ011710UTIXC2','Avenida cuauhtémoc #52','Femenino','7775636713',NULL,NULL);
-/*!40000 ALTER TABLE `alumnos` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `aplicacion_periodos`
 --
 
@@ -68,7 +29,7 @@ CREATE TABLE `aplicacion_periodos` (
   PRIMARY KEY (`id`),
   KEY `aplicacion_periodos_idperiodo_foreign` (`idPeriodo`),
   CONSTRAINT `aplicacion_periodos_idperiodo_foreign` FOREIGN KEY (`idPeriodo`) REFERENCES `periodos` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -77,35 +38,8 @@ CREATE TABLE `aplicacion_periodos` (
 
 LOCK TABLES `aplicacion_periodos` WRITE;
 /*!40000 ALTER TABLE `aplicacion_periodos` DISABLE KEYS */;
-INSERT INTO `aplicacion_periodos` VALUES (2,'REGISTRO DE CALIFICACIONES',2);
+INSERT INTO `aplicacion_periodos` VALUES (2,'CAPTURA DE CALIFICACIONES FINALES',1),(3,'CIERRE DE PERIODOS ESCOLARES',1),(4,'CALIFICACIONES PARCIALES, GESTION DE CURSO',1),(5,'CAPTURA DE EXAMENES ESPECIALES',1),(6,'PROCESO DE REINSCRIPCION',1),(7,'AUTORIZACION DE RESIDENCIAS DEP',1);
 /*!40000 ALTER TABLE `aplicacion_periodos` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `aulas`
---
-
-DROP TABLE IF EXISTS `aulas`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `aulas` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `NombreAula` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Capacidad` int NOT NULL,
-  `Ubicacion` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `created_at` timestamp NULL DEFAULT NULL,
-  `updated_at` timestamp NULL DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `aulas`
---
-
-LOCK TABLES `aulas` WRITE;
-/*!40000 ALTER TABLE `aulas` DISABLE KEYS */;
-/*!40000 ALTER TABLE `aulas` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -121,7 +55,7 @@ CREATE TABLE `avisos` (
   `Descripcion` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
   `FechaPublicacion` date NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -130,7 +64,7 @@ CREATE TABLE `avisos` (
 
 LOCK TABLES `avisos` WRITE;
 /*!40000 ALTER TABLE `avisos` DISABLE KEYS */;
-INSERT INTO `avisos` VALUES (1,'Aviso de prueba','IEINEVNEVNENECNN','2023-12-04'),(2,'Prueba','Texto prueba','2023-12-04'),(3,'Lunes','ygygvgyg','2023-12-04'),(4,'Lunes','ygygvgyg','2023-12-04'),(5,'KJIFHUDGJU','UNNBFUUNHGHUR','2023-12-04');
+INSERT INTO `avisos` VALUES (2,'Nuevo Aviso','Esto es una prueba','2024-01-09');
 /*!40000 ALTER TABLE `avisos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -144,6 +78,7 @@ DROP TABLE IF EXISTS `avisos_usuarios`;
 CREATE TABLE `avisos_usuarios` (
   `idAviso` bigint unsigned DEFAULT NULL,
   `idUsuario` bigint unsigned DEFAULT NULL,
+  `Leido` tinyint(1) NOT NULL,
   KEY `avisos_usuarios_idaviso_foreign` (`idAviso`),
   KEY `avisos_usuarios_idusuario_foreign` (`idUsuario`),
   CONSTRAINT `avisos_usuarios_idaviso_foreign` FOREIGN KEY (`idAviso`) REFERENCES `avisos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -157,7 +92,7 @@ CREATE TABLE `avisos_usuarios` (
 
 LOCK TABLES `avisos_usuarios` WRITE;
 /*!40000 ALTER TABLE `avisos_usuarios` DISABLE KEYS */;
-INSERT INTO `avisos_usuarios` VALUES (1,81),(1,82),(2,81),(3,81),(4,81),(5,81);
+INSERT INTO `avisos_usuarios` VALUES (2,2,1);
 /*!40000 ALTER TABLE `avisos_usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -178,7 +113,7 @@ CREATE TABLE `bajaspersonal` (
   KEY `bajaspersonal_idestatus_foreign` (`idEstatus`),
   CONSTRAINT `bajaspersonal_idestatus_foreign` FOREIGN KEY (`idEstatus`) REFERENCES `estatus empleado` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `bajaspersonal_idpersonal_foreign` FOREIGN KEY (`idPersonal`) REFERENCES `personal` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -187,44 +122,7 @@ CREATE TABLE `bajaspersonal` (
 
 LOCK TABLES `bajaspersonal` WRITE;
 /*!40000 ALTER TABLE `bajaspersonal` DISABLE KEYS */;
-INSERT INTO `bajaspersonal` VALUES (1,8,17,'2023-12-01'),(2,5,3,'2023-12-02'),(3,7,10,'2023-12-02'),(7,1,3,'2023-12-02'),(8,2,5,'2023-12-02'),(9,9,8,'2023-12-02'),(10,10,11,'2023-12-02');
 /*!40000 ALTER TABLE `bajaspersonal` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `calificaciones`
---
-
-DROP TABLE IF EXISTS `calificaciones`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `calificaciones` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `idAlumno` bigint unsigned DEFAULT NULL,
-  `idMateria` bigint unsigned DEFAULT NULL,
-  `Calificacion` double(8,2) NOT NULL,
-  `NumSemestre` double(8,2) NOT NULL,
-  `idProfesor` bigint unsigned DEFAULT NULL,
-  `idGrupo` bigint unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `calificaciones_idalumno_foreign` (`idAlumno`),
-  KEY `calificaciones_idmateria_foreign` (`idMateria`),
-  KEY `calificaciones_idprofesor_foreign` (`idProfesor`),
-  KEY `calificaciones_idgrupo_foreign` (`idGrupo`),
-  CONSTRAINT `calificaciones_idalumno_foreign` FOREIGN KEY (`idAlumno`) REFERENCES `alumnos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `calificaciones_idgrupo_foreign` FOREIGN KEY (`idGrupo`) REFERENCES `grupos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `calificaciones_idmateria_foreign` FOREIGN KEY (`idMateria`) REFERENCES `materias` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `calificaciones_idprofesor_foreign` FOREIGN KEY (`idProfesor`) REFERENCES `personal` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `calificaciones`
---
-
-LOCK TABLES `calificaciones` WRITE;
-/*!40000 ALTER TABLE `calificaciones` DISABLE KEYS */;
-/*!40000 ALTER TABLE `calificaciones` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -282,44 +180,6 @@ INSERT INTO `categorias` VALUES (1,'Jefe de Mesa','A01004',36),(2,'Jefe de Proye
 UNLOCK TABLES;
 
 --
--- Table structure for table `clases`
---
-
-DROP TABLE IF EXISTS `clases`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `clases` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `HInicio` time NOT NULL,
-  `HFin` time NOT NULL,
-  `dia` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `color` varchar(10) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `idMateria` bigint unsigned DEFAULT NULL,
-  `idAula` bigint unsigned DEFAULT NULL,
-  `idGrupo` bigint unsigned DEFAULT NULL,
-  `idHorario` bigint unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `clases_idmateria_foreign` (`idMateria`),
-  KEY `clases_idaula_foreign` (`idAula`),
-  KEY `clases_idgrupo_foreign` (`idGrupo`),
-  KEY `clases_idhorario_foreign` (`idHorario`),
-  CONSTRAINT `clases_idaula_foreign` FOREIGN KEY (`idAula`) REFERENCES `aulas` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
-  CONSTRAINT `clases_idgrupo_foreign` FOREIGN KEY (`idGrupo`) REFERENCES `grupos` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `clases_idhorario_foreign` FOREIGN KEY (`idHorario`) REFERENCES `horarios_docentes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  CONSTRAINT `clases_idmateria_foreign` FOREIGN KEY (`idMateria`) REFERENCES `materias` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `clases`
---
-
-LOCK TABLES `clases` WRITE;
-/*!40000 ALTER TABLE `clases` DISABLE KEYS */;
-/*!40000 ALTER TABLE `clases` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `departamentos`
 --
 
@@ -366,7 +226,7 @@ CREATE TABLE `diashorario` (
   PRIMARY KEY (`id`),
   KEY `diashorario_idhorario_foreign` (`idHorario`),
   CONSTRAINT `diashorario_idhorario_foreign` FOREIGN KEY (`idHorario`) REFERENCES `horarios_docentes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -375,7 +235,6 @@ CREATE TABLE `diashorario` (
 
 LOCK TABLES `diashorario` WRITE;
 /*!40000 ALTER TABLE `diashorario` DISABLE KEYS */;
-INSERT INTO `diashorario` VALUES (2,'12:00:00','14:00:00','Lunes',2),(3,'12:00:00','12:01:00','Viernes',3),(4,'12:00:00','14:04:00','Martes',4),(6,'12:00:00','14:00:00','Lunes',1),(7,'12:00:00','14:00:00','Martes',1);
 /*!40000 ALTER TABLE `diashorario` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -433,34 +292,6 @@ LOCK TABLES `failed_jobs` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `grupos`
---
-
-DROP TABLE IF EXISTS `grupos`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `grupos` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `Semestre` int NOT NULL,
-  `Especialidad` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Letra` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `idPeriodo` bigint unsigned DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `grupos_idperiodo_foreign` (`idPeriodo`),
-  CONSTRAINT `grupos_idperiodo_foreign` FOREIGN KEY (`idPeriodo`) REFERENCES `periodos` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `grupos`
---
-
-LOCK TABLES `grupos` WRITE;
-/*!40000 ALTER TABLE `grupos` DISABLE KEYS */;
-/*!40000 ALTER TABLE `grupos` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `horarios_docentes`
 --
 
@@ -476,7 +307,7 @@ CREATE TABLE `horarios_docentes` (
   KEY `horarios_docentes_idperiodo_foreign` (`idPeriodo`),
   CONSTRAINT `horarios_docentes_idperiodo_foreign` FOREIGN KEY (`idPeriodo`) REFERENCES `periodos` (`id`) ON DELETE CASCADE,
   CONSTRAINT `horarios_docentes_idprofesor_foreign` FOREIGN KEY (`idProfesor`) REFERENCES `personal` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -485,33 +316,7 @@ CREATE TABLE `horarios_docentes` (
 
 LOCK TABLES `horarios_docentes` WRITE;
 /*!40000 ALTER TABLE `horarios_docentes` DISABLE KEYS */;
-INSERT INTO `horarios_docentes` VALUES (1,1,1),(2,7,1),(3,5,1),(4,8,1);
 /*!40000 ALTER TABLE `horarios_docentes` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
--- Table structure for table `materias`
---
-
-DROP TABLE IF EXISTS `materias`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `materias` (
-  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
-  `Nombre` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `Descripcion` varchar(70) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
-  `Codigo` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `materias`
---
-
-LOCK TABLES `materias` WRITE;
-/*!40000 ALTER TABLE `materias` DISABLE KEYS */;
-/*!40000 ALTER TABLE `materias` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -526,7 +331,7 @@ CREATE TABLE `migrations` (
   `migration` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `batch` int NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -535,7 +340,7 @@ CREATE TABLE `migrations` (
 
 LOCK TABLES `migrations` WRITE;
 /*!40000 ALTER TABLE `migrations` DISABLE KEYS */;
-INSERT INTO `migrations` VALUES (1,'2014_10_12_000000_create_users_table',1),(2,'2014_10_12_100000_create_password_reset_tokens_table',1),(3,'2014_10_12_200000_add_two_factor_columns_to_users_table',1),(4,'2019_08_19_000000_create_failed_jobs_table',1),(5,'2019_12_14_000001_create_personal_access_tokens_table',1),(6,'2023_07_20_182922_create_sessions_table',1),(7,'2023_07_20_215233_create__aula_table',1),(8,'2023_08_19_191953_create_permission_tables',1),(9,'2023_09_06_184833_historial_alumno',1),(10,'2023_09_06_190939_periodo',1),(11,'2023_09_06_191432_historial_alumno',1),(12,'2023_09_09_225802_aplicacion_periodos',1),(13,'2023_09_13_000624_estatus_empleado',1),(14,'2023_09_13_164018_categoria',1),(15,'2023_09_13_184947_plazas',1),(16,'2023_09_14_192017_personal',1),(17,'2023_09_15_235519_subdireccion',1),(18,'2023_09_20_163346_departamento',1),(19,'2023_09_21_084904_update_table_personal',1),(20,'2023_09_25_173710_horarios_profesores',1),(21,'2023_09_30_014559_materias',1),(22,'2023_09_30_213632_grupos',1),(23,'2023_10_01_012120_clases',1),(24,'2023_10_03_233219_carrera',1),(25,'2023_10_22_194550_alumnos',1),(26,'2023_10_30_172539_dias_horario',1),(27,'2023_11_04_002222_vigencias_personal',1),(28,'2023_11_19_225510_calificaciones',1),(29,'2023_11_26_000711_permisos_carreras',1),(30,'2023_11_27_044925_avisos',1),(31,'2023_11_27_180449_usuarios__avisos',1),(32,'2023_12_02_035237_bajas_personal',2);
+INSERT INTO `migrations` VALUES (1,'2014_10_12_000000_create_users_table',1),(2,'2014_10_12_100000_create_password_reset_tokens_table',1),(3,'2014_10_12_200000_add_two_factor_columns_to_users_table',1),(4,'2019_08_19_000000_create_failed_jobs_table',1),(5,'2019_12_14_000001_create_personal_access_tokens_table',1),(6,'2023_07_20_182922_create_sessions_table',1),(7,'2023_08_19_191953_create_permission_tables',1),(8,'2023_09_06_190939_periodo',1),(9,'2023_09_09_225802_aplicacion_periodos',1),(10,'2023_09_13_000624_estatus_empleado',1),(11,'2023_09_13_164018_categoria',1),(12,'2023_09_13_184947_plazas',1),(13,'2023_09_14_192017_personal',1),(14,'2023_09_15_235519_subdireccion',1),(15,'2023_09_20_163346_departamento',1),(16,'2023_09_21_084904_update_table_personal',1),(17,'2023_09_25_173710_horarios_profesores',1),(18,'2023_10_03_233219_carrera',1),(19,'2023_10_30_172539_dias_horario',1),(20,'2023_11_04_002222_vigencias_personal',1),(21,'2023_11_26_000711_permisos_carreras',1),(22,'2023_11_27_044925_avisos',1),(23,'2023_11_27_180449_usuarios__avisos',1),(24,'2023_12_02_035237_bajas_personal',1),(25,'2024_01_08_210853_triggers',1);
 /*!40000 ALTER TABLE `migrations` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -562,7 +367,6 @@ CREATE TABLE `model_has_permissions` (
 
 LOCK TABLES `model_has_permissions` WRITE;
 /*!40000 ALTER TABLE `model_has_permissions` DISABLE KEYS */;
-INSERT INTO `model_has_permissions` VALUES (1,'App\\Models\\User',1),(6,'App\\Models\\User',4);
 /*!40000 ALTER TABLE `model_has_permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -589,7 +393,7 @@ CREATE TABLE `model_has_roles` (
 
 LOCK TABLES `model_has_roles` WRITE;
 /*!40000 ALTER TABLE `model_has_roles` DISABLE KEYS */;
-INSERT INTO `model_has_roles` VALUES (2,'App\\Models\\User',1),(2,'App\\Models\\User',2),(1,'App\\Models\\User',4),(8,'App\\Models\\User',7),(3,'App\\Models\\User',10),(7,'App\\Models\\User',81),(11,'App\\Models\\User',82);
+INSERT INTO `model_has_roles` VALUES (7,'App\\Models\\User',1),(11,'App\\Models\\User',2),(2,'App\\Models\\User',3),(4,'App\\Models\\User',4),(2,'App\\Models\\User',5),(3,'App\\Models\\User',7),(10,'App\\Models\\User',8);
 /*!40000 ALTER TABLE `model_has_roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -614,7 +418,6 @@ CREATE TABLE `password_reset_tokens` (
 
 LOCK TABLES `password_reset_tokens` WRITE;
 /*!40000 ALTER TABLE `password_reset_tokens` DISABLE KEYS */;
-INSERT INTO `password_reset_tokens` VALUES ('erickrra11@gmail.com','$2y$10$iKo1PULtQx0cP4HcRcmOMeY9UtkXHuA.cwx5v2bDMNU1ChUHtAk86','2023-12-05 02:46:42');
 /*!40000 ALTER TABLE `password_reset_tokens` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -661,7 +464,7 @@ CREATE TABLE `permisoscarreras` (
   KEY `permisoscarreras_idusuario_foreign` (`idUsuario`),
   CONSTRAINT `permisoscarreras_idcarrera_foreign` FOREIGN KEY (`idCarrera`) REFERENCES `carreras` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `permisoscarreras_idusuario_foreign` FOREIGN KEY (`idUsuario`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -670,7 +473,6 @@ CREATE TABLE `permisoscarreras` (
 
 LOCK TABLES `permisoscarreras` WRITE;
 /*!40000 ALTER TABLE `permisoscarreras` DISABLE KEYS */;
-INSERT INTO `permisoscarreras` VALUES (1,1,1);
 /*!40000 ALTER TABLE `permisoscarreras` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -698,7 +500,7 @@ CREATE TABLE `permissions` (
 
 LOCK TABLES `permissions` WRITE;
 /*!40000 ALTER TABLE `permissions` DISABLE KEYS */;
-INSERT INTO `permissions` VALUES (1,'Modificación de Actas de Calificaciones','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(2,'Modificación de Actas de Ex. Globales o Especiales','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(3,'Generación de Folios','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(4,'Alta de Alumnoss','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(5,'Modificación de datos de Alumnos','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(6,'Eliminación de Alumnos','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(7,'Modificación de Kardex','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(8,'Calcular promedios de Alumnos','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(9,'Solicitud de Ex. Globales o Especiales','web','2023-12-02 09:35:22','2023-12-02 09:35:22');
+INSERT INTO `permissions` VALUES (1,'Modificación de Actas de Calificaciones','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(2,'Modificación de Actas de Ex. Globales o Especiales','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(3,'Generación de Folios','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(4,'Alta de Alumnos','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(5,'Modificación de datos de Alumnos','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(6,'Eliminación de Alumnos','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(7,'Modificación de Kardex','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(8,'Calcular promedios de Alumnos','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(9,'Solicitud de Ex. Globales o Especiales','web','2024-01-09 09:20:49','2024-01-09 09:20:49');
 /*!40000 ALTER TABLE `permissions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -766,7 +568,7 @@ CREATE TABLE `personal` (
   CONSTRAINT `personal_iddepadscripcion_foreign` FOREIGN KEY (`idDepAdscripcion`) REFERENCES `departamentos` (`id`) ON DELETE SET NULL,
   CONSTRAINT `personal_idplaza_foreign` FOREIGN KEY (`idPlaza`) REFERENCES `plazas` (`id`) ON DELETE SET NULL,
   CONSTRAINT `personal_idusuario_foreign` FOREIGN KEY (`idUsuario`) REFERENCES `users` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -775,9 +577,74 @@ CREATE TABLE `personal` (
 
 LOCK TABLES `personal` WRITE;
 /*!40000 ALTER TABLE `personal` DISABLE KEYS */;
-INSERT INTO `personal` VALUES (1,'Perez','Torres','Ana','NDFUNNVURNVRN','Morelos','2023-12-07','Femenino','Soltero','vejbtnjnrtd','nevuurvnur','67532','hvdh rvhe','nucvnur','nuceunvnu','NJVNURNUVNVUNUVRNV','ana@gmail.com','Preparatoria','Secundaria','Maestria',2,9,10,'Kiudunnufd','rbtjbtr','Prueba','Mr.','Docente',3,'B',2001,2,2002,2,2002,4,2005,2,'Docentes','2021-12-02',NULL,15,3,15,9),(2,'Torrez','Lopez','David','HBDBHRVHBVRBH','Gomez','2023-10-13','Masculino','Casado','evbhrvbuvrurvbuu','uwcbyevbyrvby','bdvby','bhysdvbyevby','bhcebyveby','bscbhceby','RVRBVHYRBHYVREBUER','david@gmail.com','Doctorado',NULL,NULL,8,0,0,'2001',NULL,NULL,'Dr.','Administrativo',4,'B',2001,2,NULL,NULL,NULL,NULL,2004,2,'Docentes','2023-12-01',NULL,76,5,9,7),(5,'getgrtg','evijvrjju','Pedro','yevbyrvyggecg','jjujj','2023-12-02','Masculino','Soltero','nivruvrhu`','jchuvrhvrhu','49854','enurvvrh','huehur','wjiveuhjrvhu','evuhuvrhbvrvrgh','Pedro@gmail.com','Profesional',NULL,NULL,6,0,0,'rvijrvurtuhhi',NULL,NULL,'Ing','Administrativo',3848,'B',2001,2,NULL,NULL,NULL,NULL,NULL,NULL,'Docentes','2010-12-01',NULL,19,3,2,5),(7,'IVRUNRUU','UWCURVUH','Alan','UNEUHRBHYVRHY','Morelos','2023-12-08','Masculino','Viudo','evrrimtrijjiu','jvurvhu','juheu','juevuhvryh','huuhfvrhrv','hucehurvh','JIRJITBUJBTUBTRHUB','alan@gmail.com','Maestria',NULL,NULL,2,0,0,'NUCNUUF',NULL,NULL,'Mr.','Administrativo',2768,'B',2001,2,NULL,NULL,NULL,NULL,NULL,NULL,'Docentes','2023-12-01',NULL,NULL,10,3,3),(8,'njuevurbu','uuevuhrvhurvhu','Juanito','URURBVRHBVHRV','Morelos','2023-11-10','Masculino','Casado','eijrurvuhvrhu','uhhuechurvyh','huedv','hyywcygevyg','yhevybgrvygyg','777867213','VRUHJRUHRVUHVRUHRV','juanito@gmail.com','Maestria',NULL,NULL,5,0,0,'Prueba',NULL,NULL,'Mr.','Administrativo',2,'B',2001,2,NULL,NULL,NULL,NULL,NULL,NULL,'Administrativas','2023-12-01',NULL,NULL,17,3,4),(9,'NUBBS','mrvmrvim','Maria','NFBH HBVRBHVH','IRVIVRI','2023-12-01','Femenino','Soltero','ECNICUNBU','NUNUENUCENU','NUCRB','NBECBHRB','BHBEHCHB`','777509201','NRVNUVRNURVNUVRNNU','Maria@gmail.com','Normal',NULL,NULL,3,0,0,'ecjnne',NULL,NULL,'Lic','Docente',4858,'B',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,'Docentes','2023-12-02',NULL,NULL,8,6,8),(10,'HNDDNEN','UNDNUNUCENEC','Karen','BHWHBECHBBWCB','NIC3NURNUVRNUVRN','2023-12-08','Femenino','Divorciado','NEIINENI','INECNUECNU','INUEU','UNCWNECNUECNU','NUUCWNUCE','777983841','NUERVHHRVRBRVBRBHV','Kren@gmail.com','Carrera Tecnica',NULL,NULL,3,0,0,'imd if ii',NULL,NULL,'Lic','Administrativo',2939,'B',2001,2,NULL,NULL,NULL,NULL,NULL,NULL,'Administrativas','2023-12-02',NULL,NULL,11,4,4);
 /*!40000 ALTER TABLE `personal` ENABLE KEYS */;
 UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `actualiza_estatus_plaza_update_personal` BEFORE UPDATE ON `personal` FOR EACH ROW BEGIN
+                IF NEW.idPlaza IS NOT NULL THEN
+                UPDATE plazas SET estatus = '0' WHERE id = OLD.idPlaza;
+                    UPDATE plazas SET estatus = '1' WHERE id = NEW.idPlaza;
+                END IF;
+            END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `actualiza_estatus_cuenta_update_personal` BEFORE UPDATE ON `personal` FOR EACH ROW BEGIN
+                IF NEW.idUsuario IS NOT NULL THEN
+                UPDATE users SET Estatus = '0' WHERE id = OLD.idUsuario;
+                    UPDATE users SET Estatus = '1' WHERE id = NEW.idUsuario;
+                END IF;
+            END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_unicode_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `actualiza_estatus_PlazaCuenta_baja_personal` BEFORE UPDATE ON `personal` FOR EACH ROW BEGIN
+                DECLARE personal_id INT;
+                SET personal_id = NEW.id;
+
+                IF NEW.Estatus='B' THEN
+                    UPDATE departamentos SET idEncargado=NULL WHERE id=personal_id;
+                    UPDATE plazas SET estatus = '0' WHERE id = OLD.idPlaza;
+                    UPDATE users SET Estatus = '0' WHERE id = OLD.idUsuario;
+                    SET NEW.idPlaza=NULL;
+                    SET NEW.idUsuario=NULL;
+                END IF;
+            END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
 
 --
 -- Table structure for table `personal_access_tokens`
@@ -833,7 +700,7 @@ CREATE TABLE `plazas` (
   PRIMARY KEY (`id`),
   KEY `plazas_idcategoria_foreign` (`idCategoria`),
   CONSTRAINT `plazas_idcategoria_foreign` FOREIGN KEY (`idCategoria`) REFERENCES `categorias` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -842,7 +709,6 @@ CREATE TABLE `plazas` (
 
 LOCK TABLES `plazas` WRITE;
 /*!40000 ALTER TABLE `plazas` DISABLE KEYS */;
-INSERT INTO `plazas` VALUES (1,'626737','14','1',36,10,0,4,'2023-12-07 05:41:47','2023-12-07 05:41:47'),(2,'75902','18','2',40,95,0,10,'2023-12-07 05:42:06','2023-12-07 05:42:06'),(4,'709939','18','2',36,20,0,4,'2023-12-08 00:04:15','2023-12-08 00:04:15');
 /*!40000 ALTER TABLE `plazas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -887,7 +753,7 @@ CREATE TABLE `roles` (
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `roles_name_guard_name_unique` (`name`,`guard_name`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -896,7 +762,7 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'Comite de Calidad','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(2,'Academicos','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(3,'Departamento de desarrollo academico','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(4,'Division de estudios Profesionales','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(5,'Direccion','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(6,'Docentes','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(7,'Recursos Humanos','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(8,'Escolares','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(9,'Gestion tecnologica y vinculacion','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(10,'Departamento de planeacion','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(11,'Administrador','web','2023-12-02 09:35:22','2023-12-02 09:35:22'),(12,'Secretarias CENIDET','web','2023-12-02 09:35:22','2023-12-02 09:35:22');
+INSERT INTO `roles` VALUES (1,'Comite de Calidad','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(2,'Academicos','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(3,'Departamento de desarrollo academico','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(4,'Division de estudios Profesionales','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(5,'Direccion','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(6,'Docentes','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(7,'Recursos Humanos','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(8,'Escolares','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(9,'Gestion tecnologica y vinculacion','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(10,'Departamento de planeacion','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(11,'Administrador','web','2024-01-09 09:20:49','2024-01-09 09:20:49'),(12,'Secretarias CENIDET','web','2024-01-09 09:20:49','2024-01-09 09:20:49');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -926,7 +792,7 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('SSIDULsdq4TpFML0QnN191mpaSvpwvxC4nVODujB',82,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 OPR/105.0.0.0','YTo1OntzOjY6Il90b2tlbiI7czo0MDoidlVwODZFYzhHYThSbXZaMDY0TFBBNjdDR00ycVluN3hka1FqSUJTbCI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9kYXNoYm9hcmQiO31zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo4MjtzOjIxOiJwYXNzd29yZF9oYXNoX3NhbmN0dW0iO3M6NjA6IiQyeSQxMCRZQmx0UDJsUS45dVpUT21IVXNGYzQuVHlIaDQ3blhFMURlaDExei5NSWlIZ2Y5MEpZRy9YSyI7fQ==',1702082509);
+INSERT INTO `sessions` VALUES ('7a47MCwHRkbfNfNfdT8JgZ8W2ZEBmDqVmijxLhru',2,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 OPR/105.0.0.0','YTo1OntzOjY6Il90b2tlbiI7czo0MDoiRlpjTU9uMEtVRnFvRkp1anlLNUV1U0pHOGZyZjJqWjgxUVVpUER3VSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MjtzOjIxOiJwYXNzd29yZF9oYXNoX3NhbmN0dW0iO3M6NjA6IiQyeSQxMCRHVzhPTGJKdkIzb01rVTBodGVIYm51US81SFZXbGJFZmlMRzBsNjlrUlJONUhtVlEyS3YvTyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzQ6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9Sb2xlcz9wYWdlPTIiO319',1704780822),('soonV5viYLCX00MUzkt7iryNlPbJardD7YyNMKkO',2,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36 OPR/105.0.0.0','YTo0OntzOjY6Il90b2tlbiI7czo0MDoieHJKNzZuM0JIOURDWE9wUTd5VjNSZU0xOGN2RUJiZm5QOVhmRDZ6diI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MjtzOjIxOiJwYXNzd29yZF9oYXNoX3NhbmN0dW0iO3M6NjA6IiQyeSQxMCRHVzhPTGJKdkIzb01rVTBodGVIYm51US81SFZXbGJFZmlMRzBsNjlrUlJONUhtVlEyS3YvTyI7fQ==',1704770998);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -964,7 +830,7 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` bigint unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `email` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `email` varchar(191) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
   `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `two_factor_secret` text COLLATE utf8mb4_unicode_ci,
@@ -977,8 +843,8 @@ CREATE TABLE `users` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `users_email_unique` (`email`)
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  UNIQUE KEY `users_name_unique` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -987,7 +853,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Jena Doyle DDS','heidenreich.gwendolyn@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'cxFEoLlUyl',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(2,'Johanna Bernier III','gwindler@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'q99tiV7Kza',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(3,'Malachi Carroll','gregoria.shanahan@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'JyKIVJ62Aj',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(4,'Ms. Ebony McDermott IV','kenny.pfannerstill@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'Gr5rwXbg3I',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(5,'Dr. Luis Wisozk','zcremin@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'7KPatLQA1n',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(6,'Mr. Gus Waelchi MD','wcarter@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'yyfeR60bQO',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(7,'Delphia Feest','bfahey@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'2M2UZa40yG',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(8,'Guadalupe Batz','harris.drew@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'cArwruqpyl',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(9,'Kallie Senger','genesis.durgan@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'PGza3R92yX',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(10,'Reed Bartell','ian.champlin@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'be0XwcysGu',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(11,'Madaline Lebsack','telly97@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'pA0qGmKiEP',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(12,'Kory Considine','estrella16@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'PE8XOsm9OU',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(13,'Thalia Corkery','vblanda@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'wssqdJAVji',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(14,'Bret Kiehn','annamae79@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'puZxgPx1Ph',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(15,'Bonita Kuhlman','oshanahan@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'Mmf6EBhTfc',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(16,'Ian Hansen','tyra83@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'6YT6IetkNP',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(17,'Anjali Schaefer','gabrielle95@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'GBtqxEgnj1',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(18,'Dr. Vivien Toy','torp.mikel@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'r5hU6Cl4Nk',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(19,'Antonia Harvey','tgaylord@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'XIcAViJMR0',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(20,'Mollie Stehr','hammes.harold@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'6sSd0V1qqE',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(21,'Dr. Lula Williamson DDS','bmckenzie@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'KQoOfdPIGI',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(22,'Giovanni Rosenbaum V','kay70@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'IlQMfBciJI',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(23,'Mr. Elton Cole II','lzemlak@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'rfA6XwbUGa',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(24,'Lily Berge','barrett.thiel@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'X7R69owknY',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(25,'Joe Gorczany','vernice50@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'jA27WnCu5o',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(26,'Mozell Langosh','strosin.erica@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'YfDKUAIQtF',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(27,'Karl Watsica','jarrell.gutkowski@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'cOb4GnxTK0',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(28,'Lola McGlynn','fanny20@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'SOOfIDCYsi',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(29,'Mr. Brayan Donnelly','cterry@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'xImkaH7cuy',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(30,'Flavio Sawayn','kchristiansen@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'8SbmN1oUT1',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(31,'Charlotte Quigley','langworth.joyce@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'hhVnkr8qRz',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(32,'Bessie Hoppe','miller.kristopher@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'9rEba04702',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(33,'Marlon Hahn','qbeier@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'TgAGh4oYd9',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(34,'Ibrahim Stiedemann','dgoodwin@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'3EtWjMCzmn',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(35,'Miss Amara Brown','lowell56@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'dHV2zrMyuc',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(36,'Prof. Bernice Koch I','ortiz.weldon@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'eKqmoqPEwI',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(37,'Gail Tremblay','kiana37@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'RYKX78O788',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(38,'Isidro Labadie','jayme95@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'ccBmGB1ddb',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(39,'Dejuan Lemke','martine.graham@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'7nxT4AZCdu',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(40,'Hunter Yundt','zoila31@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'0UbezWrgXh',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(41,'Turner Abbott PhD','freeman87@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'VjVq0Y1C0M',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(42,'Edgar Schultz','balistreri.dora@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'gWmZW0P15l',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(43,'Christine Roberts DVM','nicklaus.zemlak@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'ejEuRrY7n6',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(44,'Emory Stamm','joanie.schuster@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'HfRHhDiErx',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(45,'Prof. Darrin Turner','blaise53@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'oy1Kir0eFi',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(46,'Olen Kunze','bernhard.watson@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'L3wUEHXIvM',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(47,'Gregorio Barton','brice@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'eEKO2g0MSl',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(48,'Felicita Ondricka','kurtis.sanford@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'wcpZUobjwG',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(49,'Josh Hirthe','virgil37@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'42Lpdxaicu',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(50,'Arvel Kovacek','rico.wilderman@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'t38SiElgZd',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(51,'Spencer Langworth','rutherford.juvenal@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'hKLtFnNmhE',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(52,'Elmira Will','ncole@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'S3vUGQ67FW',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(53,'Mr. Kayleigh Ullrich V','rau.yesenia@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'lFgHE0m5aa',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(54,'Emilie Deckow DVM','zwisozk@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'DAaK1aUbMh',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(55,'Flavio Koelpin','gbotsford@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'vyTDMh6U8F',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(56,'Hardy Ruecker','qreilly@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'fIKjuVnwSL',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(57,'Adriana Greenfelder','veda39@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'CePmfZlhWq',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(58,'Bernice Renner','lacey.wehner@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'C3QjtqZ6Xe',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(59,'Mr. Eloy McKenzie MD','bbradtke@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'Vg1sskhccB',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(60,'Camilla Hermiston','ike.lakin@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'kuzmgBzwYo',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(61,'Tyson Rogahn','manuel.torphy@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'iEb1sr6h8Z',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(62,'Colin Beahan PhD','hoconnell@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'nyirSaajjw',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(63,'Maegan Lynch','gerald.hermiston@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'tDlwKHRABp',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(64,'Napoleon Dietrich','elijah.daugherty@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'YoY4tiiYWr',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(65,'Gregory Boyle','schamberger.enos@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'uYMrJeX0QT',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(66,'Ron O\'Conner V','noemie.kuhic@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'DwJVEdgdiB',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(67,'Brice Prosacco','shanna.robel@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'yT6w3O8wyH',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(68,'Dr. Ibrahim Price V','leif.mann@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'fhe8Z9udiV',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(69,'Jaylin Rohan','cquigley@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'yjNJcaj5BA',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(70,'Helene Crist','rafaela90@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'mr4YSv9lOV',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(71,'Prof. Jocelyn Spinka','zora.breitenberg@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'LhLyvBfdEo',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(72,'Mr. Arvel Rosenbaum','ebba.schoen@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'JrmWUzjRga',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(73,'Dallin Rowe','korbin.stokes@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'VgJHstXsG5',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(74,'Mozelle Bode','julius20@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'JafIBlXEw8',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(75,'Hilma Borer','cartwright.rowan@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'XZBOVVUQkw',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(76,'Constance Kessler','sjakubowski@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'6AsgUgpBzf',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(77,'Mariah Lind','heidenreich.odessa@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'8jgXWEtfDW',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(78,'Blaze Conroy','hbotsford@example.com',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'nCAyM8Fq5O',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(79,'Mrs. Kylie Kemmer','swelch@example.org',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'Oocm7oQa0d',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(80,'Carolyne Steuber','dee.funk@example.net',NULL,'$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi',NULL,NULL,NULL,0,'LpqabXfhWc',NULL,NULL,'2023-12-02 09:35:23','2023-12-02 09:35:23'),(81,'Jorge','rbeo201569@upemor.edu.mx','2023-12-02 09:35:24','$2y$10$Q7yQXKggReICwDc1dnAnaeLTKXAb5ZwMONvfH6ggigwVQ7RnSJTiG',NULL,NULL,NULL,1,'c4lc1S6vTjrysTM5STk5riSCPbTqi3StbpatQgJt6CJiC9ib9CDMEu5WsxWe',NULL,NULL,'2023-12-02 09:35:24','2023-12-05 03:02:16'),(82,'Erick','erickrra11@gmail.com','2023-12-02 09:35:24','$2y$10$YBltP2lQ.9uZTOmHUsFc4.TyHh47nXE1Deh11z.MIiHgf90JYG/XK',NULL,NULL,NULL,1,'VGONw957yKMu6yWgZjUlMynVH9ElRoLQtrOIzrThMLqHe9S96mo3KDUIUcea',NULL,NULL,'2023-12-02 09:35:24','2023-12-02 09:35:24');
+INSERT INTO `users` VALUES (1,'RecHum','rbeo201569@upemor.edu.mx','2024-01-09 09:20:49','$2y$10$bdJEMoKF3D/uGumtdRFQ7e62DSGZczL7jc1LF6bl9wewemguHasHK',NULL,NULL,NULL,1,'fj8mvODckE',NULL,NULL,'2024-01-09 09:20:49','2024-01-09 09:20:49'),(2,'Admin','erickrra11@gmail.com','2024-01-09 09:20:49','$2y$10$GW8OLbJvB3oMkU0hteHbnuQ/5HVWlbEfiLG0l69kRRN5HmVQ2Kv/O',NULL,NULL,NULL,1,'x7ON07bGD2dO54tyDyr5wi8qjUfKd3kpszCCUcBReqJbN6mJcYJCXfckQ1L6',NULL,NULL,'2024-01-09 09:20:49','2024-01-09 09:20:49'),(3,'AcadDA','erickrra11@gmail.com','2024-01-09 09:20:49','$2y$10$7zcdm7/92SDvIzYu76tQQeplK4YqtDhJqDy8iNCyh3lAuNHiX2JBa',NULL,NULL,NULL,1,'wU0tqUX18P',NULL,NULL,'2024-01-09 09:20:49','2024-01-09 09:20:49'),(4,'DEPI','erickrra11@gmail.com','2024-01-09 09:20:49','$2y$10$UIBceYOFXShbnm1UHYbys.xxuXdkOJdQnfmwvpGrCUob8POxCrWWy',NULL,NULL,NULL,1,'q1yLi9NiyV',NULL,NULL,'2024-01-09 09:20:49','2024-01-09 09:20:49'),(5,'HPlaneacion','erickrra11@gmail.com','2024-01-09 09:20:50','$2y$10$z3yX.q0S.AnlsJCurhWstOyBhIdfwES3R6UjXvp4dVq8VfB0xjBky',NULL,NULL,NULL,1,'VnuJskVECh',NULL,NULL,'2024-01-09 09:20:50','2024-01-09 09:20:50'),(7,'DepMaria',NULL,NULL,'$2y$10$H9JZszWfr2AVmLe0fXOyZuaNWNxz96c.HBZ4JuQjfGM0/ZeqasWee',NULL,NULL,NULL,1,NULL,NULL,NULL,'2024-01-09 12:08:42','2024-01-09 12:08:42'),(8,'DepAlan',NULL,NULL,'$2y$10$Yatr4BNgbaXVibcZyQJC0eIUhHP0W5rLadtKE09YRjRjdFBG1vv8u',NULL,NULL,NULL,1,NULL,NULL,NULL,'2024-01-09 12:09:09','2024-01-09 12:09:09');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -1030,4 +896,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-08 18:42:36
+-- Dump completed on 2024-01-09  0:13:46

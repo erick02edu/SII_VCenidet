@@ -52,6 +52,7 @@
 
             <p class="inline-flex font-roboto text-lg dark:text-gray-200 justify-start  pl-24 w-full items-center pt-7 ">
                 <span class="uppercase">Horario Administrativo: {{ personal.Nombre }} {{ personal.ApellidoP }} {{ personal.ApellidoM }}</span>
+                -{{ personal.Nombramiento }}-HorMax:{{ HorasMaximas }}
                 <div class="text-end  pl-64 ">
                     Total de Horas a la semana {{ HorasSemana }} h {{ MinutosSemana }} min
                 </div>
@@ -310,6 +311,40 @@
     <!-- Capa oscura -->
     <div :class="{ hidden: !isVisible }" class="fixed inset-0  bg-black opacity-50">
     </div>
+
+    <!-- Capa oscura -->
+    <div :class="{ hidden: !isVisibleExcederHor }" class="fixed inset-0  bg-black opacity-50">
+    </div>
+
+    <!--MENSAJE DE EXCESO HORAS-->
+    <div>
+        <div :class="{ hidden: !isVisibleExcederHor }"  tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">
+            <div class="relative w-full max-w-md max-h-full">
+                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                    <button @click="hideExceso" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
+                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                        </svg>
+                        <span class="sr-only">Close modal</span>
+                    </button>
+                    <div class="p-6 text-center">
+                        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                        </svg>
+                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                            El maximo de horas para este personal es de {{ HorasMaximas }}
+                        </h3>
+                        <button @click="hideExceso" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none  dark:focus:bg-[#0284c7]  font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                            Aceptar
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </template>
 
 <script setup>
@@ -361,10 +396,18 @@
             else{
                 this.icono='fa-solid fa-sun'
             }
+
+            if(this.$page.props.personal.Nombramiento=='Docente'){
+                this.HorasMaximas=40
+            }
+            else if(this.$page.props.personal.Nombramiento=='Administrativo'){
+                this.HorasMaximas=36
+            }
         },
         data(){
             return{
 
+                HorasMaximas:0,
                 Roles:this.$page.props.user.roles,
                 icono:'',
                 msjHoraInvalidas:false,
@@ -383,9 +426,19 @@
                     dia:'',
                 },
                 DiaEditar:[],
+
+                isVisibleExcederHor:false,
             }
         },
         methods:{
+
+            showExceso(){
+                this.isVisibleExcederHor=true;
+            },
+
+            hideExceso(){
+                this.isVisibleExcederHor=false
+            },
             //Calcular las horas totales semanales del horario
             async calcularHorasTotales(HInicio,HFin,dia){
 
@@ -631,15 +684,23 @@
             },
             async GuardarCambios(){
                 try {
-                    const response = await this.$inertia.post(route('Dias.store'), {
-                        NuevoDiaLunes: this.NuevoDiaLunes,
-                        NuevoDiaMartes: this.NuevoDiaMartes,
-                        NuevoDiaMiercoles: this.NuevoDiaMiercoles,
-                        NuevoDiaJueves: this.NuevoDiaJueves,
-                        NuevoDiaViernes: this.NuevoDiaViernes,
-                        NuevoDiaSabado: this.NuevoDiaSabado,
-                        idHorario:this.$page.props.idHorario
-                    });
+
+                    if(this.HorasSemana<=this.HorasMaximas){
+                        const response = await this.$inertia.post(route('Dias.store'), {
+                            NuevoDiaLunes: this.NuevoDiaLunes,
+                            NuevoDiaMartes: this.NuevoDiaMartes,
+                            NuevoDiaMiercoles: this.NuevoDiaMiercoles,
+                            NuevoDiaJueves: this.NuevoDiaJueves,
+                            NuevoDiaViernes: this.NuevoDiaViernes,
+                            NuevoDiaSabado: this.NuevoDiaSabado,
+                            idHorario:this.$page.props.idHorario
+                        });
+                    }
+                    else{
+                        console.log('Horas excedidas el maximo de horas para un ',this.$page.props.personal.Nombramiento,'es de ',this.HorasMaximas);
+                        this.showExceso();
+                    }
+
                 } catch (error) {
                     console.error(error);
                 }

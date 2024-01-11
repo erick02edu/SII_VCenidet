@@ -19,7 +19,7 @@
                                         class="py-2 px-3 rounded-lg border-2 border-[#0285c7c6] dark:text-gray-200 dark:bg-slate-700 mt-1 focus:outline-none focus:ring-2 focus:[#014E82] focus:border-transparent" type="text"
                                     />
                                 </div>
-                                <div class="grid grid-cols-1">
+                                <!-- <div class="grid grid-cols-1">
                                     <label class="uppercase md:text-sm text-xs text-gray-500 dark:text-gray-200 text-light font-semibold">
                                         Correo
                                     </label>
@@ -28,7 +28,7 @@
                                         v-model="InfoEditar.email"
                                         class="py-2 px-3 rounded-lg border-2 border-[#0285c7c6] dark:text-gray-200 dark:bg-slate-700 mt-1 focus:outline-none focus:ring-2 focus:[#014E82] focus:border-transparent" type="email"
                                     />
-                                </div>
+                                </div> -->
                             </div>
 
                             <div class='flex justify-end md:gap-8 gap-4 pt-5 pb-5 pr-5'>

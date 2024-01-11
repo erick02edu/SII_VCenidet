@@ -4,14 +4,9 @@ namespace App\Http\Controllers;
 
 
 use App\Models\horariosDocentes;
-use App\Models\Materias;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Redirect;
-use PhpParser\Node\Scalar\String_;
-
-use App\Exports\HorariosExport;
-use Maatwebsite\Excel\Facades\Excel;
 use DateTime;
 use Exception;
 use Illuminate\Support\Facades\Session;
@@ -69,42 +64,7 @@ class horariosDocentesController extends Controller
         $InfoHorario=horariosDocentes::find($newHorarioId);
         return redirect()->route('HorariosDocentes.editAdmin',$newHorarioId);
     }
-    //Funcion que retorna al Panel de horario de un docente
-    public function edit(String $id){
-        $InfoHorario=horariosDocentes::find($id);
 
-        if(!$InfoHorario){
-            return redirect()->route('HorariosDocentes.index');
-        }
-
-        $Materias=app(MateriasController::class)->ObtenerMaterias();
-        $Aulas=app(AulaController::class)->ObtenerAulas();
-        $Grupos=app(GruposController::class)->ObtenerGruposPorPeriodo($InfoHorario->idPeriodo);
-        $Periodos=app(PeriodoController::class)->ObtenerPeriodos();
-        $PeriodoHorario=app(PeriodoController::class)->ObtenerPeriodoPorID($InfoHorario->idPeriodo);
-        $ProfesorHorario=app(PersonalController::class)->ObtenerPersonalPorID($InfoHorario->idProfesor);
-        $ClasesLunes=app(ClasesController::class)->ObtenerClasesDia('Lunes',$id);
-        $ClasesMartes=app(ClasesController::class)->ObtenerClasesDia('Martes',$id);
-        $ClasesMiercoles=app(ClasesController::class)->ObtenerClasesDia('Miercoles',$id);
-        $ClasesJueves=app(ClasesController::class)->ObtenerClasesDia('Jueves',$id);
-        $ClasesViernes=app(ClasesController::class)->ObtenerClasesDia('Viernes',$id);
-
-        return inertia('Modulos/RH/Horarios/PanelHorario',[
-            'infoHorario'=>$InfoHorario,
-            'materias'=>$Materias,
-            'aulas'=>$Aulas,
-            'grupos'=>$Grupos,
-            'periodos'=>$Periodos,
-            'idHorario'=>$id,
-            'ClasesLunes'=>$ClasesLunes,
-            'ClasesMartes'=>$ClasesMartes,
-            'ClasesMiercoles'=>$ClasesMiercoles,
-            'ClasesJueves'=>$ClasesJueves,
-            'ClasesViernes'=>$ClasesViernes,
-            'PeriodoHorario'=>$PeriodoHorario,
-            'ProfesorHorario'=>$ProfesorHorario
-        ]);
-    }
     //Funcion que retorna al Panel de horario de un administrativo
     public function editAdministrativo(String $id){
 

@@ -416,14 +416,14 @@
                     <td class=""></td>
                     <td class=""></td>
                     <td class=""></td>
-                    <td class="text-end border-r border-collapse border-black ">Subtotal</td>
-                    <td class="border-r border-b border-t border-collapse border-black"></td>
-                    <td class="border-r border-b border-t border-collapse border-black"></td>
-                    <td class="border-r border-b border-t border-collapse border-black"></td>
-                    <td class="border-r border-b border-t border-collapse border-black"></td>
-                    <td class="border-r border-b border-t border-collapse border-black"></td>
-                    <td class="border-r border-b border-t border-collapse border-black"></td>
-                    <td class="border-t border-r border-b border-collapse border-black"></td>
+                    <td class="text-end border-r border-collapse border-black">Subtotal</td>
+                    <td class="border-r border-b border-t border-collapse border-black text-center pb-1"></td>
+                    <td class="border-r border-b border-t border-collapse border-black text-center pb-1"></td>
+                    <td class="border-r border-b border-t border-collapse border-black text-center pb-1"></td>
+                    <td class="border-r border-b border-t border-collapse border-black text-center pb-1"></td>
+                    <td class="border-r border-b border-t border-collapse border-black text-center pb-1"></td>
+                    <td class="border-r border-b border-t border-collapse border-black text-center pb-1"></td>
+                    <td class="border-t border-r border-b border-collapse border-black text-center pb-1"></td>
 
                 </tr>
 
@@ -566,12 +566,12 @@
                     <td class=""></td>
 
                     <td class="text-end border-r border-black">Subtotal</td>
-                    <td class="border-r border-b  border-black"></td>
-                    <td class="border-r border-b  border-black "></td>
-                    <td class="border-r border-b  border-black "></td>
-                    <td class="border-r border-b  border-black "></td>
-                    <td class="border-r border-b  border-black "></td>
-                    <td class="border-r border-b  border-black "></td>
+                    <td class="border-r border-b  border-black text-center "></td>
+                    <td class="border-r border-b  border-black text-center "></td>
+                    <td class="border-r border-b  border-black text-center "></td>
+                    <td class="border-r border-b  border-black text-center "></td>
+                    <td class="border-r border-b  border-black text-center "></td>
+                    <td class="border-r border-b  border-black text-center "></td>
 
                 </tr>
 
@@ -581,12 +581,12 @@
                     <td class=""></td>
 
                     <td class="text-end border-r border-black">Total</td>
-                    <td class="border-r border-b border-black"></td>
-                    <td class="border-r border-b border-black"></td>
-                    <td class="border-r border-b border-black"></td>
-                    <td class="border-r border-b border-black"></td>
-                    <td class="border-r border-b border-black"></td>
-                    <td class="border-r border-b border-black"></td>
+                    <td class="border-r border-b border-black text-center pb-1"></td>
+                    <td class="border-r border-b border-black text-center pb-1"></td>
+                    <td class="border-r border-b border-black text-center pb-1"></td>
+                    <td class="border-r border-b border-black text-center pb-1"></td>
+                    <td class="border-r border-b border-black text-center pb-1"></td>
+                    <td class="border-r border-b border-black text-center pb-1"></td>
 
                 </tr>
 
@@ -763,13 +763,62 @@
                     <td class="py-1"></td>
 
                     <td class="text-end border-r border-black">Total</td>
-                    <td class="border-r border-b border-black text-center pb-1">8</td>
-                    <td class="border-r border-b border-black text-center">8</td>
-                    <td class="border-r border-b border-black text-center">8</td>
-                    <td class="border-r border-b border-black text-center">8</td>
-                    <td class="border-r border-b border-black text-center">8</td>
-                    <td class="border-r border-b border-black text-center">0</td>
-                    <td class="border-r border-b border-black text-center">40</td>
+                    <td class="border-r border-b border-black text-center pb-1">
+                        <strong>
+                            {{ HorasTotalesLunes }}
+                        </strong>
+                        <strong v-if="minutosTotalesLunes!=0">
+                            .{{ minutosTotalesLunes }}
+                        </strong>
+                    </td>
+                    <td class="border-r border-b border-black text-center">
+                        <strong>
+                            {{ HorasTotalesMartes}}
+                        </strong>
+                        <strong v-if="minutosTotalesMartes!=0">
+                            .{{ minutosTotalesMartes }}
+                        </strong>
+                    </td>
+                    <td class="border-r border-b border-black text-center">
+                        <strong>
+                            {{ HorasTotalesMiercoles}}
+                        </strong>
+                        <strong v-if="minutosTotalesMiercoles!=0">
+                            .{{ minutosTotalesMiercoles }}
+                        </strong>
+                    </td>
+                    <td class="border-r border-b border-black text-center">
+                        <strong>
+                            {{ HorasTotalesJueves}}
+                        </strong>
+                        <strong v-if="minutosTotalesJueves!=0">
+                            .{{ minutosTotalesJueves }}
+                        </strong>
+                    </td>
+                    <td class="border-r border-b border-black text-center">
+                        <strong>
+                            {{ HorasTotalesViernes}}
+                        </strong>
+                        <strong v-if="minutosTotalesViernes!=0">
+                            .{{ minutosTotalesViernes }}
+                        </strong>
+                    </td>
+                    <td class="border-r border-b border-black text-center">
+                        <strong>
+                            {{ HorasTotalesSabado}}
+                        </strong>
+                        <strong v-if="minutosTotalesSabado!=0">
+                            .{{ minutosTotalesSabado }}
+                        </strong>
+                    </td>
+                    <td class="border-r border-b border-black text-center">
+                        <strong>
+                            {{ HorasSemana }}
+                        </strong>
+                        <strong v-if="MinutosSemana!=0">
+                            .{{ MinutosSemana  }}
+                        </strong>
+                    </td>
 
                 </tr>
 

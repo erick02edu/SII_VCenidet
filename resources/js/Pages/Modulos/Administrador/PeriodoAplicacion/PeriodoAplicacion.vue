@@ -2,7 +2,7 @@
     <Head title="Periodos-Configuración"/>
     <AuthenticatedLayout>
     <template #header>
-        Configuración de periodos de aplicación
+        Configuración de Periodos para las Aplicaciones
     </template>
     <!--Apartado de busqueda-->
     <div class="inline-flex w-full" >
@@ -49,95 +49,13 @@
                 </button>
             </div>
         </form>
-        <!--Boton para abri ventana modal para agregar un nuevo periodo de aplicacion-->
-        <div id="modalContainer" class=" mt-3" v-if="$page.props.user.roles.includes('Administrador')">
-            <button :type="type" @click="showElement" class="rounded-md bg-[#014E82]  ml-6 px-5 py-3 mb-2 text-center text-sm text-white hover:bg-[#0284c7]  "
-            v-tippy="{
-                content:'Agregar periodo de aplicación',
-                placement: 'top' ,
-                arrow: true,
-                arrowType: 'MyArrow',
-                theme: 'MiThemeBlue'
-            }">
-                Nuevo
-            </button>
-        </div>
+
     </div>
-    <!--Capa Oscura-->
-    <div :class="{ hidden: !isVisible }" class="fixed inset-0 bg-black opacity-50">
-    </div>
+
     <!--Capa Oscura-->
     <div :class="{ hidden: !isvisibleDelete }" class="fixed inset-0 bg-black opacity-50">
     </div>
-    <!--Modal para crear una nueva aplicacion-->
-    <div id="modalContainer">
-        <div :class="{ hidden: !isVisible }">
-            <div id="defaultModal" tabindex="-1" aria-hidden="true"  class="fixed inset-0 flex items-center justify-center z-50">
-                <div class="relative w-full max-w-2xl max-h-full">
-                    <!--Modal content-->
-                    <div class="relative bg-white rounded-lg shadow dark:bg-gray-800">
-                        <!--Modal header-->
-                        <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
-                                <h3 class="text-xl font-semibold text-gray-900 dark:text-white">
-                                    Generar nuevo periodo de aplicación
-                                </h3>
-                            <button type="button" @click="hideElement" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="defaultModal">
-                                <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                </svg>
-                                <span class="sr-only">Close modal</span>
-                            </button>
-                        </div>
-                        <!--Modal body-->
-                        <div class="p-6 space-y-6">
-                            <!--Formulario para crear una nueva aplicacion-->
-                            <form @submit.prevent="crearAplicacion"  class="w-full max-w-lg">
-                                <div class="flex flex-wrap -mx-3 mb-6">
-                                    <div class="w-full md:w-full pl-5 mb-6 md:mb-0 ">
-                                        <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
-                                            Descripción
-                                        </label>
-                                        <input id="Nombre" v-model="NuevaAplicacion.descripcion"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
-                                        type="text" placeholder="Descripcion de la actividad" required>
-                                    </div>
 
-                                    <br>
-
-                                    <label class="pl-5 block uppercase tracking-wide text-gray-700
-                                    dark:text-gray-200 text-xs font-bold mb-2 rounded-lg " for="grid-first-name">
-                                        Marque el periodo en el que se asignara
-                                    </label>
-
-                                    <div class="pl-5 dark:text-gray-200">
-                                        <select name="aplicaciones" v-model="NuevaAplicacion.idPeriodo"
-                                        class="dark:bg-slate-700 dark:text-slate-200 rounded-sm border-gray-400  dark:border-slate-600"
-                                        required>
-                                            <option
-                                                v-for="periodo in periodos"
-                                                :key="periodo.id"
-                                                :value="periodo.id"
-                                            >
-                                            {{ periodo.mesInicio }} {{ periodo.AñoInicio }}-{{ periodo.mesTermino }} {{ periodo.AñoTermino }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <!--Modal footer-->
-                                    <div class="block items-center p-8 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-700 mr-10">
-                                        <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                            Agregar
-                                        </button>
-                                        <button @click="hideElement" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">
-                                            Cancelar
-                                        </button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <!--Alertas-->
     <div v-if="mensaje"
     :class="{ 'bg-green-100 border  border-green-400 text-green-700 px-4 py-3 rounded relative mt-1 mb-3': tipoMensaje == 'Exitoso', 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mt-3 mb-3': tipoMensaje == 'Error' }">
@@ -304,19 +222,9 @@ export default {
     data() {
         return {
             urlPaginacion:'',
-            isVisible: false,
             isvisibleDelete:false,
             idEliminar:0,
             idBorrarSeleccionado:0,
-
-            mensajeActualizar:null,
-            mensajeEliminar:null,
-
-            NuevaAplicacion:{
-                    descripcion:'',
-                    idPeriodo:0,
-                    idUser:'',
-            },
 
             campoBusqueda:'descripcion',
             AplicacionBuscar:'',
@@ -384,15 +292,7 @@ export default {
             this.mensajeEliminar=null;
             this.mensajeActualizar="Se ha actualizado el periodo de las aplicaciones";
         },
-        //Metodo que abre la ventana modal para crear una aplicacion periodo
-        showElement() {
-            this.$page.props.mensaje=null
-            this.isVisible = true;
-        },
-        //Metodo que cierra la ventana modal para crear una aplicacion periodo
-        hideElement() {
-            this.isVisible = false;
-        },
+
         //funcion para contar tiempo al escribir sobre barra de busqueda
         contarTiempo(){
                 this.$page.props.mensaje=null

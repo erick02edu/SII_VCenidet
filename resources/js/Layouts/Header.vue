@@ -40,9 +40,9 @@
                 </template>
 
                 <template #content>
-                    <dropdown-link :href="route('profile.show')">
+                    <!-- <dropdown-link :href="route('profile.show')">
                         Perfil
-                    </dropdown-link>
+                    </dropdown-link> -->
 
                     <dropdown-link class="w-full text-left" :href="route('logout')" method="post" as="button">
                         Cerrar Sesion

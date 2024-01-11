@@ -46,7 +46,9 @@ class AvisosUsuarioController extends Controller
             $AvisoUsuario->idUsuario=$Usuario['id'];
             $AvisoUsuario->Leido=0;
             $AvisoUsuario->save();
-            Mail::to($Usuario['email'])->send(new NuevoAviso($Aviso->Titulo));
+
+            //Enviar acorreo del aviso
+            //Mail::to($Usuario['email'])->send(new NuevoAviso($Aviso->Titulo));
         }
         Session::flash('mensaje', 'Se ha publicado el aviso correctamente');
         Session::flash('TipoMensaje', 'Exitoso');

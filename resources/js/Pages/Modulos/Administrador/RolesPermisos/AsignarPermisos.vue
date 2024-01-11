@@ -123,6 +123,9 @@
                 this.PermisoBuscar=''
             },
             EliminarPermisoSistema(idPermisoSistema){
+
+                console.log('idUsuario',this.NuevoPermiso.idUsuario)
+                console.log('idPermiso',idPermisoSistema)
                 axios.get('/Permisos.remover',{
                     params:{
                         idUsuario:this.NuevoPermiso.idUsuario,
@@ -136,7 +139,7 @@
                 .catch(error => {
                     console.error('Error al hacer la busqueda:', error);
                 });
-                this.ObtenerPermisosSistema();
+                //this.ObtenerPermisosSistema();
             },
             EliminarPermisoCarrera(idCarreraEliminar){
                 axios.get('/PermisosCarreras.Eliminar',{

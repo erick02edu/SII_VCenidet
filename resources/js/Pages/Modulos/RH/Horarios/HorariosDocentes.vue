@@ -364,17 +364,6 @@
 
                                     <p class="mb-2 pl-3">Acciones:</p>
 
-                                    <Link :href="route('HorariosDocentes.edit',horario.id)"  class="p-3 rounded-md bg-[#b43838] mx-2 inline-flex mb-1 text-white"
-                                    v-if="$page.props.user.roles.includes('Recursos Humanos')"
-                                    v-tippy="{
-                                        content:'Editar horario de docente',
-                                        placement: 'left',
-                                        arrow: true,
-                                        arrowType: 'MyArrow',
-                                        theme: 'MiThemeRed'
-                                    }">
-                                        <i class="fa-solid fa-user-pen"></i>
-                                    </Link>
 
                                     <Link :href="route('HorariosDocentes.editAdmin',horario.id)"  class="p-3 rounded-md bg-[#128201] mx-2 inline-flex mb-1 text-white"
                                     v-if="$page.props.user.roles.includes('Recursos Humanos')"
@@ -426,74 +415,56 @@
                                         ></i>
                                     </a>
 
-
-                                    <span v-for="(profesor,index) in profesores">
-                                        <a type="button"  @click="showEnviar(profesor,horario.idProfesor)" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1 mt-2"
-                                        v-if="$page.props.user.roles.includes('Recursos Humanos') && profesor.id==horario.idProfesor"
-                                        v-tippy="{
-                                            content:'Notificar a profesor',
-                                            placement: 'left' ,
-                                            arrow: true,
-                                            theme: 'MiThemeRed'
-                                        }">
-                                        <i class="fa-solid fa-envelope text-white pt-1"></i> <p class="text-white pl-1 "></p>
-                                        </a>
-                                    </span>
-
-                                <div>
-                                    <div :class="{ hidden: !isvisibleDelete }" v-bind:id="`Modal${horario.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">
-                                        <div class="relative w-full max-w-md max-h-full">
-                                            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                                <button @click="hideDelete" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
-                                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                                    </svg>
-                                                    <span class="sr-only">Close modal</span>
-                                                </button>
-                                                <div class="p-6 text-center">
-                                                    <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                                                    </svg>
-                                                    <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Esta seguro de eliminar este horario </h3>
-                                                    <Link @click="hideDelete" method="delete" :href="route('HorariosDocentes.destroy', idBorrarSeleccionado)" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
-                                                        Si, estoy seguro
-                                                    </Link>
-                                                    <button @click="hideDelete" data-modal-hide="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancelar</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <div :class="{ hidden: !isVisibleCorreo }" v-bind:id="`Modal${horario.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">
-                                        <div class="relative w-full max-w-md max-h-full">
-                                            <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
-                                                <button @click="hideEnviar" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
-                                                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                                    </svg>
-                                                    <span class="sr-only">Close modal</span>
-                                                </button>
-                                                <div class="p-6 text-center">
-                                                    <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
-                                                    </svg>
-                                                    <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Esta seguro de enviar un correo a
-                                                        {{  ProfesorCorreo.Nombre }} {{ ProfesorCorreo.ApellidoP }}  {{  ProfesorCorreo.ApellidoM }}  informando que su horario esta listo </h3>
-                                                    <button @click="EnviarCorreo" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
-                                                        Si, estoy seguro
+                                    <div>
+                                        <div :class="{ hidden: !isvisibleDelete }" v-bind:id="`Modal${horario.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">
+                                            <div class="relative w-full max-w-md max-h-full">
+                                                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                                    <button @click="hideDelete" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
+                                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                        </svg>
+                                                        <span class="sr-only">Close modal</span>
                                                     </button>
-                                                    <button @click="hideEnviar" data-modal-hide="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancelar</button>
+                                                    <div class="p-6 text-center">
+                                                        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                        </svg>
+                                                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Esta seguro de eliminar este horario </h3>
+                                                        <Link @click="hideDelete" method="delete" :href="route('HorariosDocentes.destroy', idBorrarSeleccionado)" type="button" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                                                            Si, estoy seguro
+                                                        </Link>
+                                                        <button @click="hideDelete" data-modal-hide="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancelar</button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
-
-
-
+                                    <div>
+                                        <div :class="{ hidden: !isVisibleCorreo }" v-bind:id="`Modal${horario.id}`" tabindex="-1" class="fixed inset-0 flex items-center justify-center z-50">
+                                            <div class="relative w-full max-w-md max-h-full">
+                                                <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+                                                    <button @click="hideEnviar" type="button" class="absolute top-3 right-2.5 text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="popup-modal">
+                                                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                                                        </svg>
+                                                        <span class="sr-only">Close modal</span>
+                                                    </button>
+                                                    <div class="p-6 text-center">
+                                                        <svg class="mx-auto mb-4 text-gray-400 w-12 h-12 dark:text-gray-200" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/>
+                                                        </svg>
+                                                        <h3 class="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">Esta seguro de enviar un correo a
+                                                            {{  ProfesorCorreo.Nombre }} {{ ProfesorCorreo.ApellidoP }}  {{  ProfesorCorreo.ApellidoM }}  informando que su horario esta listo </h3>
+                                                        <button @click="EnviarCorreo" class="text-white bg-red-600 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm inline-flex items-center px-5 py-2.5 text-center mr-2">
+                                                            Si, estoy seguro
+                                                        </button>
+                                                        <button @click="hideEnviar" data-modal-hide="popup-modal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">No, cancelar</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
 
@@ -506,9 +477,10 @@
                 </table>
         </div>
 
-        <div v-if="horarios==''" class=" text-xl w-full mt-14 text-center"> <i class="fa-solid fa-magnifying-glass dark:text-white "></i>
+        <!-- <div v-if="horarios==''" class=" text-xl w-full mt-14 text-center">
+            <i class="fa-solid fa-magnifying-glass dark:text-white "></i>
             <p class="pl-5 dark:text-white">Sin resultados para la busqueda</p>
-        </div>
+        </div> -->
 
         <nav aria-label="Page navigation example mt-4" v-if="horarios!=''">
             <ul class="inline-flex -space-x-px text-sm">
@@ -731,25 +703,9 @@ export default {
       this.isVisibleHConcentrado = false;
     },
 
-
-    showEnviar(profesor,PeriodoCorreo){
-
-        this.PeriodoHorarioCorreo=PeriodoCorreo;
-        this.ProfesorCorreo=profesor
-        this.isVisibleCorreo=true;
-    },
-
     hideEnviar(){
         this.isVisibleCorreo=false;
     },
-
-    async EnviarCorreo(){
-        let request = { profesor:this.ProfesorCorreo.id ,periodo:this.PeriodoHorarioCorreo };
-
-        await this.$inertia.post(route('EnviarCorreo'),request)
-        this.hideEnviar();
-    },
-
 
     crearHorario(){
         this.$inertia.post(route('HorariosDocentes.store'),this.NuevoHorario);

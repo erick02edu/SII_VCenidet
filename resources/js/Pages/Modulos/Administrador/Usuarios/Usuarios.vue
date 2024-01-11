@@ -32,9 +32,6 @@
                 <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-1" href="#">
                     <span @click="SeleccionarCampo('name','Nombre')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Nombre</span>
                 </div>
-                <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-2" href="#">
-                    <span @click="SeleccionarCampo('email','Email')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Email</span>
-                </div>
             </div>
         </div>
         <!--Boton para abrir modal-->
@@ -79,47 +76,6 @@
                             <form @submit.prevent="crearUsuario"  class="w-full max-w-lg">
                                     <div class="flex flex-wrap -mx-3 mb-6">
 
-                                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
-                                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-first-name">
-                                                Nombre
-                                            </label>
-                                            <input id="Nombre" v-model="NuevoUsuario.name"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="text" placeholder="nombre" required>
-                                        </div>
-
-                                        <div class="w-full md:w-1/2 px-3">
-                                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-last-name">
-                                                email
-                                            </label>
-                                            <input id="email" v-model="NuevoUsuario.email" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"   type="email" placeholder="email" required>
-                                        </div>
-
-                                        <div class="w-full px-3">
-                                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-password">
-                                                Contraseña
-                                            </label>
-                                            <input id="password" v-model="NuevoUsuario.password" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"  type="password" placeholder="contraseña" required>
-                                        </div>
-
-
-                                        <div class="w-full px-3">
-                                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2" for="grid-password">
-                                                Personal
-                                            </label>
-
-                                            <select class="appearance-none block  bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-1 leading-tight focus:outline-none focus:bg-white" name="categorias"
-                                            v-model="NuevoUsuario.PersonalAsignar" required>
-                                                <option :value="0"> Seleccione un personal </option>
-                                                <option
-                                                    v-for="(persona,index) in personal"
-                                                    :key="persona.id"
-                                                    :value="persona.id"
-                                                >
-                                                    {{ persona.Nombre }} {{ persona.ApellidoP }} {{ persona.ApellidoM }}
-                                                </option>
-                                            </select>
-                                            <p v-if="msjPersonal!=null" class="text-sm text-red-600 ">Por favor selecciona un personal</p>
-                                        </div>
-                                        <br>
                                         <strong class="pl-3 dark:text-gray-200 w-full">Tipo de usuario</strong>
                                         <div class="pl-3 dark:text-gray-200">
                                             <select class="appearance-none block  bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" name="categorias"
@@ -133,8 +89,60 @@
                                                 </option>
                                             </select>
                                         </div>
+
+                                        <div class="w-full md:w-1/2 px-3 mb-6 md:mb-0">
+                                            <label class="block uppercase tracking-wide text-gray-700 dark:text-slate-200 text-xs font-bold mb-2" for="grid-first-name">
+                                                Nombre de usuario
+                                            </label>
+                                            <input id="Nombre" v-model="NuevoUsuario.name"  class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
+                                            type="text" placeholder="Nombre de usuario" required>
+                                        </div>
+
+                                        <div class="w-full px-3">
+                                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-1" for="grid-password">
+                                                Contraseña
+                                            </label>
+                                            <input id="password" v-model="NuevoUsuario.password" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4
+                                            mb-1 leading-tight focus:outline-none focus:bg-white"  type="password" placeholder="contraseña" required>
+                                            <p v-if="msjPassword==true" class="text-sm text-red-600 mb-1  ">La contraseñas deben iguales</p>
+
+                                        </div>
+
+                                        <div class="w-full px-3 mt-1">
+                                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-1" for="grid-password">
+                                                Repetir contraseña
+                                            </label>
+                                            <input id="password" v-model="NuevoUsuario.passwordRepeat" class="appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4
+                                            mb-1 leading-tight focus:outline-none focus:bg-white"  type="password" placeholder="contraseña" required>
+                                            <p v-if="msjPassword==true" class="text-sm text-red-600 mb-1  ">La contraseñas deben iguales</p>
+                                        </div>
+
+                                        <div class="w-full px-3">
+                                            <label class="block uppercase tracking-wide text-gray-700 dark:text-gray-200 text-xs font-bold mb-2"
+                                            for="grid-password">
+                                                Personal
+                                            </label>
+
+                                            <select class="appearance-none block  bg-gray-200 dark:bg-slate-600 text-gray-700 w-full
+                                             dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4
+                                             mb-1 leading-tight focus:outline-none focus:bg-white" name="categorias"
+                                            v-model="NuevoUsuario.PersonalAsignar" required>
+                                                <option :value="0"> Seleccione un personal </option>
+                                                <option :value="null">Sin personal</option>
+                                                <option
+                                                    v-for="(persona,index) in personal"
+                                                    :key="persona.id"
+                                                    :value="persona.id"
+                                                >
+                                                    {{ persona.Nombre }} {{ persona.ApellidoP }} {{ persona.ApellidoM }}
+                                                </option>
+                                            </select>
+                                            <p v-if="msjPersonal!=null" class="text-sm text-red-600 ">Por favor selecciona un personal</p>
+                                        </div>
+                                        <br>
+
                                     <!-- Modal footer -->
-                                    <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-200">
+                                    <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-slate-700 mt-3 ml-3">
                                         <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                             Agregar
                                         </button>
@@ -167,9 +175,9 @@
                     <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                         Nombre del usuario
                     </th>
-                    <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
+                    <!-- <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                         Email
-                    </th>
+                    </th> -->
 
                     <th class="border-b-2 border-gray-300 dark:border-slate-700 bg-gray-300 dark:bg-slate-700 px-5 py-3 text-left text-xs font-semibold uppercase tracking-wider text-gray-600 dark:text-slate-200">
                         Estatus de la cuenta
@@ -188,9 +196,9 @@
                         <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ usuario.name }}</p>
                     </td>
 
-                    <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
+                    <!-- <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
                         <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">{{ usuario.email }}</p>
-                    </td>
+                    </td> -->
 
                     <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
                         <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap" v-if="usuario.Estatus==0">
@@ -214,7 +222,8 @@
                         }">
                             <i class="fa-solid fa-pen text-white"></i>
                         </Link>
-                        <a  v-if="$page.props.user.roles.includes('Administrador')" type="button" @click="showDelete(usuario.id,usuario.name)" class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1"
+                        <a  v-if="$page.props.user.roles.includes('Administrador')" type="button" @click="showDelete(usuario.id,usuario.name)"
+                        class="p-3 rounded-md bg-[#dc2626] mx-2 inline-flex mb-1"
                         v-tippy="{
                             content:'Eliminar usuario',
                             placement: 'top' ,
@@ -224,7 +233,8 @@
                         }">
                             <i class="fa-solid fa-trash text-white"></i>
                         </a>
-                        <Link  v-if="$page.props.user.roles.includes('Administrador')" :href="route('Users.editRole',usuario.id)" class="p-3 rounded-md bg-[#FFD200]  mx-2 inline-flex mb-1 "
+                        <Link  v-if="$page.props.user.roles.includes('Administrador')" :href="route('Users.editRole',usuario.id)" class="p-3
+                        rounded-md bg-[#FFD200]  mx-2 inline-flex mb-1 "
                         v-tippy="{
                             content:'Ver tipo de usuario',
                             placement: 'top' ,
@@ -232,7 +242,19 @@
                             arrowType: 'MyArrow',
                             theme: 'MiThemeYellow'
                         }">
-                            <strong>Tipo de usuario<span>  <i class="fa-solid fa-user-plus pl-1"></i> </span> </strong>
+                            <strong >Tipo de usuario<span>  <i class="fa-solid fa-user-plus pl-1"></i> </span> </strong>
+                        </Link>
+
+                        <Link  v-if="$page.props.user.roles.includes('Administrador')" :href="route('User.Password',usuario.id)" class="p-3 rounded-md
+                        bg-[#dc2626] mx-2 inline-flex mb-1 "
+                        v-tippy="{
+                            content:'Cambiar contraseña',
+                            placement: 'top' ,
+                            arrow: true,
+                            arrowType: 'MyArrow',
+                            theme: 'MiThemeRed'
+                        }">
+                            <strong class="text-white">Contraseña<span>  <i class="fa-solid fa-user-lock pl-1"></i> </span> </strong>
                         </Link>
 
                         <!-- Capa oscura -->
@@ -357,12 +379,11 @@
         },
         data() {
             return {
+
+                msjPassword:false,
                 msjPersonal:null,
                 urlPaginacion:'',
-                infoEditar: {
-                    name:'',
-                    email:''
-                },
+
                 MostrarFiltro:false,
                 cantidadPaginas:'',
 
@@ -382,6 +403,7 @@
                     name:'',
                     email:'',
                     password:'',
+                    passwordRepeat:'',
                     RolesSeleccionados:[],
                     PersonalAsignar:0,
                 },
@@ -426,11 +448,17 @@
                     this.msjPersonal=true;
                 }
                 else{
-                    try{
-                        const response=await this.$inertia.post(route('Users.store'),this.NuevoUsuario)
-                        this.hideElement()
-                    }catch (error) {
-                        console.error(error); // Imprimir el error en la consola.
+
+                    if(this.NuevoUsuario.password==this.NuevoUsuario.passwordRepeat){
+                        try{
+                            const response=await this.$inertia.post(route('Users.store'),this.NuevoUsuario)
+                            this.hideElement()
+                        }catch (error) {
+                            console.error(error); // Imprimir el error en la consola.
+                        }
+                    }
+                    else{
+                        this.msjPassword=true;
                     }
                 }
             },
@@ -443,6 +471,7 @@
             hideElement() {
                 this.isVisible = false;
                 this.msjPersonal=null;
+                this.msjPassword=false;
             },
             //Abrir ventana de alerta al eliminar un usuario
             showDelete(id,name){

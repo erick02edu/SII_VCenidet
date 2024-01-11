@@ -517,6 +517,11 @@
                     <select class="md:w-full appearance-none block w-full bg-white dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white"
                     name="aplicaciones" v-model="NuevoPersonal.idUsuario">
 
+                        <option :value="null" class="dark:text-white">
+                            Sin cuenta de usuario
+                        </option>
+
+
                         <option :value="cuentaAsignada.id">
                             {{ cuentaAsignada.email }}
                         </option>

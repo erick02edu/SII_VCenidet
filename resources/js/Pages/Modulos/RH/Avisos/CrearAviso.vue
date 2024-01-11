@@ -137,9 +137,9 @@
                                             <span @click="SeleccionarCampo('name','Nombre')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Nombre</span>
                                         </div>
 
-                                        <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-2" href="#">
+                                        <!-- <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-2" href="#">
                                             <span @click="SeleccionarCampo('email','Correo')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Correo</span>
-                                        </div>
+                                        </div> -->
 
                                         <div class="py-1 dark:bg-slate-700 dark:hover:bg-slate-500 " role="menuitem" tabindex="-1" id="dropdown-menu-item-2" href="#">
                                             <span @click="SeleccionarCampo('TipoRol','TipoRol')" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-slate-500 dark:text-gray-200">Tipo de usuario</span>
@@ -171,7 +171,7 @@
                                 </div>
 
                                 <div class="w-full p-3 overflow-y-auto h-64 border rounded-lg border-gray-300 dark:border-gray-500">
-                                    <!--TABLA ASIGNAR ALUMNOS A UN GRUPO-->
+
                                     <div class="inline-block min-w-full overflow-hidden rounded-lg shadow mb-4">
                                         <table class="w-full">
                                             <!--Encabezados-->
@@ -201,7 +201,7 @@
 
                                                     <td class="border-b border-gray-200 dark:border-slate-700  bg-white dark:bg-slate-800 px-5 py-5 text-sm">
                                                         <p class="text-gray-900 dark:text-gray-200 whitespace-no-wrap">
-                                                            <strong>{{ usuario.name }}</strong>-{{ usuario.email }}
+                                                            <strong>{{ usuario.name }}</strong>
                                                         </p>
                                                     </td>
                                                 </tr>

@@ -43,27 +43,6 @@ class AplicacionPeriodoController extends Controller
             'tipoMensaje' => $TipoMensaje,
         ]);
     }
-
-    //Funcion para registrar un nuevo periodo de aplicacion
-    public function store(Request $request){
-
-        $Aplicacion=new AplicacionPeriodos();
-        try{
-            $Aplicacion->descripcion=$request->descripcion;
-            $Aplicacion->idPeriodo=$request->idPeriodo;
-            $Aplicacion->save();
-
-            //Definir datos flash de la sesión
-            Session::flash('mensaje', 'La aplicación se ha almacenado correctamente.');
-            Session::flash('TipoMensaje', 'Exitoso');
-            return Redirect::route('Aplicaciones.index');
-
-        }catch(Exception $e){
-            Session::flash('mensaje', 'Ha ocurrido un error al registrar la aplicacion.');
-            Session::flash('TipoMensaje', 'Error');
-        }
-    }
-
     //Funcion para eliminar una aplicacion
     public function destroy(String $id)
     {

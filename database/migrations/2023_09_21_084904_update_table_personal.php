@@ -12,9 +12,7 @@ return new class extends Migration
     public function up(): void
     {
 
-
         Schema::table('personal', function (Blueprint $table) {
-            
             //LlavesForaneas personal
             $table->unsignedBigInteger('idDepAdscripcion')->nullable(); // Columna para la llave foránea
             $table->unsignedBigInteger('idDepAcademico')->nullable(); // Columna para la llave foránea

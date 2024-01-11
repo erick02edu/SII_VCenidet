@@ -1,33 +1,25 @@
 <?php
 
-use App\Http\Controllers\AlumnosController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\PDFController;
-use App\Http\Controllers\AulaController;
 use App\Http\Controllers\PlazaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
-use App\Http\Controllers\PromedioController;
 use App\Http\Controllers\PeriodoController;
 use App\Http\Controllers\AplicacionPeriodoController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\AvisosController;
 use App\Http\Controllers\AvisosUsuarioController;
 use App\Http\Controllers\BackupController;
-use App\Http\Controllers\bajasPersonalController;
-use App\Http\Controllers\CalificacionesController;
 use App\Http\Controllers\CarreraController;
 use App\Http\Controllers\CategoriaController;
-use App\Http\Controllers\ClasesController;
 use App\Http\Controllers\PersonalController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\DiasHorarioController;
-use App\Http\Controllers\GruposController;
 use App\Http\Controllers\horariosDocentesController;
-use App\Http\Controllers\MateriasController;
+
 use App\Http\Controllers\PermisosCarrerasController;
 use App\Http\Controllers\VigenciaPersonalController;
 
@@ -65,6 +57,9 @@ Route::middleware([
          //Rutas para crud usuarios
         Route::resource('Users',UserController::class);
         Route::get('Users.buscar',[UserController::class,'buscarUsuario']);
+        Route::get('User.Password/{idHorario}',[UserController::class,'editPassword'])->name('User.Password');
+        Route::post('User.password',[UserController::class,'CambiarContra'])->name('User.password');
+
         //Rutas para tipos de usuario(Roles)
         Route::resource('Roles',RoleController::class);
         Route::get('Roles.buscar',[RoleController::class,'buscarRol']);
@@ -109,18 +104,12 @@ Route::middleware([
         Route::post('Personal.asignarCuenta',[PersonalController::class,'asignarCuenta'])->name('Personal.asignarCuenta');
         Route::get('Personal.Departemento',[PersonalController::class,'ObtenerPersonalDepartamento']);
 
-        Route::get('Personal.Reportes',[PersonalController::class,'Reportes'])->name('Personal.Reportes');
-        Route::post('Personal.Antiguedad',[PersonalController::class,'ReporteAntiguedad'])->name('Personal.Antiguedad');
-        Route::post('Personal.Rotacion',[PersonalController::class,'ReporteRotacion'])->name('Personal.Rotacion');
-        //bajas Personal
-        Route::resource('bajasPersonal',bajasPersonalController::class)->only('store');
         //Rutas para crud vigencia Personal
         Route::resource('VigenciaPersonal',VigenciaPersonalController::class)->only(['store','update']);
         Route::get('VigenciaPersonal/{idPersonal}/{idPeriodo}',[VigenciaPersonalController::class,'editVigencia'])->name('VigenciaPersonal.edit');
 
         //Periodos escolares
         Route::get('Periodo',[PeriodoController::class,'index'])->name('Periodo.index');
-
 
          //Rutas para crud departamentos
         Route::resource('Departamentos',DepartamentoController::class);
@@ -135,52 +124,19 @@ Route::middleware([
         Route::get('/HorConcentrado/{periodo}',[horariosDocentesController::class,'HorarioConcentrado'])->name('HorConcentrado');
         Route::get('HorariosDocentes.buscar',[horariosDocentesController::class,'buscarHorario']);
         Route::post('EnviarCorreo',[horariosDocentesController::class,'CorreoHorario'])->name('EnviarCorreo');
-        //Clases
-        Route::resource('Clases',ClasesController::class)->only('store');
+
+        //Carreras
+        Route::get('/Carreras.buscar',[CarreraController::class,'Buscar'])->name('Carreras.buscar');
         //Dias horario administrativo
         Route::resource('Dias',DiasHorarioController::class)->only(['store','destroy']);
         /*-----------------------Rutas para version de escuela------------------------------------------------------------------------------------------*/
-            //Rutas para calificaciones
-            Route::resource('Calificaciones',CalificacionesController::class)->only(['index']);
-            Route::post('Calificaciones.subir',[CalificacionesController::class,'SubirCalificaciones'])->name('Calificaciones.subir');
-            Route::post('Calificaciones.Actualizar',[CalificacionesController::class,'ActualizarCalificaciones'])->name('Calificaciones.Actualizar');
-            Route::get('Calificaciones.buscar',[CalificacionesController::class,'Buscar']);
-            Route::get('Calificaciones.Promedios',[CalificacionesController::class,'Promedios'])->name('Calificaciones.Promedios');
-            Route::post('Calificaciones.historial',[CalificacionesController::class,'GenerarHistorial'])->name('Calificaciones.historial');
 
-            //Rutas para crud Grupos
-            Route::resource('Grupos',GruposController::class);
-            Route::get('Grupos.buscar',[GruposController::class,'Buscar']);
-            Route::get('GruposAlumnos/{id}',[GruposController::class,'EditarAlumnos'])->name('Grupos.Alumnos');
-
-            //Carreras
-            Route::get('/Carreras.buscar',[CarreraController::class,'Buscar'])->name('Carreras.buscar');
-
-            //Rutas para crud Alumnos
-            Route::resource('Alumnos',AlumnosController::class);
-            Route::get('Alumnos.buscar',[AlumnosController::class,'Buscar']);
-            Route::post('Alumnos.AsignarGrupo',[AlumnosController::class,'AsignarGrupo'])->name('Alumnos.AsignarGrupo');
-            Route::put('Alumnos.QuitarGrupo/{id}',[AlumnosController::class,'QuitarGrupo'])->name('Alumnos.QuitarGrupo');
-            Route::post('Alumnos.importar', [AlumnosController::class, 'ImportarDatos']);
-            Route::get('Alumnos.Grupo/{id}',[AlumnosController::class,'AlumnosPorGrupo'])->name('Alumnos.Grupo');
-
-            //Rutas para Materias
-            Route::resource('Materias',MateriasController::class);
-            Route::get('Materias.buscar',[MateriasController::class,'buscar']);
-
-            //Rutas para crud Aulas
-            Route::resource('Aulas',AulaController::class);
-            Route::get('Aula.buscar',[AulaController::class,'Buscar']);
-
-            //Promedio
-            Route::get('Promedios',[PromedioController::class,'index'])->name('Promedio.index');
-
-            //Rutas para respaldo
-            Route::resource('backup',BackupController::class)->only(['index']);
+        //Rutas para respaldo
+        Route::resource('backup',BackupController::class)->only(['index']);
             Route::get('GenerarBackup',[BackupController::class,'GenerarBackup'])->name('GenerarBackup');
-            Route::post('GenerarRestauracion',[BackupController::class,'Restaurar'])->name('GenerarRestauracion');
-            Route::post('EliminarRespaldo',[BackupController::class,'EliminarRespaldo'])->name('EliminarRespaldo');
-            Route::get('/descargar-archivo/{nombreArchivo}', [BackupController::class,'descargarSQL'])->name('descargar-archivo');
+        Route::post('GenerarRestauracion',[BackupController::class,'Restaurar'])->name('GenerarRestauracion');
+        Route::post('EliminarRespaldo',[BackupController::class,'EliminarRespaldo'])->name('EliminarRespaldo');
+        Route::get('/descargar-archivo/{nombreArchivo}', [BackupController::class,'descargarSQL'])->name('descargar-archivo');
  });
 
 //Login
@@ -198,6 +154,4 @@ Route::get('/AvisoEmail', function () {
     //return view('emails.NuevoAviso');
     return view('emails.NotificacionHorario');
 });
-
-Route::get('PruebaReporte',[PDFController::class,'generatePDF'])->name('PruebaReporte');
 

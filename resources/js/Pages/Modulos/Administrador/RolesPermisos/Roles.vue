@@ -53,6 +53,12 @@
     <!-- Capa oscura eliminar -->
     <div :class="{ hidden: !isvisibleDelete }" class="fixed inset-0 bg-black opacity-50">
     </div>
+
+    <div class="w-full dark:text-white mb-3">
+        <strong>Nota:</strong>Los permisos serán asignados sólo a los usuarios de tipo
+        'División de Estudios Profesionales', 'Deptos. Académicos' , 'Servicios Escolares' o 'Secretarias de Jefatura'
+    </div>
+
     <!--Modal para agregar un nuevo tipo de usuario-->
     <div id="modalContainer">
         <!-- Main modal -->
@@ -102,7 +108,8 @@
                                     </div>
                                     <!-- Modal footer -->
                                     <div class="flex items-center p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                                        <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Crear Rol</button>
+                                        <button type="submit" class="text-white bg-[#014E82] hover:bg-[#0284c7] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                            Crear tipo de usuario</button>
                                         <button @click="hideElement" data-modal-hide="defaultModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Cancelar</button>
                                     </div>
                                 </div>
@@ -171,7 +178,7 @@
                         </a>
 
                         <Link :href="route('Roles.editPermisos',rol.id)" class="p-3  rounded-md bg-[#FFD200] inline-flex mt-2  "
-                        v-if="$page.props.user.roles.includes('Administrador')"
+                        v-if="$page.props.user.roles.includes('Administrador') && TipoUserPermitPermisos.includes(rol.name)"
                         v-tippy="{
                             content:'Ver y Editar permisos',
                             placement: 'top' ,
@@ -179,7 +186,7 @@
                             arrowType: 'MyArrow',
                             theme: 'MiThemeYellow'
                         }">
-                            <strong class="text-sm">Ver permisos <span>  <i class="fa-solid fa-user-plus pl-1"></i> </span> </strong>
+                            <strong class="text-sm">Asignar permisos <span>  <i class="fa-solid fa-user-plus pl-1"></i> </span> </strong>
                         </Link>
 
                         <div>
@@ -302,6 +309,12 @@
 
         data() {
             return {
+                TipoUserPermitPermisos:[
+                    'Division de estudios Profesionales',
+                    'Departamento de desarrollo academico',
+                    'Escolares',
+                    'Secretarias CENIDET',
+                ''],
                 urlPaginacion:'',
                 infoEditar: {
                     name:'',

@@ -6,15 +6,10 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('plazas', function (Blueprint $table) {
             $table->id();
-
-
             $table->string('diagonal'); // Agrega la nueva columna
             $table->string('unidad'); // Agrega la nueva columna
             $table->string('subunidad'); // Agrega la nueva columna

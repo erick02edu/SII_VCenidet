@@ -76,7 +76,7 @@
                 arrowType: 'MyArrow',
                 theme: 'MiThemeBlue'
             }">
-                Agregar plaza
+                Asignar plaza
             </button>
         </div>
     </div>
@@ -339,7 +339,10 @@
                                         Cuentas disponibles
                                 </label>
 
-                                <select v-if="contenidoModal=='Plaza'" class=" ml-4 md:w-5/6 appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" name="categorias" v-model="InfoAsignacion.idPlaza" required>
+                                <select v-if="contenidoModal=='Plaza'" class=" ml-4 md:w-5/6 appearance-none block w-full
+                                bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200
+                                 dark:border-slate-600 rounded py-3 px-4 mb-1 leading-tight focus:outline-none focus:bg-white"
+                                 name="categorias" v-model="InfoAsignacion.idPlaza" required>
 
                                 <option :value='0'> Seleccione una plaza </option>
                                     <option
@@ -354,6 +357,9 @@
                                         </span>
                                     </option>
                                 </select>
+
+                                <p v-if="msjPlaza==true" class="mb-1 ml-4 text-sm text-red-600">Por favor selecciona una plaza</p>
+
 
                                 <select v-if="contenidoModal=='Usuario'" class=" ml-4 md:w-5/6 appearance-none block w-full bg-gray-200 dark:bg-slate-600 text-gray-700 dark:text-gray-200 border border-gray-200  dark:border-slate-600 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:bg-white" name="categorias" v-model="InfoAsignacion.idCuenta" required>
                                     <option :value='0'> Seleccione una cuenta </option>
@@ -597,6 +603,7 @@
                 FiltroDep:Array,
 
                 setTimeoutBuscador:'',
+                msjPlaza:false
             }
         },
         //Escuchar cambios
@@ -682,6 +689,7 @@
             },
             //Funcion que cierra la modal para la asignacion de una plaza
             hideAsignacion() {
+                this.msjPlaza=falseP;
                 this.isvisibleAsignacion = false;
             },
             //Metodo para abrir modal de vigencia
@@ -733,12 +741,20 @@
             //Metodo que redirige a ruta para asignar una plaza o cuenta al personal
             async AsignarPersonal(contenido){
                 if(contenido=='Plaza'){
-                    await this.$inertia.post(route('Personal.asignarPlaza'),this.InfoAsignacion)
+                    if(this.InfoAsignacion.idPlaza!=0){
+                        await this.$inertia.post(route('Personal.asignarPlaza'),this.InfoAsignacion)
+                        this.hideAsignacion()
+                    }
+                    else{
+                        this.msjPlaza=true;
+                    }
+
                 }
                 if(contenido=='Usuario'){
                     await this.$inertia.post(route('Personal.asignarCuenta'),this.InfoAsignacion)
+                    this.hideAsignacion()
                 }
-                this.hideAsignacion()
+
             }
         }
     };

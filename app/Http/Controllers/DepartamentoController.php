@@ -98,22 +98,7 @@ class DepartamentoController extends Controller
             return redirect::route('Departamentos.index');
         }
     }
-    //Funcion que permite realizar la eliminacion de un departamento
-    public function destroy(string $id){
-        try{
-            $Departamento = Departamentos::find($id);
-            $Departamento->delete();
 
-            Session::flash('mensaje', 'Se eliminado correctamente el departamento');
-            Session::flash('TipoMensaje', 'Exitoso');
-            return Redirect::route('Departamentos.index');
-        }
-        catch(Exception $e){
-            Session::flash('mensaje', 'Ha ocurrido un error al eliminar el departamento');
-            Session::flash('TipoMensaje', 'Error');
-            return redirect::route('Departamentos.index');
-        }
-    }
     //Funcion que devuelv la lista de departamentos
     public function ObtenerDepartamentos(){
         $Departamentos=Departamentos::all();
